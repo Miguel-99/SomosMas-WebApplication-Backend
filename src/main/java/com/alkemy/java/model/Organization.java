@@ -4,7 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 
@@ -16,21 +17,23 @@ public class Organization {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @NotEmpty(message = "This field cannot be null or empty!")
     private String name;
-    @NotNull
+    @NotEmpty(message = "This field cannot be null or empty!")
     private String image;
     private String address;
     private int phone;
-    @NotNull
+    @NotEmpty(message = "This field cannot be null or empty!")
+    @Email
+    @Column(name = "email", unique = true)
     private String email;
-    @NotNull
+    @NotEmpty(message = "This field cannot be null or empty!")
     private String welcomeText;
     private String aboutUsText;
     private Date creationDate;
     private Date lastUpdate;
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    private List<Slide> slides;
+    private List<Slide> slides; // coordine con mi compañero para que esto funcione
     private Boolean deleted;
 
     public Organization(String name, String image, String address, int phone, String email, String welcomeText, String aboutUsText, Boolean deleted) {
