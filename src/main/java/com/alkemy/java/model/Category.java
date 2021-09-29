@@ -15,7 +15,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "categories")
-@SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE categories SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 @NoArgsConstructor @AllArgsConstructor
 public class Category {
@@ -35,7 +35,7 @@ public class Category {
     private String image;
 
     @Getter @Setter
-    private boolean deleted;
+    private boolean deleted = Boolean.FALSE;
 
     @Getter @Setter @Column(name = "create_date")
     private Date createDate;
