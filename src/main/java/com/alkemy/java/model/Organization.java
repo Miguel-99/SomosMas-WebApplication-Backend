@@ -2,6 +2,8 @@ package com.alkemy.java.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,6 +15,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Table(name = "organizations")
+@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
+@Where(clause = " deleted = false ")
 public class Organization {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +40,7 @@ public class Organization {
     private List<Slide> slides; // coordine con mi compañero para que esto funcione
     private Boolean deleted;
 
-    public Organization(String name, String image, String address, int phone, String email, String welcomeText, String aboutUsText, Boolean deleted) {
+    public Organization(String name, String image, String address, String phone, String email, String welcomeText, String aboutUsText) {
         this.name = name;
         this.image = image;
         this.address = address;
@@ -46,6 +50,6 @@ public class Organization {
         this.aboutUsText = aboutUsText;
         this.creationDate = new Date();
         this.lastUpdate = this.creationDate;
-        this.deleted = deleted;
+        this.deleted = Boolean.FALSE;
     }
 }
