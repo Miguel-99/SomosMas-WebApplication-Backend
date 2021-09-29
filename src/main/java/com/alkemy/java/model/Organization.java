@@ -21,23 +21,34 @@ public class Organization {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotEmpty(message = "This field cannot be null or empty!")
     private String name;
+
     @NotEmpty(message = "This field cannot be null or empty!")
     private String image;
+
     private String address;
+
     private String phone;
+
     @NotEmpty(message = "This field cannot be null or empty!")
     @Email
     @Column(name = "email", unique = true)
     private String email;
+
     @NotEmpty(message = "This field cannot be null or empty!")
     private String welcomeText;
+
     private String aboutUsText;
+
     private Date creationDate;
+
     private Date lastUpdate;
+
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Slide> slides; // coordine con mi compañero para que esto funcione
+
     private Boolean deleted;
 
     public Organization(String name, String image, String address, String phone, String email, String welcomeText, String aboutUsText) {
