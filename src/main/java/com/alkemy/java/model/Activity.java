@@ -1,15 +1,18 @@
 package com.alkemy.java.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
-public class Activity implements Serializable {
+@Table (name = "activities")
+@SQLDelete(sql = "UPDATE activities SET deleted = true WHERE id=?")
+@Where(clause = " deleted = false ")
+public class Activity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +36,6 @@ public class Activity implements Serializable {
     @Column (name = "update_date")
     private Date updateDate;
 
-    private Boolean delete;
+    private Boolean delete = Boolean.FALSE;
 
 }
