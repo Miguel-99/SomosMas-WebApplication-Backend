@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +15,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "categories")
+@SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @NoArgsConstructor @AllArgsConstructor
 public class Category {
 
