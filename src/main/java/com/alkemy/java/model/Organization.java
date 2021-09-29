@@ -22,7 +22,7 @@ public class Organization {
     @NotEmpty(message = "This field cannot be null or empty!")
     private String image;
     private String address;
-    private int phone;
+    private String phone;
     @NotEmpty(message = "This field cannot be null or empty!")
     @Email
     @Column(name = "email", unique = true)
