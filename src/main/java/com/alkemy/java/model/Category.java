@@ -2,10 +2,7 @@ package com.alkemy.java.model;
 
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -17,30 +14,27 @@ import java.util.Date;
 @Table(name = "categories")
 @SQLDelete(sql = "UPDATE categories SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
+@Data
 @NoArgsConstructor @AllArgsConstructor
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
     private Long id;
 
-    @Getter @Setter @NotEmpty(message = "Field name should not be null or empty")
+    @NotEmpty(message = "Field name should not be null or empty")
     private String name;
 
-    @Getter @Setter
     private String description;
 
-    @Getter @Setter
     private String image;
 
-    @Getter @Setter
     private boolean deleted = Boolean.FALSE;
 
-    @Getter @Setter @Column(name = "create_date")
+    @Column(name = "create_date")
     private Date createDate;
 
-    @Getter @Setter @Column(name = "last_update")
+    @Column(name = "last_update")
     private Date lastUpdate;
 
 }
