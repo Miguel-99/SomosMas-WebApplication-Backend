@@ -29,8 +29,12 @@ public class Slide {
     private String text;
 
     @NotBlank
-    @Column(name = "order")
-    private String order;
+    @Column(name = "number_order")
+    private int numberOrder;
+
+    @ManyToOne()
+    @JoinColumn(name="organization_id")
+    private Organization organizationId;
 
     private boolean deleted = Boolean.FALSE;
 
