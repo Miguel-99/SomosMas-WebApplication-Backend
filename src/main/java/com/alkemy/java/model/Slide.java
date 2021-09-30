@@ -22,17 +22,17 @@ public class Slide {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Field ImageUrl should not be null or empty")
     private String imageUrl;
 
-    @NotBlank
+    @NotBlank(message = "Field Text should not be null or empty")
     private String text;
 
-    @NotBlank
+    @NotBlank(message = "Field NumberOrder should not be null or empty")
     @Column(name = "number_order")
     private int numberOrder;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="organization_id")
     private Organization organizationId;
 
