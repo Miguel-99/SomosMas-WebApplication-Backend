@@ -1,5 +1,6 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
@@ -16,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        com.alkemy.java.model.User user = userRepository.findByUsername(username);
         UserBuilder userBuilder = null;
 
         if (user != null) {
