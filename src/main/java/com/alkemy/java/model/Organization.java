@@ -47,7 +47,7 @@ public class Organization {
     private Date lastUpdate;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    private List<Slide> slides; // coordine con mi compañero para que esto funcione
+    private List<Slide> slides;
 
     private Boolean deleted;
 
