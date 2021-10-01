@@ -8,6 +8,7 @@ import org.hibernate.annotations.Where;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -25,19 +26,20 @@ public class User {
     @Column(name = "id_user")
     private Integer id;
 
-    @NotNull(message = "This field cannot be null or empty!")
+    @NotNull(message = "Field first name should not be null or empty!")
     @Column(name = "first_name")
     private String firstName;
 
-    @NotNull(message = "This field cannot be null or empty!")
+    @NotNull(message = "Field last name should not be null or empty!")
     @Column(name = "last_name")
     private String lastName;
 
-    @NotNull(message = "This field cannot be null or empty!")
+    @NotNull(message = "Field email should not be null or empty!")
     @Column(name = "email", unique = true)
+    @Email
     private String email;
 
-    @NotNull(message = "This field cannot be null or empty!")
+    @NotNull(message = "Field password should not be null or empty!")
     @Column(name = "password")
     private String password;
 
@@ -45,9 +47,9 @@ public class User {
     private String photo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_role", referencedColumnName = "id_role") //No tengo el codigo de mi compañero
-    private Role role;                                              //Igualmente me puse en contacto con el para que nos pongamos
-                                                                    // de acuerdo y tengamos la relacion de manera correcto
+    @JoinColumn(name = "id_role", referencedColumnName = "id_role")
+    private Role role;
+
     @Column(name = "deleted")
     private Boolean deleted = Boolean.FALSE;
 
