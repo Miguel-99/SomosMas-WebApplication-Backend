@@ -4,7 +4,6 @@ import com.alkemy.java.dto.UserDto;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -42,23 +41,21 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDto registerUser(UserDto userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
-            throw new RuntimeException(messageSource.getMessage("user.error.email.registered", null, Locale.getDefault()));
+            throw new RuntimeException(messageSource.getMessage("error.email.registered", null, Locale.getDefault()));
 
         User user = mapToEntity(userDto);
         user.setCreationDate(new Date());
         user.setLastUpdate(new Date());
-        user.setPhoto(RandomStringUtils.random(10));
+        user.setPhoto("url1");
         User newUser = userRepository.save(user);
         return mapToDTO(newUser);
     }
 
     private UserDto mapToDTO(User user) {
-        UserDto userDto = mapper.map(user, UserDto.class);
-        return userDto;
+        return mapper.map(user, UserDto.class);
     }
 
     private User mapToEntity(UserDto userDto) {
-        User user = mapper.map(userDto, User.class);
-        return user;
+        return mapper.map(userDto, User.class);
     }
 }

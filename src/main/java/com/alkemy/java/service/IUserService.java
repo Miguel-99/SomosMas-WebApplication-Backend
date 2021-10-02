@@ -4,6 +4,6 @@ import com.alkemy.java.dto.UserDto;
 
 public interface IUserService {
 
-    UserDto registerUser(UserDto user);
+     UserDto registerUser(UserDto user);
 
 }
