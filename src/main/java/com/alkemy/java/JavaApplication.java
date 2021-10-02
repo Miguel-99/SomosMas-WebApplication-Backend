@@ -22,6 +22,7 @@ public class JavaApplication {
 		SpringApplication.run(JavaApplication.class, args);
 	}
 
+
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
