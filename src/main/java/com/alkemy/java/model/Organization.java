@@ -1,5 +1,8 @@
 package com.alkemy.java.model;
 
+import com.alkemy.java.dto.ContactFieldsDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -11,8 +14,10 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 
+@Builder
 @Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "organizations")
 @SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id=?")
@@ -48,6 +53,15 @@ public class Organization {
     @Column(name = "about_us_text")
     private String aboutUsText;
 
+    @Column(name = "linkedin_url",length = 255)
+    private String linkedinUrl;
+
+    @Column(name = "facebook_url",length = 255)
+    private String facebookUrl;
+
+    @Column(name = "instagram_url",length = 255)
+    private String instagramUrl;
+
     @Column(name = "create_date")
     private Date creationDate;
 
@@ -57,18 +71,6 @@ public class Organization {
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Slide> slides;
 
-    private Boolean deleted;
+    private Boolean deleted = Boolean.FALSE;
 
-    public Organization(String name, String image, String address, String phone, String email, String welcomeText, String aboutUsText) {
-        this.name = name;
-        this.image = image;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.welcomeText = welcomeText;
-        this.aboutUsText = aboutUsText;
-        this.creationDate = new Date();
-        this.lastUpdate = this.creationDate;
-        this.deleted = Boolean.FALSE;
-    }
 }
