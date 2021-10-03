@@ -1,7 +1,7 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.UserDto;
-import com.alkemy.java.service.IUserService;
+import com.alkemy.java.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +17,9 @@ import javax.validation.Valid;
 public class AuthController {
 
 
-    private IUserService userService;
+    private UserServiceImpl userService;
 
-    public AuthController(IUserService userService) {
+    public AuthController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
