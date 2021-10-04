@@ -1,15 +1,18 @@
 package com.alkemy.java.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -57,6 +60,8 @@ public class User {
 
     @Column(name = "last_update")
     private Date lastUpdate;
+
+
 
 
 }

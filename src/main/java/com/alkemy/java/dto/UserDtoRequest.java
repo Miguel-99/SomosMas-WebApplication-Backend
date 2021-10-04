@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class UserDto {
+public class UserDtoRequest {
 
     @NotEmpty(message = "Field firstName should not be null or empty")
     @Size(min = 3, max = 20)

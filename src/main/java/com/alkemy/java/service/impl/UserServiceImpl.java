@@ -1,6 +1,7 @@
 package com.alkemy.java.service.impl;
 
-import com.alkemy.java.dto.UserDto;
+import com.alkemy.java.dto.UserDtoRequest;
+import com.alkemy.java.dto.UserDtoResponse;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,33 +20,43 @@ import java.util.Locale;
 @Service
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
     UserRepository userRepository;
 
-    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
     private MessageSource messageSource;
 
-    @Autowired
+
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private ModelMapper mapper;
 
+    @Value("error.email.registered")
+    private String errorPath;
 
-    @Value("${error.email.registered}")
-    private String accessKey;
 
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           MessageSource messageSource,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           ModelMapper mapper) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.messageSource = messageSource;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.mapper = mapper;
+    }
 
     @Override
-    public UserDto registerUser(UserDto userDto) {
+    public UserDtoResponse registerUser(UserDtoRequest userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
-            throw new RuntimeException(messageSource.getMessage(accessKey, null, Locale.getDefault()));
+            throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
         User user = mapToEntity(userDto);
         user.setCreationDate(new Date());
@@ -56,14 +65,15 @@ public class UserServiceImpl implements IUserService {
 
         user.setPhoto("url1");
         User newUser = userRepository.save(user);
-        return mapToDTO(newUser);
+
+        return UserDtoResponse.userToDto(newUser);
     }
 
-    private UserDto mapToDTO(User user) {
-        return mapper.map(user, UserDto.class);
+    private UserDtoRequest mapToDTO(User user) {
+        return mapper.map(user, UserDtoRequest.class);
     }
 
-    private User mapToEntity(UserDto userDto) {
+    private User mapToEntity(UserDtoRequest userDto) {
         return mapper.map(userDto, User.class);
     }
 
