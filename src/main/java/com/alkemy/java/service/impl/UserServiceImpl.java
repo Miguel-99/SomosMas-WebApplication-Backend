@@ -39,15 +39,10 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private ModelMapper mapper;
 
-
-    @Value("${error.email.registered}")
-    private String accessKey;
-
-
     @Override
     public UserDto registerUser(UserDto userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
-            throw new RuntimeException(messageSource.getMessage(accessKey, null, Locale.getDefault()));
+            throw new RuntimeException(messageSource.getMessage("accessKey", null, Locale.getDefault()));
 
         User user = mapToEntity(userDto);
         user.setCreationDate(new Date());
