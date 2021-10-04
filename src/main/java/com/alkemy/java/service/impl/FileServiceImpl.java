@@ -31,6 +31,9 @@ public class FileServiceImpl implements IFileService {
     @Value("${amazonProperties.endpointUrl}")
     private String endpointUrl;
 
+    @Value("error.match.file.url")
+    private String errorMatchFileUrl;
+
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
         File mainFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
@@ -75,7 +78,7 @@ public class FileServiceImpl implements IFileService {
                 S3Object object = amazonS3.getObject(bucketName, file);
                 return object.getObjectContent();
             }
-            throw new FileNotFoundException("File url dont matches with any object in the bucket");
+            throw new FileNotFoundException(errorMatchFileUrl);
 
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -90,7 +93,7 @@ public class FileServiceImpl implements IFileService {
                 amazonS3.deleteObject(bucketName, file);
                 return "Successfully deleted";
             }
-            throw new FileNotFoundException("File url dont matches with any object in the bucket");
+            throw new FileNotFoundException(errorMatchFileUrl);
 
         } catch (SdkClientException e) {
             throw new SdkClientException(e.getMessage());

@@ -13,6 +13,7 @@ import com.alkemy.java.repository.OrganizationRepository;
 import com.alkemy.java.service.IOrganizationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,12 @@ public class OrganizationServiceImpl implements IOrganizationService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Value("error.organization.dont.exist")
+    private String errorOrganizationDontExist;
+
+    @Value("error.organization.eliminated")
+    private String errorOrganizationEliminated;
 
     @Override
     public OrganizationDto findById(Long id) {
@@ -44,10 +51,10 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private void removedVerification(Long idOrg) throws NotFoundException, RemovedException {
 
         Organization organization =  organizationRepository.findById(idOrg)
-                .orElseThrow(() -> new NotFoundException("Organization doesn't exist."));
+                .orElseThrow(() -> new NotFoundException(errorOrganizationDontExist));
 
         if(organization.getDeleted()){
-            throw new RemovedException("The organization is eliminated.");
+            throw new RemovedException(errorOrganizationEliminated);
         }
     }
 

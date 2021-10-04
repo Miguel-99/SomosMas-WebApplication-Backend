@@ -26,18 +26,14 @@ public class UserServiceImpl implements IUserService {
 
     private MessageSource messageSource;
 
-
     private PasswordEncoder passwordEncoder;
-
 
     private AuthenticationManager authenticationManager;
 
     private ModelMapper mapper;
 
-
     @Value("error.email.registered")
     private String errorPath;
-
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
