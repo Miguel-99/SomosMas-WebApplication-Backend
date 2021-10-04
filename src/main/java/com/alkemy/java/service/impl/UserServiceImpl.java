@@ -50,13 +50,11 @@ public class UserServiceImpl implements IUserService {
         this.mapper = mapper;
     }
 
-
     @Override
     public UserDtoResponse registerUser(UserDtoRequest userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
 
-            throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
-
+            throw new RuntimeException(errorPath);
 
         User user = mapToEntity(userDto);
         user.setCreationDate(new Date());
@@ -76,6 +74,4 @@ public class UserServiceImpl implements IUserService {
     private User mapToEntity(UserDtoRequest userDto) {
         return mapper.map(userDto, User.class);
     }
-
-
 }
