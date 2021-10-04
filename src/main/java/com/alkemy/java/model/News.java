@@ -31,10 +31,10 @@ public class News {
     @Column(length = 100)
     private String name;
 
-    @NotNull(message = "Field name should not be null or empty")
+    @NotNull(message = "Field content should not be null or empty")
     private String content;
 
-    @NotNull(message = "Field name should not be null or empty")
+    @NotNull(message = "Field image should not be null or empty")
     private String image;
 
     @Column(name = "creation_date")

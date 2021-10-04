@@ -8,15 +8,29 @@ import com.alkemy.java.service.IOrganizationService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alkemy.java.repository.OrganizationRepository;
+import com.alkemy.java.dto.OrganizationDto;
+import com.alkemy.java.repository.OrganizationRepository;
+import com.alkemy.java.service.IOrganizationService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrganizationServiceImpl implements IOrganizationService {
 
     @Autowired
-    OrganizationRepository organizationRepository;
+    private OrganizationRepository organizationRepository;
 
+    @Override
+    public OrganizationDto findById(Long id) {
+        boolean organizationExists = organizationRepository.existsById(id);
+        if (!organizationExists)
+            return null;
 
+        ModelMapper modelMapper = new ModelMapper();
+        Organization organization = organizationRepository.getOne(id);
+        return modelMapper.map(organization, OrganizationDto.class);
+    }
     @Override
     public void setContactFields(ContactFieldsDto contactFieldsDto) throws NotFoundException, RemovedException {
 

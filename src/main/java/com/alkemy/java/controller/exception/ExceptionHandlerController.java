@@ -2,6 +2,7 @@ package com.alkemy.java.controller.exception;
 
 import com.alkemy.java.dto.ErrorMessageDto;
 import javassist.NotFoundException;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,5 +30,11 @@ public class ExceptionHandlerController {
                 .exception("NotFoundException")
                 .message(exception.getMessage())
                 .build());
+    }
+
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
+        return new ErrorMessageDto(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage());
     }
 }
