@@ -1,0 +1,40 @@
+package com.alkemy.java.service.impl;
+
+import com.alkemy.java.dto.ContactFieldsDto;
+import com.alkemy.java.exception.RemovedException;
+import com.alkemy.java.model.Organization;
+
+import com.alkemy.java.service.IOrganizationService;
+import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.alkemy.java.repository.OrganizationRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OrganizationServiceImpl implements IOrganizationService {
+
+    @Autowired
+    OrganizationRepository organizationRepository;
+
+
+    @Override
+    public void setContactFields(ContactFieldsDto contactFieldsDto) throws NotFoundException, RemovedException {
+
+        removedVerification(contactFieldsDto.getId());
+
+        organizationRepository.setContactInfoById(contactFieldsDto.getLinkedinUrl(),
+                contactFieldsDto.getFacebookUrl(),
+                contactFieldsDto.getInstagramUrl(),
+                contactFieldsDto.getId());
+    }
+    private void removedVerification(Long idOrg) throws NotFoundException, RemovedException {
+
+        Organization organization =  organizationRepository.findById(idOrg)
+                .orElseThrow(() -> new NotFoundException("Organization doesn't exist."));
+
+        if(organization.getDeleted()){
+            throw new RemovedException("The organization is eliminated.");
+        }
+    }
+
+}

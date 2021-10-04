@@ -10,8 +10,10 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ErrorMessageDto {
     private int statusCode;
     private Date timestamp;
+    private String exception;
     private String message;
 }
