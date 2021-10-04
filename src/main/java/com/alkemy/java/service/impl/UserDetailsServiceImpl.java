@@ -2,6 +2,7 @@ package com.alkemy.java.service.impl;
 
 import com.alkemy.java.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
             userBuilder = User.withUsername(email);
             userBuilder.disabled(false);
             userBuilder.password(user.getPassword());
+            userBuilder.authorities(new SimpleGrantedAuthority("ROL_USER"));
         } else {
             throw new UsernameNotFoundException("Unregistered user");
         }
