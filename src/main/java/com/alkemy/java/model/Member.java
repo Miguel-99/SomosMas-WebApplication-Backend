@@ -1,21 +1,25 @@
 package com.alkemy.java.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE members SET deleted = true WHERE id=?")
+@Where(clause = " deleted = false ")
 @Table(name = "Members")
 public class Member{
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-@Column(name = "id_member")
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name")
-    @NotNull
+    @NotEmpty(message = "This field cannot be null or empty!")
     private String name;
 
     @Column(name = "facebook_url")
@@ -27,29 +31,18 @@ public class Member{
     @Column(name = "linkedin_url")
     private String linkedinUrl;
 
-    @Column(name = "image")
-    @NotNull
+    @NotEmpty(message = "This field cannot be null or empty!")
     private String image;
 
-    @Column(name = "description")
     private String description;
 
     @Column(name = "created_Date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date createdDate;
+
     @Column(name = "update_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date updateDate;
-    @Column(name = "soft_delete")
-    private boolean softDelete;
 
-    @PrePersist
-    public void prePersist(){
-        this.createdDate = new Date();
-    }
-
-    @PreUpdate
-    public void preUpdate(){
-        this.updateDate = new Date();
-    }
+    private boolean deleted = Boolean.FALSE;
 }
