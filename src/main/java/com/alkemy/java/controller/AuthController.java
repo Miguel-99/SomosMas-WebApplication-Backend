@@ -44,6 +44,7 @@ public class AuthController {
     @PostMapping("/authentication")
     public ResponseEntity<?> createAuthentication(@RequestBody AuthenticationRequestDto authenticationRequest) throws Exception{
         try{
+            // en la funcion de abajo es donde salta el error de autentificacion, no matchea correctamente con lo que le dan y lo que esta en la BD
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
