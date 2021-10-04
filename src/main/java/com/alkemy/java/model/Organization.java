@@ -25,7 +25,6 @@ import java.util.List;
 public class Organization {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_organization")
     private Long id;
 
     @NotEmpty(message = "This field cannot be null or empty!")

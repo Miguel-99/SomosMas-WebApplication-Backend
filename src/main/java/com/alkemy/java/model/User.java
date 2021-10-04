@@ -23,8 +23,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
-    private Integer id;
+    private Long id;
 
     @NotNull(message = "Field first name should not be null or empty!")
     @Column(name = "first_name")
@@ -47,7 +46,7 @@ public class User {
     private String photo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_role", referencedColumnName = "id_role")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @Column(name = "deleted")
@@ -58,8 +57,6 @@ public class User {
 
     @Column(name = "last_update")
     private Date lastUpdate;
-
-
 
 
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 @RestControllerAdvice
@@ -35,6 +35,6 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = ResourceNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
-        return new ErrorMessageDto(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage());
+        return new ErrorMessageDto(HttpStatus.NOT_FOUND.value(), new Date(),"ResourceNotFoundException", ex.getMessage());
     }
 }

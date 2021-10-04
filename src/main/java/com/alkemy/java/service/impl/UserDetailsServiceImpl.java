@@ -16,12 +16,12 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.alkemy.java.model.User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        com.alkemy.java.model.User user = userRepository.findByEmail(email);
         UserBuilder userBuilder = null;
 
         if (user != null) {
-            userBuilder = User.withUsername(username);
+            userBuilder = User.withUsername(email);
             userBuilder.disabled(false);
             userBuilder.password(user.getPassword());
         } else {

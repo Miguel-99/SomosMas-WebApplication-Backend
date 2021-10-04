@@ -29,7 +29,6 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_role")
     private Long id;
 
     @NotEmpty(message = "Field name should not be null or empty")
