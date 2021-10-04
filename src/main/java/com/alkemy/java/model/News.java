@@ -18,8 +18,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Data @NoArgsConstructor @AllArgsConstructor
-@Entity @Table(name = "news")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "news")
 @SQLDelete(sql = "UPDATE news SET deleted = true WHERE id=?")
 @Where(clause = " deleted = false")
 public class News {
@@ -31,10 +34,10 @@ public class News {
     @Column(length = 100)
     private String name;
 
-    @NotNull(message = "Field name should not be null or empty")
+    @NotNull(message = "Field content should not be null or empty")
     private String content;
 
-    @NotNull(message = "Field name should not be null or empty")
+    @NotNull(message = "Field image should not be null or empty")
     private String image;
 
     @Column(name = "creation_date")
@@ -43,7 +46,7 @@ public class News {
     @Column(name = "update_date")
     private Date updateDate;
 
-    private Boolean deleted;
+    private Boolean deleted = Boolean.FALSE;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_category")

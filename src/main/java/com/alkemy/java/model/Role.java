@@ -9,6 +9,16 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.util.Date;
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -32,5 +42,7 @@ public class Role {
     @Column(name = "last_update")
     private Date updateDate;
 
+    @OneToMany(mappedBy = "role")
+    private List<User> userList;
 
 }

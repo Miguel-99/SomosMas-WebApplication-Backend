@@ -1,7 +1,11 @@
 package com.alkemy.java;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,4 +23,15 @@ public class JavaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JavaApplication.class, args);
 	}
+
+
+	@Bean
+	public ModelMapper modelMapper(){
+		return new ModelMapper();
+	}
+	@Bean
+	public ProjectionFactory projectionFactory() {
+		return new SpelAwareProxyProjectionFactory();
+	}
+
 }
