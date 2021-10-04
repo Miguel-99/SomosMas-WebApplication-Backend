@@ -34,6 +34,9 @@ public class FileServiceImpl implements IFileService {
     @Value("error.match.file.url")
     private String errorMatchFileUrl;
 
+    @Value("error.success.deleted")
+    private String errorSuccessDeleted;
+
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
         File mainFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
@@ -91,7 +94,7 @@ public class FileServiceImpl implements IFileService {
         try {
             if(amazonS3.doesObjectExist(bucketName, file)){
                 amazonS3.deleteObject(bucketName, file);
-                return "Successfully deleted";
+                return errorSuccessDeleted;
             }
             throw new FileNotFoundException(errorMatchFileUrl);
 
