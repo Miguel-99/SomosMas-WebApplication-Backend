@@ -34,6 +34,7 @@ public class UserServiceImpl implements IUserService {
 
     private ModelMapper mapper;
 
+
     @Value("error.email.registered")
     private String errorPath;
 
@@ -53,10 +54,13 @@ public class UserServiceImpl implements IUserService {
         this.mapper = mapper;
     }
 
+
     @Override
     public UserDtoResponse registerUser(UserDtoRequest userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
+
             throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
+
 
         User user = mapToEntity(userDto);
         user.setCreationDate(new Date());
