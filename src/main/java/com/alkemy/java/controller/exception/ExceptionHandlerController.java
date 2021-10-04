@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Date;
 
+import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
 import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
 
 @RestControllerAdvice
@@ -28,7 +29,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorMessageDto.builder()
                 .timestamp(new Date())
-                .exception("NotFoundException")
+                .exception(NOT_FOUND)
                 .message(exception.getMessage())
                 .build());
     }
