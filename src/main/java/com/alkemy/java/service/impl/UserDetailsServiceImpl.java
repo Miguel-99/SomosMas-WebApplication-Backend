@@ -1,5 +1,6 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.model.UserDetail;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.util.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         } else {
             throw new UsernameNotFoundException(errorUserUnregister);
         }
-        return userBuilder.build();
+        //return userBuilder.build();
+        return new UserDetail(userRepository.findByEmail(email));
     }
 }
