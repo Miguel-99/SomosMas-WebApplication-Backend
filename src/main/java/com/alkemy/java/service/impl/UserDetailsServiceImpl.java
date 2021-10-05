@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
             userBuilder = User.withUsername(email);
             userBuilder.disabled(false);
             userBuilder.password(user.getPassword());
-            userBuilder.authorities(new SimpleGrantedAuthority("ROLE_" + Roles.CLIENT));
+            userBuilder.authorities(new SimpleGrantedAuthority(/*"ROLE_" + Roles.CLIENT*/ user.getRole().getName().toUpperCase()));
         } else {
             throw new UsernameNotFoundException(errorUserUnregister);
         }
