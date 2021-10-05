@@ -74,6 +74,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        /*
+         httpSecurity.csrf().disable().authorizeRequests()
+         .antMatchers(HttpMethod.GET, "/news").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+         .anyRequest().authenticated()
+         .and().sessionManagement()
+         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+         .and().exceptionHandling();
+         */
     }
 
 
