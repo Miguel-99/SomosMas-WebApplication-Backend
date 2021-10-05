@@ -53,10 +53,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDtoResponse registerUser(UserDtoRequest userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
-
-            throw new RuntimeException(errorPath);
+            throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
         User user = mapToEntity(userDto);
+
         user.setCreationDate(new Date());
         user.setLastUpdate(new Date());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
