@@ -3,27 +3,37 @@ package com.alkemy.java.controller.exception;
 import com.alkemy.java.dto.ErrorMessageDto;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
 import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
 
 @RestControllerAdvice
-public class ExceptionHandlerController {
+public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = UsernameNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessageDto usernameNotFoundException(UsernameNotFoundException ex) {
         return new ErrorMessageDto(new Date(), USERNAME_NOT_FOUND, ex.getMessage());
     }
+
+
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException exception){
 
@@ -39,4 +49,22 @@ public class ExceptionHandlerController {
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
         return new ErrorMessageDto(new Date(),"ResourceNotFoundException", ex.getMessage());
     }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        Map<String,String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error)->{
+            String field =((FieldError) error).getField();
+            String message=error.getDefaultMessage();
+            errors.put(field,message);
+        });
+        return new ResponseEntity<Object>(errors,HttpStatus.BAD_REQUEST);
+
+    }
+
+
+
 }
