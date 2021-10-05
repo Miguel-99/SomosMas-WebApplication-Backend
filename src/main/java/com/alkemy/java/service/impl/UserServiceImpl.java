@@ -3,6 +3,7 @@ package com.alkemy.java.service.impl;
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
 import com.alkemy.java.model.User;
+import com.alkemy.java.repository.RoleRepository;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
 import org.modelmapper.ModelMapper;
@@ -32,6 +33,8 @@ public class UserServiceImpl implements IUserService {
 
     private ModelMapper mapper;
 
+    private RoleRepository roleRepository;
+
     @Value("error.email.registered")
     private String errorPath;
 
@@ -41,13 +44,15 @@ public class UserServiceImpl implements IUserService {
                            MessageSource messageSource,
                            PasswordEncoder passwordEncoder,
                            AuthenticationManager authenticationManager,
-                           ModelMapper mapper) {
+                           ModelMapper mapper,
+                           RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.messageSource = messageSource;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.mapper = mapper;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -60,8 +65,8 @@ public class UserServiceImpl implements IUserService {
         user.setCreationDate(new Date());
         user.setLastUpdate(new Date());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
         user.setPhoto("url1");
+        user.setRole(roleRepository.findById(userDto.getIdRole()).get());
         User newUser = userRepository.save(user);
 
         return UserDtoResponse.userToDto(newUser);
