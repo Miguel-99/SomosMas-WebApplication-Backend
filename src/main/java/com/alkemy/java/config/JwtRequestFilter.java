@@ -32,9 +32,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
         final String authorizationHeader = request.getHeader(HEADER);
-        boolean contain = authorizationHeader.startsWith(PREFIX);
 
-        if(authorizationHeader != null && contain){
+        boolean contain = false;
+        if(authorizationHeader != null ){
+            contain = authorizationHeader.startsWith(PREFIX);
+        }
+
+        if(contain){
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }
@@ -50,5 +54,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+
     }
 }
