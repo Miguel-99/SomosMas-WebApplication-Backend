@@ -22,7 +22,6 @@ public class UserDtoResponse {
 
     private String lastName;
 
-    @Email
     private String email;
 
     public static UserDtoResponse userToDto(User user) {
