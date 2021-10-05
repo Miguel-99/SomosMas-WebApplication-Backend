@@ -14,6 +14,7 @@ public class RoleServiceImpl implements IRoleService {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
     private ModelMapper mapper;
 
     public RoleServiceImpl(RoleRepository roleRepository) {
