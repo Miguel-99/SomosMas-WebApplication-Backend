@@ -27,6 +27,7 @@ public class UserDtoRequest {
     @Size(min = 8, max = 20)
     private String password;
 
+    @NotEmpty(message = "Field idRole should not be null or empty")
     private Long idRole;
 
 }
