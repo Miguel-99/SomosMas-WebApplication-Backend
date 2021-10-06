@@ -89,6 +89,7 @@ public class UserServiceImpl implements IUserService {
         return mapper.map(userDto, User.class);
     }
 
+    @Override
     public boolean validedRole(Long id, String token) {
 
         String email = jwtUtil.extractUsername(token);
