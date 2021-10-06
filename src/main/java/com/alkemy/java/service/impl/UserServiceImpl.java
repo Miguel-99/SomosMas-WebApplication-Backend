@@ -91,11 +91,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean validedRole(Long id, String token) {
-
+        final String ADMIN = "ROLE_ADMIN";
         String email = jwtUtil.extractUsername(token);
         User user = userRepository.findByEmail(email);
 
-        if (!(user.getId().equals(id) || user.getRole().getName().equals("ROLE_ADMIN")) ) {
+        if (!(user.getId().equals(id) || user.getRole().getName().equals(ADMIN)) ) {
             throw new ForbiddenException(messageSource.getMessage(errorForbiddenUser, null, Locale.getDefault()));
         }
         return true;
