@@ -44,8 +44,7 @@ public class ExceptionHandlerController {
     
     @ExceptionHandler (value = ForbiddenException.class)
     @ResponseStatus (value = HttpStatus.FORBIDDEN)
-     protected ErrorMessageDto handleException(ForbiddenException ex) {
-    
+    public ErrorMessageDto handleException(ForbiddenException ex) {
     return new ErrorMessageDto (new Date(),"ForbiddenException",ex.getMessage());
   }
 }   
