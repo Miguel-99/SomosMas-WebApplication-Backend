@@ -2,11 +2,12 @@ package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
+import com.alkemy.java.exception.ForbiddenException;
 import com.alkemy.java.model.User;
-import com.alkemy.java.model.UserDetail;
 import com.alkemy.java.repository.RoleRepository;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
+import com.alkemy.java.util.JwtUtil;
 import org.apache.maven.artifact.repository.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Locale;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -45,9 +47,13 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private JwtUtil jwtUtil; 
 
     @Value("error.email.registered")
     private String errorPath;
+    @Value("error.service.user.forbidden")
+    private String errorForbidden;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -91,12 +97,14 @@ public class UserServiceImpl implements IUserService {
         return mapper.map(userDto, User.class);
     }
 
-    public boolean validedRole(Long id, UserDetail userito) {
-
-        User user = userRepository.findByEmail(userito.getUsername());
-        if (user.getId().equals(id) || user.getRole().getName().equals("ROLE_USER") ){
-            return true;
+    public boolean validedRole(Long id, String token) {
+        String email = jwtUtil.extractUsername(token);
+           
+        User user = userRepository.findByEmail(email);
+        
+        if (!(user.getId().equals(id) || user.getRole().getName().equals("ROLE_ADMIN")) ) {
+            throw new ForbiddenException(errorForbidden);
         }
-        return false;
+        return true;
     }
 }

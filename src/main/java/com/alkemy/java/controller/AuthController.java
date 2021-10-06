@@ -4,7 +4,7 @@ import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.AuthenticationRequestDto;
 import com.alkemy.java.dto.AuthenticationResponseDto;
 import com.alkemy.java.model.User;
-import com.alkemy.java.model.UserDetail;
+import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.impl.UserDetailsServiceImpl;
 import com.alkemy.java.service.impl.UserServiceImpl;
 import com.alkemy.java.util.JwtUtil;
@@ -39,6 +39,7 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+
     @Value("error.username.password.incorrect")
     private String errorUsernamePasswordIncorrect;
 
@@ -64,12 +65,13 @@ public class AuthController {
         return new ResponseEntity<>(userService.registerUser(userDtoRequest), HttpStatus.CREATED);
     }
 
-    @GetMapping ("/{id}")
-    public boolean listUsers (@PathVariable Long id, @AuthenticationPrincipal UserDetail user){
-        if (userService.validedRole(id,user)){
-            return true;
-        }
-        return false;
-    }
+//    Codigo de prueba para traer token y validad ROl y ID
+//    @GetMapping ("/{id}")
+//    public boolean validedUsers (@PathVariable Long id,
+//                               @RequestHeader(name = "Authorization", required = true) String token){
+//        
+//        
+//        return userService.validedRole(id,token);
+//    }
 
 }

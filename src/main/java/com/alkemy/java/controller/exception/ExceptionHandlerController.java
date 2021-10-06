@@ -1,6 +1,7 @@
 package com.alkemy.java.controller.exception;
 
 import com.alkemy.java.dto.ErrorMessageDto;
+import com.alkemy.java.exception.ForbiddenException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class ExceptionHandlerController {
     public ErrorMessageDto usernameNotFoundException(UsernameNotFoundException ex) {
         return new ErrorMessageDto(new Date(), USERNAME_NOT_FOUND, ex.getMessage());
     }
+    
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException exception){
 
@@ -39,4 +41,12 @@ public class ExceptionHandlerController {
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
         return new ErrorMessageDto(new Date(),"ResourceNotFoundException", ex.getMessage());
     }
-}
+    
+    @ExceptionHandler (value = ForbiddenException.class)
+    @ResponseStatus (value = HttpStatus.FORBIDDEN)
+     protected ErrorMessageDto handleException(ForbiddenException ex) {
+    
+    return new ErrorMessageDto (new Date(),"ForbiddenException",ex.getMessage());
+  }
+}   
+ 
