@@ -65,9 +65,6 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody UserDtoRequest userDtoRequest) {
 
-        if (emptyRequest(userDtoRequest) != null) return emptyRequest(userDtoRequest);
-
-
         UserDtoResponse response =userService.registerUser(userDtoRequest);
 
 
@@ -87,15 +84,6 @@ public class AuthController {
 
     }
 
-    private ResponseEntity<Object> emptyRequest(@Valid @RequestBody UserDtoRequest userDtoRequest) {
-        if (userDtoRequest.getFirstName().isEmpty()  || userDtoRequest.getLastName().isEmpty()
-                || userDtoRequest.getEmail().isEmpty() || userDtoRequest.getPassword().isEmpty()) {
-            return new ResponseEntity<>(new ResponseDto(messageSource.getMessage
-                    (errorUsernamePasswordIncorrect,null, Locale.getDefault())),
-                    HttpStatus.BAD_REQUEST);
-        }
-        return null;
-    }
 
 
 }
