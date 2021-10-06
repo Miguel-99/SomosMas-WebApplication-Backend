@@ -8,23 +8,20 @@ import com.alkemy.java.repository.RoleRepository;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
 import com.alkemy.java.util.JwtUtil;
-import org.apache.maven.artifact.repository.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Locale;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Service
+@PropertySource("classpath:messages/error.properties")
 public class UserServiceImpl implements IUserService {
 
     @Autowired
@@ -34,40 +31,35 @@ public class UserServiceImpl implements IUserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private ModelMapper mapper;
 
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private JwtUtil jwtUtil; 
 
-    @Value("error.email.registered")
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Value("${error.email.registered}")
     private String errorPath;
-    @Value("error.service.user.forbidden")
-    private String errorForbidden;
+
+    @Value("${error.service.user.forbidden}")
+    private String errorForbiddenUser;
+
+    @Autowired
+    MessageSource messageSource;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
-                           MessageSource messageSource,
                            PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
                            ModelMapper mapper,
                            RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.messageSource = messageSource;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
         this.mapper = mapper;
         this.roleRepository = roleRepository;
     }
@@ -98,12 +90,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     public boolean validedRole(Long id, String token) {
+
         String email = jwtUtil.extractUsername(token);
-           
         User user = userRepository.findByEmail(email);
-        
+
         if (!(user.getId().equals(id) || user.getRole().getName().equals("ROLE_ADMIN")) ) {
-            throw new ForbiddenException(errorForbidden);
+            throw new ForbiddenException(messageSource.getMessage(errorForbiddenUser, null, Locale.getDefault()));
         }
         return true;
     }
