@@ -3,20 +3,17 @@ package com.alkemy.java.controller;
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.AuthenticationRequestDto;
 import com.alkemy.java.dto.AuthenticationResponseDto;
-import com.alkemy.java.model.User;
-import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.impl.UserDetailsServiceImpl;
 import com.alkemy.java.service.impl.UserServiceImpl;
 import com.alkemy.java.util.JwtUtil;
-import org.apache.maven.artifact.repository.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,23 +22,27 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@PropertySource("classpath:messages/error.properties")
 public class AuthController {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserServiceImpl userService;
 
-    @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
     private JwtUtil jwtUtil;
 
-
-    @Value("error.username.password.incorrect")
+    @Value("${error.username.password.incorrect}")
     private String errorUsernamePasswordIncorrect;
+
+    @Autowired
+    public AuthController(AuthenticationManager authenticationManager, UserServiceImpl userService, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping("/authentication")
     public ResponseEntity<?> createAuthentication(@RequestBody AuthenticationRequestDto authenticationRequest) throws Exception{
@@ -64,14 +65,5 @@ public class AuthController {
 
         return new ResponseEntity<>(userService.registerUser(userDtoRequest), HttpStatus.CREATED);
     }
-
-//    Codigo de prueba para traer token y validad ROl y ID
-//    @GetMapping ("/{id}")
-//    public boolean validedUsers (@PathVariable Long id,
-//                               @RequestHeader(name = "Authorization", required = true) String token){
-//        
-//        
-//        return userService.validedRole(id,token);
-//    }
 
 }
