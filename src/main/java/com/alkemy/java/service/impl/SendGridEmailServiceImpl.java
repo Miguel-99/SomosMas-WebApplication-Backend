@@ -2,7 +2,6 @@ package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.EmailRequestDto;
 import com.alkemy.java.service.IEmailService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -10,15 +9,13 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Personalization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import static com.alkemy.java.util.Constants.SPACE;
+
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class SendGridEmailServiceImpl implements IEmailService {
@@ -50,7 +47,7 @@ public class SendGridEmailServiceImpl implements IEmailService {
     @Override
     public Response sendEmailWithTemplate(String to) {
 
-        Mail mail = new Mail(new Email(fromEmail), " " , new Email(to),new Content("text/html"," "));
+        Mail mail = new Mail(new Email(fromEmail), SPACE, new Email(to), new Content("text/html", SPACE));
 
         mail.setTemplateId(templateId);
 
