@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Builder
 public class RoleDto {
 
-    @NotEmpty(message = "Field lastName should not be null or empty")
+    @NotEmpty(message = "Field name should not be null or empty")
     @Size(min = 3, max = 20)
     private String name;
 }
