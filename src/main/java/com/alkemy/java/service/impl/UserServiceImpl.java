@@ -1,22 +1,26 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.UserDto;
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Locale;
-
+@Slf4j
+@PropertySource("classpath:messages/error.properties")
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -31,6 +35,9 @@ public class UserServiceImpl implements IUserService {
     private AuthenticationManager authenticationManager;
 
     private ModelMapper mapper;
+
+    @Value("${error.user.dont.exist}")
+    private String resourceNotFound;
 
     @Value("error.email.registered")
     private String errorPath;
@@ -65,6 +72,34 @@ public class UserServiceImpl implements IUserService {
         User newUser = userRepository.save(user);
 
         return UserDtoResponse.userToDto(newUser);
+    }
+
+    @Override
+    public UserDto updateUser(Long userId, UserDto userDto) {
+        boolean userExists = userRepository.existsById(userId);
+        log.info("user with id: "+ userId +" exists? " + userExists);
+        if (!userExists)
+            throw new ResourceNotFoundException(resourceNotFound);
+        User user = userRepository.getOne(userId);
+
+        if (userDto.getFirstName() != null)
+            user.setFirstName(userDto.getFirstName());
+        if (userDto.getLastName() != null)
+            user.setLastName(userDto.getLastName());
+        if (userDto.getEmail() != null)
+            user.setEmail(userDto.getEmail());
+        if (userDto.getPassword() != null)
+            user.setPassword(userDto.getPassword());
+        if (userDto.getPhoto() != null)
+            user.setPhoto(userDto.getPhoto());
+        if (userDto.getRole() != null)
+            user.setRole(userDto.getRole());
+        if (userDto.getDeleted() != null)
+            user.setDeleted(userDto.getDeleted());
+        user.setLastUpdate(new Date());
+
+        user = userRepository.save(user);
+        return mapper.map(user, UserDto.class);
     }
 
     private UserDtoRequest mapToDTO(User user) {
