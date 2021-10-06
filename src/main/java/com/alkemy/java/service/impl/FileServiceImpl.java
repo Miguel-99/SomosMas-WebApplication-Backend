@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@PropertySource("classpath:messages/error.properties")
 public class FileServiceImpl implements IFileService {
 
     @Autowired
@@ -31,10 +33,10 @@ public class FileServiceImpl implements IFileService {
     @Value("${amazonProperties.endpointUrl}")
     private String endpointUrl;
 
-    @Value("error.match.file.url")
+    @Value("${error.match.file.url}")
     private String errorMatchFileUrl;
 
-    @Value("error.success.deleted")
+    @Value("${error.success.deleted}")
     private String errorSuccessDeleted;
 
     @Override
