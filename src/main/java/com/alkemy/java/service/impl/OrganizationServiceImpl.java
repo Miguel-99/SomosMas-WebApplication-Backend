@@ -9,23 +9,22 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alkemy.java.repository.OrganizationRepository;
 import com.alkemy.java.dto.OrganizationDto;
-import com.alkemy.java.repository.OrganizationRepository;
-import com.alkemy.java.service.IOrganizationService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
+@PropertySource("classpath:messages/error.properties")
 public class OrganizationServiceImpl implements IOrganizationService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    @Value("error.organization.dont.exist")
+    @Value("${error.organization.dont.exist}")
     private String errorOrganizationDontExist;
 
-    @Value("error.organization.eliminated")
+    @Value("${error.organization.eliminated}")
     private String errorOrganizationEliminated;
 
     @Override
