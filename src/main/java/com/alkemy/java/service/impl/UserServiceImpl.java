@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.Locale;
 
 @Service
-@PropertySource("classpath:messages/error.properties")
 public class UserServiceImpl implements IUserService {
 
     @Autowired
@@ -42,10 +41,10 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Value("${error.email.registered}")
+    @Value("error.email.registered")
     private String errorPath;
 
-    @Value("${error.service.user.forbidden}")
+    @Value("error.service.user.forbidden")
     private String errorForbiddenUser;
 
     @Autowired
@@ -68,7 +67,7 @@ public class UserServiceImpl implements IUserService {
     public UserDtoResponse registerUser(UserDtoRequest userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
 
-            throw new RuntimeException(errorPath);
+            throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
         User user = mapToEntity(userDto);
         user.setCreationDate(new Date());
@@ -79,10 +78,6 @@ public class UserServiceImpl implements IUserService {
         User newUser = userRepository.save(user);
 
         return UserDtoResponse.userToDto(newUser);
-    }
-
-    private UserDtoRequest mapToDTO(User user) {
-        return mapper.map(user, UserDtoRequest.class);
     }
 
     private User mapToEntity(UserDtoRequest userDto) {
