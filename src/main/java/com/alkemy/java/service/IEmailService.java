@@ -1,9 +1,9 @@
 package com.alkemy.java.service;
 
-import com.alkemy.java.dto.EmailRequestDto;
-import com.sendgrid.Response;
+import com.alkemy.java.dto.UserDtoRequest;
 
 public interface IEmailService {
-    public Response sendSimpleEmail(EmailRequestDto emailRequestDto);
-    public Response sendEmailWithTemplate(String to);
+
+    public void sendEmailWithTemplate(UserDtoRequest user, String subject);
+
 }

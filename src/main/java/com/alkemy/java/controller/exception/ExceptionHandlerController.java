@@ -1,6 +1,7 @@
 package com.alkemy.java.controller.exception;
 
 import com.alkemy.java.dto.ErrorMessageDto;
+import com.alkemy.java.exception.EmailNotSentException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
-import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
+import static com.alkemy.java.util.Constants.*;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -31,8 +31,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto usernameNotFoundException(UsernameNotFoundException ex) {
         return new ErrorMessageDto(new Date(), USERNAME_NOT_FOUND, ex.getMessage());
     }
-
-
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException exception){
@@ -65,6 +63,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     }
 
-
+    @ExceptionHandler(value = EmailNotSentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessageDto emailNotSendException(EmailNotSentException ex) {
+        return new ErrorMessageDto(new Date(), EMAIL_NOT_SENT, ex.getMessage());
+    }
 
 }

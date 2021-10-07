@@ -4,11 +4,13 @@ import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.UserRepository;
+import com.alkemy.java.service.IEmailService;
 import com.alkemy.java.service.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @Service
+@PropertySource("classpath:messages/messages.properties")
 public class UserServiceImpl implements IUserService {
 
     UserRepository userRepository;
@@ -34,6 +37,12 @@ public class UserServiceImpl implements IUserService {
 
     @Value("error.email.registered")
     private String errorPath;
+
+    @Value("${sendgrid.subject.welcome}")
+    private String welcome;
+
+    @Autowired
+    IEmailService emailService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -63,6 +72,8 @@ public class UserServiceImpl implements IUserService {
 
         user.setPhoto("url1");
         User newUser = userRepository.save(user);
+
+        emailService.sendEmailWithTemplate(userDto,welcome);
 
         return UserDtoResponse.userToDto(newUser);
     }
