@@ -11,17 +11,18 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@PropertySource("classpath:messages/error.properties")
 public class FileServiceImpl implements IFileService {
 
     @Autowired
@@ -33,11 +34,14 @@ public class FileServiceImpl implements IFileService {
     @Value("${amazonProperties.endpointUrl}")
     private String endpointUrl;
 
-    @Value("${error.match.file.url}")
+    @Value("error.match.file.url")
     private String errorMatchFileUrl;
 
-    @Value("${error.success.deleted}")
+    @Value("error.success.deleted")
     private String errorSuccessDeleted;
+
+    @Autowired
+    MessageSource messageSource;
 
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
@@ -83,7 +87,7 @@ public class FileServiceImpl implements IFileService {
                 S3Object object = amazonS3.getObject(bucketName, file);
                 return object.getObjectContent();
             }
-            throw new FileNotFoundException(errorMatchFileUrl);
+            throw new FileNotFoundException(messageSource.getMessage(errorMatchFileUrl, null, Locale.getDefault()));
 
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -96,9 +100,9 @@ public class FileServiceImpl implements IFileService {
         try {
             if(amazonS3.doesObjectExist(bucketName, file)){
                 amazonS3.deleteObject(bucketName, file);
-                return errorSuccessDeleted;
+                return messageSource.getMessage(errorSuccessDeleted, null, Locale.getDefault());
             }
-            throw new FileNotFoundException(errorMatchFileUrl);
+            throw new FileNotFoundException(messageSource.getMessage(errorMatchFileUrl, null, Locale.getDefault()));
 
         } catch (SdkClientException e) {
             throw new SdkClientException(e.getMessage());
