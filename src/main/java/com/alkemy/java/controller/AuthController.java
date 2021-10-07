@@ -1,6 +1,7 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.*;
+import com.alkemy.java.service.IUserService;
 import com.alkemy.java.service.impl.UserDetailsServiceImpl;
 import com.alkemy.java.service.impl.UserServiceImpl;
 import com.alkemy.java.util.JwtUtil;
@@ -15,10 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Locale;
@@ -32,10 +31,10 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserServiceImpl userService;
+    private IUserService userService;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -84,6 +83,8 @@ public class AuthController {
 
     }
 
-
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getUserInformation (@PathVariable Long id, @RequestHeader(name = "Authorization", required = true) String token){
+        return new ResponseEntity<>(userService.getUserInformation(id, token), HttpStatus.OK);
+    }
 }
