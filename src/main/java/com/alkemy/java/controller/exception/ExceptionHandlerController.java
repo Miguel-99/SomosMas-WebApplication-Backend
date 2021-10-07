@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Date;
 
-import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
-import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
+import static com.alkemy.java.util.ExceptionConstant.*;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {
@@ -39,13 +38,13 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = ResourceNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
-        return new ErrorMessageDto(new Date(),"ResourceNotFoundException", ex.getMessage());
+        return new ErrorMessageDto(new Date(),RESOURCE_NOT_FOUND, ex.getMessage());
     }
     
     @ExceptionHandler (value = ForbiddenException.class)
     @ResponseStatus (value = HttpStatus.FORBIDDEN)
-    public ErrorMessageDto handleException(ForbiddenException ex) {
-    return new ErrorMessageDto (new Date(),"ForbiddenException",ex.getMessage());
+    public ErrorMessageDto forbiddenException(ForbiddenException ex) {
+    return new ErrorMessageDto (new Date(),FORBIDDEN,ex.getMessage());
   }
 }   
  
