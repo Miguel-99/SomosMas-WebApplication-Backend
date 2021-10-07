@@ -11,21 +11,26 @@ import com.alkemy.java.repository.OrganizationRepository;
 import com.alkemy.java.dto.OrganizationDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
+
 @Service
-@PropertySource("classpath:messages/error.properties")
 public class OrganizationServiceImpl implements IOrganizationService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    @Value("${error.organization.dont.exist}")
+    @Value("error.organization.dont.exist")
     private String errorOrganizationDontExist;
 
-    @Value("${error.organization.eliminated}")
+    @Value("error.organization.eliminated")
     private String errorOrganizationEliminated;
+
+    @Autowired
+    MessageSource messageSource;
 
     @Override
     public OrganizationDto findById(Long id) {
@@ -50,10 +55,10 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private void removedVerification(Long idOrg) throws NotFoundException, RemovedException {
 
         Organization organization =  organizationRepository.findById(idOrg)
-                .orElseThrow(() -> new NotFoundException(errorOrganizationDontExist));
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage(errorOrganizationDontExist, null, Locale.getDefault())));
 
         if(organization.getDeleted()){
-            throw new RemovedException(errorOrganizationEliminated);
+            throw new RemovedException(messageSource.getMessage(errorOrganizationEliminated, null, Locale.getDefault()));
         }
     }
 
