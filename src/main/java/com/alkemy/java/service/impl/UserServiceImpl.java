@@ -64,17 +64,16 @@ public class UserServiceImpl implements IUserService {
         if (userRepository.findByEmail(userDto.getEmail()) != null)
             throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
-        User user = mapToEntity(userDto);
-
+        User user = new User();
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
         user.setCreationDate(new Date());
         user.setLastUpdate(new Date());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
         user.setPhoto("url1");
+        user.setRole(roleRepository.findById(userDto.getIdRole()).get());
         User newUser = userRepository.save(user);
-
-        emailService.sendEmailWithTemplate(userDto,welcome);
-
         return UserDtoResponse.userToDto(newUser);
     }
 
@@ -84,5 +83,16 @@ public class UserServiceImpl implements IUserService {
 
     private User mapToEntity(UserDtoRequest userDto) {
         return mapper.map(userDto, User.class);
+    }
+
+    @Override
+    public UserDtoResponse getUserInformation(Long id, String token){
+        if(validedRole(id,token)){
+            String email = jwtUtil.extractUsername(token);
+            User user = userRepository.findByEmail(email);
+            return UserDtoResponse.userToDto(user);
+        } else {
+            throw new ForbiddenException(messageSource.getMessage(errorForbiddenUser, null, Locale.getDefault()));
+        }
     }
 }
