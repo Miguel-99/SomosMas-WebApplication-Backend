@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
 import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
@@ -24,6 +25,7 @@ public class ExceptionHandlerController {
     public ErrorMessageDto usernameNotFoundException(UsernameNotFoundException ex) {
         return new ErrorMessageDto(new Date(), USERNAME_NOT_FOUND, ex.getMessage());
     }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException exception){
 
@@ -39,4 +41,12 @@ public class ExceptionHandlerController {
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
         return new ErrorMessageDto(new Date(),"ResourceNotFoundException", ex.getMessage());
     }
+
+
+    @ExceptionHandler
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    protected ErrorMessageDto noSuchElementException(NoSuchElementException ex) {
+        return new ErrorMessageDto(new Date(), "NoSuchElementException", ex.getMessage());
+    }
+
 }
