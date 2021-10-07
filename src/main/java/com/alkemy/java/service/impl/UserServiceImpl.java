@@ -86,11 +86,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
-        boolean userExists = userRepository.existsById(userId);
-        log.info("user with id: "+ userId +" exists? " + userExists);
-        if (!userExists)
-            throw new ResourceNotFoundException(resourceNotFound);
-        User user = userRepository.getOne(userId);
+        User user = userRepository.findById(userId).orElseThrow( () ->
+                new ResourceNotFoundException(resourceNotFound));
 
         if (userDto.getFirstName() != null)
             user.setFirstName(userDto.getFirstName());
