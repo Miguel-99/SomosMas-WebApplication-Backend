@@ -2,6 +2,7 @@ package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.ContactFieldsDto;
 import com.alkemy.java.dto.OrganizationDto;
+import com.alkemy.java.service.IOrganizationService;
 import com.alkemy.java.service.impl.OrganizationServiceImpl;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizationController {
 
     @Autowired
-    OrganizationServiceImpl organizationService;
+    IOrganizationService organizationService;
 
 
     @PatchMapping("/contact")
