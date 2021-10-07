@@ -8,6 +8,7 @@ import com.alkemy.java.service.impl.UserServiceImpl;
 import com.alkemy.java.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 
 @RestController
 @RequestMapping("/auth")
-@PropertySource("classpath:messages/error.properties")
 public class AuthController {
 
     private AuthenticationManager authenticationManager;
@@ -33,8 +34,11 @@ public class AuthController {
 
     private JwtUtil jwtUtil;
 
-    @Value("${error.username.password.incorrect}")
+    @Value("error.username.password.incorrect")
     private String errorUsernamePasswordIncorrect;
+
+    @Autowired
+    MessageSource messageSource;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserServiceImpl userService, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
@@ -49,7 +53,7 @@ public class AuthController {
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new Exception(errorUsernamePasswordIncorrect, e);
+            throw new Exception(messageSource.getMessage(errorUsernamePasswordIncorrect, null, Locale.getDefault()), e);
         }
         try{
             UserDetails user = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
@@ -65,5 +69,4 @@ public class AuthController {
 
         return new ResponseEntity<>(userService.registerUser(userDtoRequest), HttpStatus.CREATED);
     }
-
 }
