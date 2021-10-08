@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Locale;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +24,8 @@ public class UserDtoResponse {
     private String lastName;
 
     private String email;
+
+    private String idRole;
 
     private String role;
 

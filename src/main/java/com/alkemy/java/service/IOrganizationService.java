@@ -7,6 +7,6 @@ import javassist.NotFoundException;
 
 
 public interface IOrganizationService {
-    public void setContactFields(ContactFieldsDto contactFieldsDto) throws NotFoundException, RemovedException;
-    OrganizationDto findById(Long id);
+    public void setContactFields(ContactFieldsDto contactFieldsDto) throws NotFoundException;
+    OrganizationDto findById(Long id) throws NotFoundException;
 }

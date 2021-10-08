@@ -7,6 +7,10 @@ public class Constants {
     public final static String NOT_FOUND = "NotFoundException";
     public final static String INVALID_ROL = "errorInvalidRol";
     public final static String EMAIL_NOT_SENT = "EmailNotSentException";
+    public final static String INVALID_DATA = "InvalidDataException";
+    public final static String BAD_REQUEST = "BadRequestException";
+    public final static String FORBIDDEN = "ForbiddenException";
+
 
     //OTHERS
     public static final String SPACE = " ";
