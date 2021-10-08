@@ -37,7 +37,7 @@ public class FileServiceImpl implements IFileService {
     @Value("error.match.file.url")
     private String errorMatchFileUrl;
 
-    @Value("error.success.deleted")
+    @Value("success.deleted")
     private String errorSuccessDeleted;
 
     @Autowired
