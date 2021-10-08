@@ -72,13 +72,11 @@ public class UserServiceImpl implements IUserService {
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            MessageSource messageSource,
                            PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
                            ModelMapper mapper) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.messageSource = messageSource;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
         this.mapper = mapper;
     }
 

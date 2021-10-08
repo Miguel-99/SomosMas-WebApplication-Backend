@@ -45,9 +45,6 @@ public class AuthController {
     @Value("error.empty.register")
     private String errorUsernamePasswordIncorrect;
 
-    @Autowired
-    MessageSource messageSource;
-
     @PostMapping("/authentication")
     public ResponseEntity<?> createAuthentication(@RequestBody AuthenticationRequestDto authenticationRequest) throws Exception {
         try {

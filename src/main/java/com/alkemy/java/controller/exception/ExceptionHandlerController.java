@@ -1,5 +1,6 @@
 package com.alkemy.java.controller.exception;
 
+import com.alkemy.java.dto.ErrorDataMessageDto;
 import com.alkemy.java.dto.ErrorMessageDto;
 import com.alkemy.java.exception.EmailNotSentException;
 import com.alkemy.java.exception.ForbiddenException;
@@ -102,9 +103,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     return new ErrorDataMessageDto (new Date(),INVALID_DATA,errors);
 
       }
-
-
-}
 
     @ExceptionHandler (value = ForbiddenException.class)
     @ResponseStatus (value = HttpStatus.FORBIDDEN)
