@@ -1,6 +1,7 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.UserDto;
+import com.alkemy.java.service.IUserService;
 import com.alkemy.java.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    UserServiceImpl userService;
+    IUserService userService;
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto){
