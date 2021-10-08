@@ -2,6 +2,7 @@ package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IUserService;
@@ -83,7 +84,7 @@ public class UserServiceImpl implements IUserService {
             user = userOld.get();
             userRepository.delete(user);
         } else {
-            throw new NoSuchElementException(idNotFound);
+            throw new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault()));
         }
 
         return user;
@@ -91,8 +92,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findById(Long idUser) {
-        return userRepository.findById(idUser).orElseThrow(() -> new NoSuchElementException("Movie ID was not found. By ID: " + idUser));
+    public User findById(Long idUser) throws NoSuchElementException {
+        return userRepository.findById(idUser).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
     }
 
 

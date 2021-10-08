@@ -1,9 +1,11 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.model.User;
-import com.alkemy.java.service.impl.UserServiceImpl;
+import com.alkemy.java.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,15 +13,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Locale;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    UserServiceImpl userService;
+    IUserService userService;
 
     @Value("{error.user.error}")
     private String error;
+
+    @Autowired
+    MessageSource messageSource;
 
     @DeleteMapping("/{idUser}")
     public ResponseEntity<?> delete(@PathVariable Long idUser) {
@@ -28,8 +35,8 @@ public class UserController {
 
         try {
             user = userService.delete(idUser);
-        } catch (Exception ex) {
-            throw new RuntimeException(error);
+        } catch (DataAccessException ex) {
+            throw new RuntimeException(messageSource.getMessage(error, null, Locale.getDefault()));
         }
 
         return new ResponseEntity<User>(user, HttpStatus.OK);

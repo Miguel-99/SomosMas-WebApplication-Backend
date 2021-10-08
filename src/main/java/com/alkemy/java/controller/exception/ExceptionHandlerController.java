@@ -43,10 +43,4 @@ public class ExceptionHandlerController {
     }
 
 
-    @ExceptionHandler
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    protected ErrorMessageDto noSuchElementException(NoSuchElementException ex) {
-        return new ErrorMessageDto(new Date(), "NoSuchElementException", ex.getMessage());
-    }
-
 }
