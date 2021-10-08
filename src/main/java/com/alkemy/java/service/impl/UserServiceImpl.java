@@ -1,14 +1,19 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.UserDto;
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.UserRepository;
+import com.alkemy.java.service.IEmailService;
 import com.alkemy.java.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +22,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Locale;
 
+@Slf4j
 @Service
+@PropertySource("classpath:messages/messages.properties")
 public class UserServiceImpl implements IUserService {
 
     UserRepository userRepository;
@@ -32,8 +39,17 @@ public class UserServiceImpl implements IUserService {
 
     private ModelMapper mapper;
 
+    @Value("${error.user.dont.exist}")
+    private String resourceNotFound;
+
     @Value("error.email.registered")
     private String errorPath;
+
+    @Value("${sendgrid.subject.welcome}")
+    private String welcome;
+
+    @Autowired
+    IEmailService emailService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -64,7 +80,32 @@ public class UserServiceImpl implements IUserService {
         user.setPhoto("url1");
         User newUser = userRepository.save(user);
 
+        emailService.sendEmailWithTemplate(userDto,welcome);
+
         return UserDtoResponse.userToDto(newUser);
+    }
+
+    @Override
+    public UserDto updateUser(Long userId, UserDto userDto) {
+        User user = userRepository.findById(userId).orElseThrow( () ->
+                new ResourceNotFoundException(messageSource.getMessage(resourceNotFound, null, Locale.getDefault())));
+
+        if (userDto.getFirstName() != null)
+            user.setFirstName(userDto.getFirstName());
+        if (userDto.getLastName() != null)
+            user.setLastName(userDto.getLastName());
+        if (userDto.getEmail() != null)
+            user.setEmail(userDto.getEmail());
+        if (userDto.getPassword() != null)
+            user.setPassword(userDto.getPassword());
+        if (userDto.getPhoto() != null)
+            user.setPhoto(userDto.getPhoto());
+        if (userDto.getRole() != null)
+            user.setRole(userDto.getRole());
+        user.setLastUpdate(new Date());
+
+        user = userRepository.save(user);
+        return mapper.map(user, UserDto.class);
     }
 
     private UserDtoRequest mapToDTO(User user) {

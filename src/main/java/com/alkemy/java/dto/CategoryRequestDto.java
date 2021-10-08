@@ -5,25 +5,20 @@
  */
 package com.alkemy.java.dto;
 
-import java.util.Date;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- *
- * @author Mariela
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponseDto {
-
+public class CategoryRequestDto {
+    
+    @NotBlank(message= "Field name should not be null or empty")
     private String name;
 
     private String description;
 
     private String image;
-
-    private Date createDate;
 }

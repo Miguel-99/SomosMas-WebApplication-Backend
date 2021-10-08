@@ -1,28 +1,33 @@
+
 package com.alkemy.java.controller;
 
-import com.alkemy.java.dto.CategoryResponseDto;
-import com.alkemy.java.model.Category;
+import com.alkemy.java.dto.CategoryRequestDto;
+import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ICategoryService;
-import com.alkemy.java.service.impl.CategoryServiceImpl;
-import io.swagger.annotations.ApiOperation;
-import javassist.NotFoundException;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
+/**
+ *
+ * @author Mariela
+ */
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
 
     @Autowired
-    private ICategoryService categoryService;
+    ICategoryService iCategoryService;
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long categoryId) throws NotFoundException {
-        return ResponseEntity.ok(categoryService.getCategoryById(categoryId));
+    @PostMapping
+    public ResponseEntity <?> createCategory (@Valid @RequestBody (required = true) CategoryRequestDto categoryRequest, BindingResult bindingResult){
+        if (bindingResult.hasErrors())
+            throw new InvalidDataException(bindingResult);
+
+            return new ResponseEntity<>(iCategoryService.createCategory(categoryRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -30,5 +35,4 @@ public class CategoryController {
         CategoryResponseDto categoryResponse = categoryService.updateCategory(categoryResponseDto, id);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
-
 }
