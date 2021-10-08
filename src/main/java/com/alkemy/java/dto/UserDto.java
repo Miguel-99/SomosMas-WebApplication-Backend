@@ -14,7 +14,6 @@ import java.util.Date;
 public class UserDto {
     private Long id;
 
-
     private String firstName;
 
     private String lastName;
@@ -28,10 +27,6 @@ public class UserDto {
 
     @JsonIgnoreProperties("hibernateLazyInitializer")
     private Role role;
-
-    private Boolean deleted = Boolean.FALSE;
-
-    private Date creationDate;
 
     private Date lastUpdate;
 }

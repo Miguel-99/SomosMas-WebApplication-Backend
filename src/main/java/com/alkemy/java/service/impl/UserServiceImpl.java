@@ -20,8 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Locale;
+
 @Slf4j
-@PropertySource("classpath:messages/error.properties")
 @Service
 @PropertySource("classpath:messages/messages.properties")
 public class UserServiceImpl implements IUserService {
@@ -87,7 +88,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
         User user = userRepository.findById(userId).orElseThrow( () ->
-                new ResourceNotFoundException(resourceNotFound));
+                new ResourceNotFoundException(messageSource.getMessage(resourceNotFound, null, Locale.getDefault())));
 
         if (userDto.getFirstName() != null)
             user.setFirstName(userDto.getFirstName());
@@ -101,8 +102,6 @@ public class UserServiceImpl implements IUserService {
             user.setPhoto(userDto.getPhoto());
         if (userDto.getRole() != null)
             user.setRole(userDto.getRole());
-        if (userDto.getDeleted() != null)
-            user.setDeleted(userDto.getDeleted());
         user.setLastUpdate(new Date());
 
         user = userRepository.save(user);
