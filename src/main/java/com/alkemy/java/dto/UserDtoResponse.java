@@ -27,12 +27,17 @@ public class UserDtoResponse {
 
     private String idRole;
 
+    private String role;
+
+    private Date creationDate;
+
     public static UserDtoResponse userToDto(User user) {
         return UserDtoResponse.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .idRole(user.getRole().getName().toUpperCase())
+                .role(user.getRole().getName().toUpperCase())
+                .creationDate(user.getCreationDate())
                 .build();
     }
 }
