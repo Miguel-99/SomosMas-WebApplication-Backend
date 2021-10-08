@@ -6,14 +6,19 @@ import com.alkemy.java.exception.EmailNotSentException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.exception.*;
 import javassist.NotFoundException;
+import org.springframework.http.HttpHeaders;
 import static com.alkemy.java.util.Constants.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +55,32 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessageDto emailNotSendException(EmailNotSentException ex) {
         return new ErrorMessageDto(new Date(), EMAIL_NOT_SENT, ex.getMessage());
+    }
+    
+    
+    @Override
+
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+
+        Map<String,String> errors = new HashMap<>();
+
+
+        ex.getBindingResult().getAllErrors().forEach((error)->{
+
+            String field =((FieldError) error).getField();
+
+            String message=error.getDefaultMessage();
+
+            errors.put(field,message);
+
+        });
+
+        return new ResponseEntity<Object>(errors,HttpStatus.BAD_REQUEST);
+
+
     }
 
 
