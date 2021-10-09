@@ -5,6 +5,6 @@ import com.alkemy.java.dto.NewsResponseDto;
 
 public interface INewsService {
 
-    NewsResponseDto save(NewsRequestDto news);
+    NewsResponseDto createNews(NewsRequestDto news);
 
 }

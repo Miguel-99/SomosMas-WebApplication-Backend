@@ -26,7 +26,7 @@ public class NewsServiceImpl implements INewsService {
     MessageSource messageSource;
 
     @Override
-    public NewsResponseDto save(NewsRequestDto newsDto) {
+    public NewsResponseDto createNews(NewsRequestDto newsDto) {
 
         if(newsRepository.findByName(newsDto.getName()) != null)
             throw new BadRequestException(messageSource.getMessage("error.news.already.exist", null, Locale.getDefault()));
