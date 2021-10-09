@@ -5,13 +5,13 @@ import static com.alkemy.java.util.ExceptionConstant.INVALID_ROL;
 
 public enum Roles {
 
-    CLIENT, ADMIN;
+    USER, ADMIN;
 
     public static Roles getRol(String rol) throws NotValidRolException {
 
         switch (rol) {
             case "client":
-                return CLIENT;
+                return USER;
 
             case "admin":
                 return ADMIN;

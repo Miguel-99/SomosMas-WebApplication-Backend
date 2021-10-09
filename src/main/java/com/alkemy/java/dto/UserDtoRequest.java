@@ -34,5 +34,7 @@ public class UserDtoRequest {
             message = "{error.size.password}")
     private String password;
 
+    @NotEmpty(message = "Field idRole should not be null or empty")
+    private Long idRole;
 
 }
