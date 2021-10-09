@@ -8,7 +8,6 @@ import com.alkemy.java.repository.CategoryRepository;
 import com.alkemy.java.repository.NewsRepository;
 import com.alkemy.java.service.INewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -26,20 +25,14 @@ public class NewsServiceImpl implements INewsService {
     @Autowired
     MessageSource messageSource;
 
-    @Value("error.news.already.exist")
-    private String newsAlreadyExist;
-
-    @Value("error.category.doesnt.exist")
-    private String categoryDoesntExist;
-
     @Override
     public NewsResponseDto save(NewsRequestDto newsDto) {
 
         if(newsRepository.findByName(newsDto.getName()) != null)
-            throw new BadRequestException(messageSource.getMessage(newsAlreadyExist, null, Locale.getDefault()));
+            throw new BadRequestException(messageSource.getMessage("error.news.already.exist", null, Locale.getDefault()));
 
         if (!categoryRepository.existsById((long) newsDto.getCategoryId()))
-            throw new BadRequestException(messageSource.getMessage(categoryDoesntExist, null, Locale.getDefault()));
+            throw new BadRequestException(messageSource.getMessage("error.category.doesnt.exist", null, Locale.getDefault()));
 
         News newsToSave = NewsRequestDto.dtoToNews(newsDto);
 
