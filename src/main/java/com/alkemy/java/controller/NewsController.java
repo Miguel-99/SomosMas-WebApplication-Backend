@@ -25,7 +25,7 @@ public class NewsController {
         if(bindingResult.hasErrors())
             throw new InvalidDataException(bindingResult);
 
-        return new ResponseEntity<>(newsService.save(newsRequestDto),HttpStatus.CREATED);
+        return new ResponseEntity<>(newsService.createNews(newsRequestDto),HttpStatus.CREATED);
     }
 
 }
