@@ -45,6 +45,7 @@ public class NewsServiceImpl implements INewsService {
 
         newsToSave.setCreateDate(new Date());
         newsToSave.setUpdateDate(new Date());
+        newsToSave.setDeleted(false);
 
         newsToSave.setCategory(categoryRepository.findById((long) newsDto.getCategoryId()).get());
 
