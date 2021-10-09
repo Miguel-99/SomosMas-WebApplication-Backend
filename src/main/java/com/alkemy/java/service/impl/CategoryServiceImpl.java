@@ -5,6 +5,7 @@
  */
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.BadRequestException;
@@ -12,6 +13,7 @@ import com.alkemy.java.model.Category;
 import com.alkemy.java.repository.CategoryRepository;
 import com.alkemy.java.service.ICategoryService;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,11 @@ public class CategoryServiceImpl implements ICategoryService {
         categoryRepository.save(category);
         
         return mapToDto(category);
+    }
+
+    @Override
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
     }
 
     private CategoryResponseDto mapToDto(Category category) {
