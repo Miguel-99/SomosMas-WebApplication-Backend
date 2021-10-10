@@ -8,6 +8,7 @@ package com.alkemy.java.service.impl;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.BadRequestException;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Category;
 import com.alkemy.java.repository.CategoryRepository;
 import com.alkemy.java.service.ICategoryService;
@@ -35,7 +36,10 @@ public class CategoryServiceImpl implements ICategoryService {
     
     @Value ("error.service.category.badrequest")
     private String errorBadRequest;
-    
+
+    @Value ("error.service.category.does.not.exist")
+    private String errorDoesNotExist;
+
     @Autowired
     private ModelMapper mapper;
 
@@ -54,6 +58,13 @@ public class CategoryServiceImpl implements ICategoryService {
         categoryRepository.save(category);
         
         return mapToDto(category);
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> {
+            throw new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()));
+        }));
     }
 
     private CategoryResponseDto mapToDto(Category category) {

@@ -16,8 +16,5 @@ import com.alkemy.java.dto.CategoryResponseDto;
 public interface ICategoryService {
     
     CategoryResponseDto createCategory (CategoryRequestDto categoryRequest);
-        
-        
-        
-    
+    void deleteCategory(Long id);
 }

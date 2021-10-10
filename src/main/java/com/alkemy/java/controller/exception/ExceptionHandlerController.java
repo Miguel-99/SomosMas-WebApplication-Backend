@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,4 +110,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto forbiddenException(ForbiddenException ex) {
     return new ErrorMessageDto (new Date(),FORBIDDEN,ex.getMessage());
   }
+
+    @ExceptionHandler (value = MethodArgumentTypeMismatchException.class)
+    @ResponseStatus (value = HttpStatus.BAD_REQUEST)
+    public ErrorMessageDto argumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return new ErrorMessageDto (new Date(),ARGUMENT_TYPE_MISMATCH,ex.getMessage());
+    }
 }
