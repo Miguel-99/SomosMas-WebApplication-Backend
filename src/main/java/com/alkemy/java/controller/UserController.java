@@ -22,25 +22,13 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @Value("{error.user.error}")
-    private String error;
-
     @Autowired
     MessageSource messageSource;
 
     @DeleteMapping("/{idUser}")
     public ResponseEntity<?> delete(@PathVariable Long idUser) {
-
-        User user;
-
-        try {
-            user = userService.delete(idUser);
-        } catch (DataAccessException ex) {
-            throw new RuntimeException(messageSource.getMessage(error, null, Locale.getDefault()));
-        }
-
+        User user = userService.delete(idUser);
         return new ResponseEntity<User>(user, HttpStatus.OK);
-
     }
 
 
