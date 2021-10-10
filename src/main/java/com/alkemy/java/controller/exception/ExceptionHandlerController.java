@@ -7,11 +7,11 @@ import com.alkemy.java.exception.ForbiddenException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.exception.*;
-import javassist.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import static com.alkemy.java.util.Constants.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
-
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -108,5 +107,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus (value = HttpStatus.FORBIDDEN)
     public ErrorMessageDto forbiddenException(ForbiddenException ex) {
     return new ErrorMessageDto (new Date(),FORBIDDEN,ex.getMessage());
-  }
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ErrorMessageDto error = new ErrorMessageDto(new Date(), BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+
+    }
 }
