@@ -5,6 +5,7 @@
  */
 package com.alkemy.java.service;
 
+import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
 
@@ -20,5 +21,8 @@ public interface ICategoryService {
     CategoryResponseDto updateCategory(CategoryResponseDto dto, Long id);
 
 
+
+
+    List<Category> findAllCategories();
 
 }
