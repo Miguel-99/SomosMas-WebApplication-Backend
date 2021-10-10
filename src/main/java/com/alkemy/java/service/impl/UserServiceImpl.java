@@ -93,7 +93,7 @@ public class UserServiceImpl implements IUserService {
         user.setLastUpdate(new Date());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setPhoto("url1");
-        user.setRole(roleRepository.findById(userDto.getIdRole()).get());
+        user.setRole(roleRepository.findById(userDto.getRoleId()).get());
         User newUser = userRepository.save(user);
         emailService.sendEmailWithTemplate(userDto,welcome);
         return UserDtoResponse.userToDto(newUser);
