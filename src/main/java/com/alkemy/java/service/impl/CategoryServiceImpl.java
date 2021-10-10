@@ -62,6 +62,12 @@ public class CategoryServiceImpl implements ICategoryService {
         return mapToDto(category);
     }
 
+
+    @Override
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
+    }
+
     @Override
     public CategoryResponseDto updateCategory(CategoryResponseDto categoryResponseDto, Long id) {
 

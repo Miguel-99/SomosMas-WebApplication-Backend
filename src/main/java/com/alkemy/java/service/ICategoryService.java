@@ -8,6 +8,9 @@ package com.alkemy.java.service;
 import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
+import com.alkemy.java.model.Category;
+
+import java.util.List;
 
 /**
  *
