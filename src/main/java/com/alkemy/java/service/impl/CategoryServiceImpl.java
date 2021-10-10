@@ -37,6 +37,9 @@ public class CategoryServiceImpl implements ICategoryService {
     @Value ("error.service.category.badrequest")
     private String errorBadRequest;
 
+    @Value ("error.category.id.not.found")
+    private String idNotFoundMessage;
+
     @Autowired
     private ModelMapper mapper;
 
