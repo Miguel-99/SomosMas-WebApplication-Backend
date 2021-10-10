@@ -64,7 +64,9 @@ public class CategoryServiceImpl implements ICategoryService {
     public CategoryResponseDto updateCategory(CategoryResponseDto categoryResponseDto, Long id) {
 
         Category updatedCategory = categoryRepository.findById(id).orElseThrow(() ->
+
                 new ResourceNotFoundException(messageSource.getMessage
+
                         (idNotFoundMessage, null, Locale.getDefault())));
 
         updatedCategory.setName(categoryResponseDto.getName());

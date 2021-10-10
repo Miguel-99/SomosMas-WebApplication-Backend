@@ -2,8 +2,12 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.CategoryRequestDto;
+import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.InvalidDataException;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.service.ICategoryService;
+
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,8 +35,11 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> updatePost(@Valid @RequestBody CategoryResponseDto categoryResponseDto, @PathVariable(name = "id") long id) {
-        CategoryResponseDto categoryResponse = categoryService.updateCategory(categoryResponseDto, id);
-        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+    public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryResponseDto categoryResponseDto, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(iCategoryService.updateCategory(categoryResponseDto,id), HttpStatus.OK);
+        }catch(ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 }
