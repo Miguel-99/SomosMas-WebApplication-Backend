@@ -25,8 +25,6 @@ public class UserDtoResponse {
 
     private String email;
 
-    private String idRole;
-
     private String role;
 
     private Date creationDate;
