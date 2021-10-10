@@ -5,8 +5,13 @@
  */
 package com.alkemy.java.service;
 
+import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
+import com.alkemy.java.model.Category;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -16,8 +21,7 @@ import com.alkemy.java.dto.CategoryResponseDto;
 public interface ICategoryService {
     
     CategoryResponseDto createCategory (CategoryRequestDto categoryRequest);
-        
-        
-        
-    
+
+    List<Category> findAllCategories();
+
 }
