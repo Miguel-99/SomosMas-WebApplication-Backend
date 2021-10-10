@@ -3,9 +3,12 @@ package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
+import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ICategoryService;
 import javax.validation.Valid;
+
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,4 +45,11 @@ public class CategoryController {
                 .collect(Collectors.toList());
         return categories.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(categories) : ResponseEntity.ok(categories);
     }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long categoryId) throws NotFoundException {
+
+        return ResponseEntity.ok(iCategoryService.getCategoryById(categoryId));
+    }
+
 }

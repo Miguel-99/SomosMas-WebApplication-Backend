@@ -9,6 +9,7 @@ import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.model.Category;
+import javassist.NotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
  */
 
 public interface ICategoryService {
+
+    CategoryResponseDto getCategoryById(Long categoryId) throws NotFoundException;
     
     CategoryResponseDto createCategory (CategoryRequestDto categoryRequest);
 
