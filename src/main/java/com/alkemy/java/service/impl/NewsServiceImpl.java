@@ -1,22 +1,21 @@
 
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.NewsDtoResponse;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.News;
 import com.alkemy.java.repository.NewsRepository;
 import com.alkemy.java.service.INewsService;
 import java.util.Locale;
+
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author Mariela
- */
 @Service
-public class NewsServiceImpl implements INewsService{
+public class NewsServiceImpl implements INewsService {
     
     @Autowired
     NewsRepository newsRepository;
@@ -25,22 +24,19 @@ public class NewsServiceImpl implements INewsService{
     MessageSource messageSource;
     
     @Value ("error.news.service.dont.exist")
-     String messageDontExist;
-   
+    String messageDontExist;
 
     @Override
     public void deleteNews(Long id) {
-        News news = findById(id);
-        
-        if (news == null) {
-            throw new ResourceNotFoundException(messageSource.getMessage(messageDontExist, null, Locale.getDefault()));
-        }
-        
-        newsRepository.deleteById(id);
+        News news = newsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(messageDontExist, null, Locale.getDefault())));
+        newsRepository.delete(news);
     }
-    
-    private News findById(Long id){
-       return newsRepository.findById(id).orElse(null);
+
+    @Override
+    public NewsDtoResponse findById(Long id) throws ResourceNotFoundException {
+        News news = newsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(messageDontExist, null, Locale.getDefault())));
+        return NewsDtoResponse.newsToDto(news);
     }
     
 }
