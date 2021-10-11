@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
 
+import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
+import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -35,7 +37,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto usernameNotFoundException(UsernameNotFoundException ex) {
         return new ErrorMessageDto(new Date(), USERNAME_NOT_FOUND, ex.getMessage());
     }
-
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException exception){
@@ -52,7 +53,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
         return new ErrorMessageDto(new Date(),"ResourceNotFoundException", ex.getMessage());
     }
-
 
     @ExceptionHandler(value = EmailNotSentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
