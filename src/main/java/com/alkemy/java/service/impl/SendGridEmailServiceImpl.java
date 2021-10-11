@@ -1,6 +1,7 @@
 package com.alkemy.java.service.impl;
 
-import com.alkemy.java.dto.EmailRequestDto;
+import com.alkemy.java.dto.UserDtoRequest;
+import com.alkemy.java.exception.EmailNotSentException;
 import com.alkemy.java.service.IEmailService;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -9,24 +10,39 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.helpers.mail.objects.Personalization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import static com.alkemy.java.util.Constants.SPACE;
-
 
 import java.io.IOException;
 
 @Service
+@PropertySource("classpath:messages/messages.properties")
 public class SendGridEmailServiceImpl implements IEmailService {
 
+    @Autowired
     private SendGrid sendGridClient;
 
     @Value("${email.sendgrid.from}")
     private String fromEmail;
 
-    @Value("${app.sendgrid.template}")
-    private String templateId;
+    @Value("${app.sendgrid.template.welcome}")
+    private String templateWelcomeId;
+
+    @Value("${sendgrid.welcome.message}")
+    private String sendgridWelcomeMessage;
+
+    @Value("${sendgrid.from.name}")
+    private String fromName;
+
+    @Value("${error.email.not.sent}")
+    private String emailNotSent;
+
+    @Value("${sendgrid.subject.welcome}")
+    private String welcome;
 
     @Autowired
     public SendGridEmailServiceImpl(SendGrid sendGrid) {
@@ -34,38 +50,44 @@ public class SendGridEmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public Response sendSimpleEmail(EmailRequestDto emailRequestDto) {
+    public void sendEmailWithTemplate(UserDtoRequest user, String subject) {
 
-        Mail mail = new Mail(new Email(fromEmail),
-                emailRequestDto.getSubject() ,
-                new Email(emailRequestDto.getTo()),
-                new Content("text/plain",emailRequestDto.getBody()));
+        Mail mail = addPersonalizationTemplate(subject,user.getEmail(),user.getFirstName());
 
-        return sendEmailRequest(mail);
+        sendEmailRequest(mail);
     }
 
-    @Override
-    public Response sendEmailWithTemplate(String to) {
+    private Mail addPersonalizationTemplate(String subject, String to, String name){
 
-        Mail mail = new Mail(new Email(fromEmail), SPACE, new Email(to), new Content("text/html", SPACE));
+        Mail mail = new Mail(new Email(fromEmail,fromName), subject, new Email(to), new Content("text/html", SPACE));
 
-        mail.setTemplateId(templateId);
+        mail.setTemplateId(templateWelcomeId);
 
-        return sendEmailRequest(mail);
+        Personalization personalization = new Personalization();
+        personalization.addTo(new Email(to));
+
+        if(subject.equals(welcome)){
+            personalization.addDynamicTemplateData("subject", subject);
+            personalization.addDynamicTemplateData("name", name);
+            personalization.addDynamicTemplateData("messageSubject", sendgridWelcomeMessage);
+        }
+        mail.addPersonalization(personalization);
+
+        return mail;
     }
 
-    private Response sendEmailRequest(Mail mail) {
+    private void sendEmailRequest(Mail mail) {
+
         Request request = new Request();
-        Response response = null;
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            response = this.sendGridClient.api(request);
+            Response response = this.sendGridClient.api(request);
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            throw new EmailNotSentException(emailNotSent);
         }
-        return response;
+
     }
 
 }

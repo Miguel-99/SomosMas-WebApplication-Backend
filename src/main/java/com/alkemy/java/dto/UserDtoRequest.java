@@ -12,20 +12,29 @@ import javax.validation.constraints.Size;
 @Setter
 public class UserDtoRequest {
 
-    @NotEmpty(message = "Field firstName should not be null or empty")
-    @Size(min = 3, max = 20)
+    @NotEmpty(message = "{error.empty.firstname}")
+    @Size(min = 3
+            ,max=20,
+            message = "{error.size.firstname}")
     private String firstName;
 
-    @NotEmpty(message = "Field lastName should not be null or empty")
-    @Size(min = 3, max = 20)
+    @NotEmpty(message = "{error.empty.lastName}")
+    @Size(min = 3
+            ,max=20,
+            message = "{error.size.lastname}")
     private String lastName;
 
-    @Email(message = "invalid email format")
-    @NotBlank
+    @Email(message = "{error.email.format}")
+    @NotEmpty(message = "{error.empty.email}")
     private String email;
 
-    @Size(min = 8, max = 20)
+    @NotEmpty(message = "{error.empty.password}")
+    @Size(min = 8
+            ,max=20,
+            message = "{error.size.password}")
     private String password;
 
+    @NotEmpty(message = "Field idRole should not be null or empty")
+    private Long idRole;
 
 }

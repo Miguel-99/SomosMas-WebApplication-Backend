@@ -13,10 +13,18 @@ public class MessagesConfig {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasenames(
-                "classpath:/messages/error"
+                "classpath:/messages/messages"
         );
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
+
+    @Bean
+    public LocalValidatorFactoryBean getValidator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
 
 }
