@@ -3,11 +3,11 @@ package com.alkemy.java.controller.exception;
 import com.alkemy.java.dto.ErrorDataMessageDto;
 import com.alkemy.java.dto.ErrorMessageDto;
 import com.alkemy.java.exception.EmailNotSentException;
+import com.alkemy.java.exception.Exception;
 import com.alkemy.java.exception.ForbiddenException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.exception.*;
-import javassist.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import static com.alkemy.java.util.Constants.*;
 import org.springframework.http.HttpStatus;
@@ -109,4 +109,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto forbiddenException(ForbiddenException ex) {
     return new ErrorMessageDto (new Date(),FORBIDDEN,ex.getMessage());
   }
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorMessageDto conflictException(Exception ex){
+        return new ErrorMessageDto(new Date(),CONFLICT,ex.getMessage());
+    }
+
 }
