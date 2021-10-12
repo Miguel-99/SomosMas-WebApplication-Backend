@@ -3,7 +3,7 @@ package com.alkemy.java.controller.exception;
 import com.alkemy.java.dto.ErrorDataMessageDto;
 import com.alkemy.java.dto.ErrorMessageDto;
 import com.alkemy.java.exception.EmailNotSentException;
-import com.alkemy.java.exception.Exception;
+import com.alkemy.java.exception.ConflictException;
 import com.alkemy.java.exception.ForbiddenException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
 
-import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
-import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
+import static com.alkemy.java.util.Constants.NOT_FOUND;
+import static com.alkemy.java.util.Constants.USERNAME_NOT_FOUND;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -110,10 +110,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     return new ErrorMessageDto (new Date(),FORBIDDEN,ex.getMessage());
   }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = ConflictException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ErrorMessageDto conflictException(Exception ex){
+    public ErrorMessageDto conflictException(ConflictException ex){
         return new ErrorMessageDto(new Date(),CONFLICT,ex.getMessage());
     }
+
 
 }

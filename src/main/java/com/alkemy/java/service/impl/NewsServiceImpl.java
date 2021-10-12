@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.alkemy.java.dto.NewsRequestDto;
 import com.alkemy.java.dto.NewsResponseDto;
 import com.alkemy.java.exception.BadRequestException;
-import com.alkemy.java.exception.Exception;
+import com.alkemy.java.exception.ConflictException;
 import com.alkemy.java.repository.CategoryRepository;
 
 
@@ -48,7 +48,7 @@ public class NewsServiceImpl implements INewsService{
     public NewsResponseDto createNews(NewsRequestDto newsDto) {
 
         if(newsRepository.findByName(newsDto.getName()) != null)
-            throw new Exception(messageSource.getMessage("error.news.already.exist", null, Locale.getDefault()));
+            throw new ConflictException(messageSource.getMessage("error.news.already.exist", null, Locale.getDefault()));
 
         if (!categoryRepository.existsById((long) newsDto.getCategoryId()))
             throw new BadRequestException(messageSource.getMessage("error.category.doesnt.exist", null, Locale.getDefault()));
