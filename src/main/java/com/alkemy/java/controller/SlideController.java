@@ -1,7 +1,5 @@
 package com.alkemy.java.controller;
 
-import com.alkemy.java.dto.RoleDto;
-import com.alkemy.java.service.IRoleService;
 import com.alkemy.java.service.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
