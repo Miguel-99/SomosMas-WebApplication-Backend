@@ -7,32 +7,27 @@ import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.service.ICategoryService;
-
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-/**
- *
- * @author Mariela
- */
+
+
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
 
     @Autowired
     ICategoryService iCategoryService;
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity <?> createCategory (@Valid @RequestBody (required = true) CategoryRequestDto categoryRequest, BindingResult bindingResult){
         if (bindingResult.hasErrors())
