@@ -14,13 +14,13 @@ public class NewsDto {
 
     private Long id;
 
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 100, message = "field characters length must be between 2 and 100")
     private String name;
 
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 255, message = "field characters length must be between 2 and 255")
     private String content;
 
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 255, message = "field characters length must be between 2 and 255")
     private String image;
 
     private Category category;
