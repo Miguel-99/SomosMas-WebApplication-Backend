@@ -3,11 +3,11 @@ package com.alkemy.java.controller.exception;
 import com.alkemy.java.dto.ErrorDataMessageDto;
 import com.alkemy.java.dto.ErrorMessageDto;
 import com.alkemy.java.exception.EmailNotSentException;
+import com.alkemy.java.exception.Exception;
 import com.alkemy.java.exception.ForbiddenException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.exception.*;
-import javassist.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import static com.alkemy.java.util.Constants.*;
 import org.springframework.http.HttpStatus;
@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
 
+import static com.alkemy.java.util.ExceptionConstant.NOT_FOUND;
+import static com.alkemy.java.util.ExceptionConstant.USERNAME_NOT_FOUND;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -35,7 +37,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto usernameNotFoundException(UsernameNotFoundException ex) {
         return new ErrorMessageDto(new Date(), USERNAME_NOT_FOUND, ex.getMessage());
     }
-
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException exception){
@@ -52,7 +53,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto resourceNotFoundException(ResourceNotFoundException ex) {
         return new ErrorMessageDto(new Date(),"ResourceNotFoundException", ex.getMessage());
     }
-
 
     @ExceptionHandler(value = EmailNotSentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -109,4 +109,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto forbiddenException(ForbiddenException ex) {
     return new ErrorMessageDto (new Date(),FORBIDDEN,ex.getMessage());
   }
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorMessageDto conflictException(Exception ex){
+        return new ErrorMessageDto(new Date(),CONFLICT,ex.getMessage());
+    }
+
 }

@@ -16,6 +16,8 @@ import com.alkemy.java.service.ICategoryService;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,11 +41,28 @@ public class CategoryServiceImpl implements ICategoryService {
     @Value ("error.service.category.badrequest")
     private String errorBadRequest;
 
+    @Value("error.category.notfound")
+    private String notFoundMessage;
+
+
     @Value ("error.category.id.not.found")
     private String idNotFoundMessage;
 
     @Autowired
     private ModelMapper mapper;
+
+
+    @Override
+
+    public CategoryResponseDto getCategoryById(Long categoryId) throws NotFoundException {
+
+        Category category = categoryRepository.findById(categoryId)
+
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage(notFoundMessage, null, Locale.getDefault())));
+
+        return CategoryResponseDto.buildResponse(category);
+
+    }
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto categoryRequest) {
@@ -58,7 +77,7 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setLastUpdate(new Date());
 
         categoryRepository.save(category);
-
+        
         return mapToDto(category);
     }
 

@@ -10,6 +10,8 @@ import com.alkemy.java.service.ICategoryService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,4 +58,11 @@ public class CategoryController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long categoryId) throws NotFoundException {
+
+        return ResponseEntity.ok(iCategoryService.getCategoryById(categoryId));
+    }
+
 }
