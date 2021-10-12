@@ -7,4 +7,5 @@ import java.util.List;
 public interface ISlideService {
 
     List<SlideResponseDto> getAllSlide();
+    void delete(Long id);
 }
