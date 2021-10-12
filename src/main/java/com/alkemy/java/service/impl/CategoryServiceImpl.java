@@ -9,6 +9,7 @@ import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.BadRequestException;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Category;
 import com.alkemy.java.repository.CategoryRepository;
 import com.alkemy.java.service.ICategoryService;
@@ -33,15 +34,19 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
-    
+
     @Autowired
     MessageSource messageSource;
-    
+
     @Value ("error.service.category.badrequest")
     private String errorBadRequest;
 
     @Value("error.category.notfound")
     private String notFoundMessage;
+
+
+    @Value ("error.category.id.not.found")
+    private String idNotFoundMessage;
 
     @Autowired
     private ModelMapper mapper;
@@ -61,12 +66,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public CategoryResponseDto createCategory(CategoryRequestDto categoryRequest) {
-        
+
         Category category = categoryRepository.findByName(categoryRequest.getName());
 
-        if (category != null) 
+        if (category != null)
             throw new BadRequestException(messageSource.getMessage(errorBadRequest, null, Locale.getDefault()));
-        
+
         category = mapToEntity(categoryRequest);
         category.setCreateDate(new Date());
         category.setLastUpdate(new Date());
@@ -76,9 +81,28 @@ public class CategoryServiceImpl implements ICategoryService {
         return mapToDto(category);
     }
 
+
     @Override
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    @Override
+    public CategoryResponseDto updateCategory(CategoryResponseDto categoryResponseDto, Long id) {
+
+        Category updatedCategory = categoryRepository.findById(id).orElseThrow(() ->
+
+                new ResourceNotFoundException(messageSource.getMessage
+
+                        (idNotFoundMessage, null, Locale.getDefault())));
+
+        updatedCategory.setName(categoryResponseDto.getName());
+        updatedCategory.setDescription(categoryResponseDto.getDescription());
+        updatedCategory.setImage(categoryResponseDto.getImage());
+        updatedCategory.setLastUpdate(new Date());
+        categoryRepository.save(updatedCategory);
+
+        return CategoryResponseDto.buildResponse(updatedCategory);
     }
 
     private CategoryResponseDto mapToDto(Category category) {
@@ -86,7 +110,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     private Category mapToEntity(CategoryRequestDto categoryRequest) {
-        
+
         return mapper.map(categoryRequest,Category.class );
     }
 }

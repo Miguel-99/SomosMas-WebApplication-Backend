@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CategoryResponseDto {
-    
+
     private String name;
 
     private String description;
