@@ -16,19 +16,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
-@PropertySource("classpath:messages/messages.properties")
 public class UserServiceImpl implements IUserService {
 
     @Autowired
@@ -66,6 +65,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     MessageSource messageSource;
+
+    @Value("{error.user.notFoundID}")
+    private String idNotFound;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -121,6 +123,29 @@ public class UserServiceImpl implements IUserService {
         user = userRepository.save(user);
         return mapper.map(user, UserDto.class);
     }
+
+
+    @Override
+    @Transactional
+    public User delete(Long idUser) {
+        Optional<User> userOld = Optional.of(userRepository.getById(idUser));
+        User user;
+        if (userOld.isPresent()) {
+            user = userOld.get();
+            userRepository.delete(user);
+        } else {
+            throw new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault()));
+        }
+
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findById(Long idUser) throws NoSuchElementException {
+        return userRepository.findById(idUser).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
+    }
+
 
     private UserDtoRequest mapToDTO(User user) {
         return mapper.map(user, UserDtoRequest.class);

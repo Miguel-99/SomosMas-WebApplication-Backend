@@ -50,18 +50,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST).permitAll()
-                .antMatchers(HttpMethod.GET).permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/categories").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/news").hasAnyAuthority("ROLE_ADMIN")
-                .antMatchers("/organization/").permitAll()
-                .anyRequest().authenticated()
-                .and().sessionManagement()
+        http
+                .csrf().disable()
+                .exceptionHandling()
+                .and()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().exceptionHandling();
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET).permitAll()
+                .antMatchers(HttpMethod.POST).permitAll()
+                .antMatchers(HttpMethod.DELETE,"/news").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET,"/categories/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/users/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/organization/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/v2/api-docs/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/categories/**").hasAuthority("ROLE_ADMIN")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        /*
+         httpSecurity.csrf().disable().authorizeRequests()
+         .antMatchers(HttpMethod.GET, "/news").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+         .antMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ROLE_ADMIN")
+         .antMatchers(HttpMethod.POST, "/news").hasAnyAuthority("ROLE_ADMIN")
+         .anyRequest().authenticated()
+         .and().sessionManagement()
+         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+         .and().exceptionHandling();
+         */
     }
+
 
 }

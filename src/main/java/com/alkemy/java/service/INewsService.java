@@ -7,4 +7,5 @@ public interface INewsService {
 
     NewsResponseDto createNews(NewsRequestDto news);
 
+    void deleteNews(Long id);
 }
