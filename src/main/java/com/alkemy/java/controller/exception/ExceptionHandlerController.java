@@ -7,6 +7,9 @@ import com.alkemy.java.exception.ForbiddenException;
 import javassist.NotFoundException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.exception.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import static com.alkemy.java.util.Constants.*;
 import org.springframework.http.HttpStatus;
@@ -20,14 +23,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+
+    @Value("error.request.body.missing")
+    private String messageRequestBodyMissing;
+
+    @Autowired
+    MessageSource messageSource;
 
     @ExceptionHandler(value = UsernameNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -111,7 +122,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ErrorMessageDto error = new ErrorMessageDto(new Date(), BAD_REQUEST, ex.getMessage());
+        ErrorMessageDto error = new ErrorMessageDto(new Date(), NOT_READABLE,
+                messageSource.getMessage(messageRequestBodyMissing, null, Locale.getDefault()));
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 
     }
