@@ -21,7 +21,7 @@ import javax.validation.Valid;
 public class ActivityController {
 
     @Autowired
-    IActivityService activityService;
+    private IActivityService activityService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping

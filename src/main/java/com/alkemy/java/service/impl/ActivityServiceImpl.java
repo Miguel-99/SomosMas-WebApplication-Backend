@@ -14,10 +14,10 @@ import java.util.Locale;
 public class ActivityServiceImpl implements IActivityService {
 
     @Autowired
-    ActivityRepository activityRepository;
+    private ActivityRepository activityRepository;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Override
     public void createActivity(ActivityDto activityDto) {
