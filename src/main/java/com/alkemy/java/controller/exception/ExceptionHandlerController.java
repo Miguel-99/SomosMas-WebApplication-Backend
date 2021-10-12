@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
 
@@ -114,6 +115,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler (value = MethodArgumentTypeMismatchException.class)
     @ResponseStatus (value = HttpStatus.BAD_REQUEST)
     public ErrorMessageDto argumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        return new ErrorMessageDto (new Date(),ARGUMENT_TYPE_MISMATCH,ex.getMessage());
+        String error = ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName().substring(10);
+        return new ErrorMessageDto (new Date(),ARGUMENT_TYPE_MISMATCH, error);
     }
 }
