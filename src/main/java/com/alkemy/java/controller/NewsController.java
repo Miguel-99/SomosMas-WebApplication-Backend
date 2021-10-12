@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/news")
@@ -39,7 +40,8 @@ public class NewsController {
 
         return new ResponseEntity<>(newsService.createNews(newsRequestDto),HttpStatus.CREATED);
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/:{id}")
     public ResponseEntity<?> deleteNews(@PathVariable("id") Long id) {
         newsService.deleteNews(id);
