@@ -1,7 +1,7 @@
 package com.alkemy.java.util;
 
 import com.alkemy.java.exception.NotValidRolException;
-import static com.alkemy.java.util.ExceptionConstant.INVALID_ROL;
+import static com.alkemy.java.util.Constants.INVALID_ROL;
 
 public enum Roles {
 
