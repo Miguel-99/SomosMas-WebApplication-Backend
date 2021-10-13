@@ -60,7 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
-                .antMatchers(HttpMethod.DELETE,"/news").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/users/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/organization/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
@@ -79,6 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         /*
          httpSecurity.csrf().disable().authorizeRequests()
          .antMatchers(HttpMethod.GET, "/news").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+         .antMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ROLE_ADMIN")
+         .antMatchers(HttpMethod.POST, "/news").hasAnyAuthority("ROLE_ADMIN")
          .anyRequest().authenticated()
          .and().sessionManagement()
          .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -37,15 +37,16 @@ public class NewsServiceImpl implements INewsService{
 
     @Value ("error.news.service.dont.exist")
      String messageDontExist;
+   
 
     @Override
     public void deleteNews(Long id) {
         News news = findById(id);
-
+        
         if (news == null) {
             throw new ResourceNotFoundException(messageSource.getMessage(messageDontExist, null, Locale.getDefault()));
         }
-
+        
         newsRepository.deleteById(id);
     }
 
@@ -91,7 +92,7 @@ public class NewsServiceImpl implements INewsService{
     }
 
     private News findById(Long id){
-        return newsRepository.findById(id).orElse(null);
+       return newsRepository.findById(id).orElse(null);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.alkemy.java.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -49,6 +51,6 @@ public class News {
     private Boolean deleted = Boolean.FALSE;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "id_category")
+    @JoinColumn(name = "category_id")
     private Category category;
 }

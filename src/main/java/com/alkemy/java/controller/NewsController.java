@@ -30,10 +30,10 @@ public class NewsController {
 
     @Autowired
     INewsService newsService;
-
+    
     @Autowired
     MessageSource messageSource;
-
+    
     @Value("success.deleted")
     String messageDeleted;
 
@@ -45,7 +45,6 @@ public class NewsController {
         return new ResponseEntity<>(newsService.createNews(newsRequestDto),HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/:{id}")
     public ResponseEntity<?> deleteNews(@PathVariable("id") Long id) {
         newsService.deleteNews(id);

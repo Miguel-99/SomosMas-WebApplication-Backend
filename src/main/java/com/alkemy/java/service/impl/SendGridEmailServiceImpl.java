@@ -26,22 +26,22 @@ public class SendGridEmailServiceImpl implements IEmailService {
     @Autowired
     private SendGrid sendGridClient;
 
-    @Value("${email.sendgrid.from}")
+    @Value("email.sendgrid.from")
     private String fromEmail;
 
-    @Value("${app.sendgrid.template.welcome}")
+    @Value("app.sendgrid.template.welcome")
     private String templateWelcomeId;
 
-    @Value("${sendgrid.welcome.message}")
+    @Value("sendgrid.welcome.message")
     private String sendgridWelcomeMessage;
 
-    @Value("${sendgrid.from.name}")
+    @Value("sendgrid.from.name")
     private String fromName;
 
-    @Value("${error.email.not.sent}")
+    @Value("error.email.not.sent")
     private String emailNotSent;
 
-    @Value("${sendgrid.subject.welcome}")
+    @Value("sendgrid.subject.welcome")
     private String welcome;
 
     @Autowired
