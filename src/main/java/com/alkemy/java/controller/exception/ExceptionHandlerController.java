@@ -22,6 +22,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
+
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -69,35 +71,20 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ErrorMessageDto(new Date(), EMAIL_NOT_SENT, ex.getMessage());
     }
 
-
     @Override
-
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         Map<String,String> errors = new HashMap<>();
 
-
         ex.getBindingResult().getAllErrors().forEach((error)->{
-
             String field =((FieldError) error).getField();
-
             String message=error.getDefaultMessage();
-
             errors.put(field,message);
-
         });
 
-        return new ResponseEntity<Object>(errors,HttpStatus.BAD_REQUEST);
-
-
+        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
     }
 
-
-
-     @ExceptionHandler(value = BadRequestException.class)
+    @ExceptionHandler(value = BadRequestException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessageDto BadRequestException(BadRequestException ex) {
         return new ErrorMessageDto(new Date(),BAD_REQUEST, ex.getMessage());
@@ -110,8 +97,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     List<String> errors = exc.getResult().getFieldErrors().stream().map(FieldError::getDefaultMessage)
         .collect(Collectors.toList());
     return new ErrorDataMessageDto (new Date(),INVALID_DATA,errors);
-
-      }
+    }
 
     @ExceptionHandler (value = ForbiddenException.class)
     @ResponseStatus (value = HttpStatus.FORBIDDEN)
@@ -130,5 +116,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         ErrorMessageDto error = new ErrorMessageDto(new Date(), NOT_READABLE,
                 messageSource.getMessage(messageRequestBodyMissing, null, Locale.getDefault()));
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler (value = MethodArgumentTypeMismatchException.class)
+    @ResponseStatus (value = HttpStatus.BAD_REQUEST)
+    public ErrorMessageDto argumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String error = ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName().substring(10);
+        return new ErrorMessageDto (new Date(),ARGUMENT_TYPE_MISMATCH, error);
     }
 }
