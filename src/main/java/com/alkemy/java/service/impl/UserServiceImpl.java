@@ -1,10 +1,11 @@
 package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.UserDto;
+import com.alkemy.java.dto.UserDtoList;
 import com.alkemy.java.dto.UserDtoRequest;
 import com.alkemy.java.dto.UserDtoResponse;
-import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.exception.ForbiddenException;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.RoleRepository;
 import com.alkemy.java.repository.UserRepository;
@@ -21,7 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,8 +42,10 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ModelMapper mapper;
+
+
+    private ModelMapper mapper = new ModelMapper();
+
 
     @Value("${error.user.dont.exist}")
     private String resourceNotFound;
@@ -51,7 +56,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Value("error.email.registered")
+    @Value("${error.email.registered}")
     private String errorPath;
 
     @Value("${sendgrid.subject.welcome}")
@@ -60,14 +65,17 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     IEmailService emailService;
 
-    @Value("error.service.user.forbidden")
+    @Value("${error.service.user.forbidden}")
     private String errorForbiddenUser;
 
     @Autowired
     MessageSource messageSource;
 
-    @Value("{error.user.notFoundID}")
+    @Value("${error.user.notFoundID}")
     private String idNotFound;
+
+    @Value("${error.empty.list}")
+    private String emptyList;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -100,6 +108,7 @@ public class UserServiceImpl implements IUserService {
         emailService.sendEmailWithTemplate(userDto,welcome);
         return UserDtoResponse.userToDto(newUser);
     }
+
 
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
@@ -153,6 +162,20 @@ public class UserServiceImpl implements IUserService {
 
     private User mapToEntity(UserDtoRequest userDto) {
         return mapper.map(userDto, User.class);
+    }
+
+
+    @Override
+    public List<UserDtoList> findAllUsers() {
+        List<UserDtoList> userDtos = new ArrayList<>();
+        userRepository.findAll().forEach(user -> {
+            userDtos.add(mapper.map(user,UserDtoList.class));
+        });
+        if (userDtos.isEmpty()){
+            throw new ResourceNotFoundException(messageSource.getMessage(emptyList, null, Locale.getDefault()));
+        }
+
+        return userDtos;
     }
 
     @Override

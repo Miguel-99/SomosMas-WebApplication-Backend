@@ -1,6 +1,8 @@
 package com.alkemy.java.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -10,8 +12,10 @@ import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "testimonials")
-@SQLDelete(sql = "UPDATE categories SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE testimonials SET deleted = true where id=?")
 @Where(clause = "deleted=false")
 public class Testimonial {
 
@@ -26,7 +30,6 @@ public class Testimonial {
 
     private String content;
 
-    @Column(name = "active")
     private Boolean deleted = Boolean.FALSE;
 
     @Column(name = "create_date")

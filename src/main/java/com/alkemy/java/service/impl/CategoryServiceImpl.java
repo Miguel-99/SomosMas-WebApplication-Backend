@@ -25,10 +25,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 
-/**
- *
- * @author Mariela
- */
 @Service
 public class CategoryServiceImpl implements ICategoryService {
 
@@ -44,24 +40,22 @@ public class CategoryServiceImpl implements ICategoryService {
     @Value("error.category.notfound")
     private String notFoundMessage;
 
-
     @Value ("error.category.id.not.found")
     private String idNotFoundMessage;
+
+    @Value ("error.service.category.does.not.exist")
+    private String errorDoesNotExist;
 
     @Autowired
     private ModelMapper mapper;
 
 
     @Override
-
     public CategoryResponseDto getCategoryById(Long categoryId) throws NotFoundException {
-
         Category category = categoryRepository.findById(categoryId)
-
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage(notFoundMessage, null, Locale.getDefault())));
 
         return CategoryResponseDto.buildResponse(category);
-
     }
 
     @Override
@@ -81,6 +75,12 @@ public class CategoryServiceImpl implements ICategoryService {
         return mapToDto(category);
     }
 
+    @Override
+    public void deleteCategory(Long id) {
+        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> {
+            throw new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()));
+        }));
+    }
 
     @Override
     public List<Category> findAllCategories() {
@@ -91,9 +91,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public CategoryResponseDto updateCategory(CategoryResponseDto categoryResponseDto, Long id) {
 
         Category updatedCategory = categoryRepository.findById(id).orElseThrow(() ->
-
                 new ResourceNotFoundException(messageSource.getMessage
-
                         (idNotFoundMessage, null, Locale.getDefault())));
 
         updatedCategory.setName(categoryResponseDto.getName());
