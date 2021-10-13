@@ -1,5 +1,6 @@
 package com.alkemy.java.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@Builder
 @Table (name = "activities")
 @SQLDelete(sql = "UPDATE activities SET deleted = true WHERE id=?")
 @Where(clause = " deleted = false ")
