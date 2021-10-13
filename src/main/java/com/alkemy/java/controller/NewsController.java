@@ -1,6 +1,7 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.NewsDto;
+import com.alkemy.java.dto.NewsResponseDto;
 import com.alkemy.java.service.INewsService;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,10 @@ public class NewsController {
 
     @Autowired
     INewsService newsService;
-
+    
     @Autowired
     MessageSource messageSource;
-
+    
     @Value("success.deleted")
     String messageDeleted;
 
@@ -44,7 +45,6 @@ public class NewsController {
         return new ResponseEntity<>(newsService.createNews(newsRequestDto),HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/:{id}")
     public ResponseEntity<?> deleteNews(@PathVariable("id") Long id) {
         newsService.deleteNews(id);
@@ -56,5 +56,11 @@ public class NewsController {
     public ResponseEntity<?> updateNews(@PathVariable("id") Long id, @Valid @RequestBody NewsDto newsDto) {
         NewsDto newsDtoResponse = newsService.updateNews(id, newsDto);
         return new ResponseEntity<>(newsDtoResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<NewsResponseDto> getNewsById(@PathVariable Long id) {
+        return ResponseEntity.ok(newsService.findNewsById(id));
     }
 }
