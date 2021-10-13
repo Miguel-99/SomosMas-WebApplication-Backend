@@ -2,6 +2,7 @@ package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.*;
 import com.alkemy.java.exception.BadRequestException;
+import com.alkemy.java.exception.Exception;
 import com.alkemy.java.exception.RemovedException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Category;
@@ -12,6 +13,7 @@ import com.alkemy.java.repository.SlideRepository;
 import com.alkemy.java.service.IFileService;
 import com.alkemy.java.service.IOrganizationService;
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alkemy.java.repository.OrganizationRepository;
@@ -27,6 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @Service
+@Slf4j
 public class OrganizationServiceImpl implements IOrganizationService {
 
     @Autowired
@@ -46,6 +49,9 @@ public class OrganizationServiceImpl implements IOrganizationService {
 
     @Value("error.organization.id.not.found")
     private String idNotFoundMessage;
+
+    @Value("error.email.registered")
+    private String errorPath;
 
     @Autowired
     private IFileService fileService;
@@ -79,12 +85,12 @@ public class OrganizationServiceImpl implements IOrganizationService {
     @Override
     public OrganizationResponseDto createOrganization(OrganizationRequestDto request) throws Exception {
 
+        if (organizationRepository.findByEmail(request.getEmail())!= null)
+            throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
         Organization updatedOrganization =
                 OrganizationRequestDto.dtoToOrg(request);
 
-        updatedOrganization.setCreationDate(new Date());
-        updatedOrganization.setLastUpdate(new Date());
         Organization org = organizationRepository.save(updatedOrganization);
 
         return OrganizationResponseDto.orgToDto(org);

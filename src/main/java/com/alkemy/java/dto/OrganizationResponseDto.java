@@ -43,6 +43,9 @@ public class OrganizationResponseDto {
                 .lastUpdate(organization.getLastUpdate())
                 .welcomeText(organization.getWelcomeText())
                 .aboutUsText(organization.getAboutUsText())
+                .facebookUrl(organization.getFacebookUrl())
+                .instagramUrl(organization.getInstagramUrl())
+                .linkedinUrl(organization.getLinkedinUrl())
                 .build();
     }
 }

@@ -33,7 +33,7 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.findById(organizationId));
     }
 
-    @PostMapping
+    @PostMapping("/public")
     public ResponseEntity<?> createOrganization(@Valid @RequestBody OrganizationRequestDto request){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(organizationService.createOrganization(request));

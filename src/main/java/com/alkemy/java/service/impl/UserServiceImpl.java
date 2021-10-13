@@ -146,15 +146,6 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findById(idUser).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
     }
 
-
-    private UserDtoRequest mapToDTO(User user) {
-        return mapper.map(user, UserDtoRequest.class);
-    }
-
-    private User mapToEntity(UserDtoRequest userDto) {
-        return mapper.map(userDto, User.class);
-    }
-
     @Override
     public boolean validedRole(Long id, String token) {
         final String ADMIN = "ROLE_ADMIN";

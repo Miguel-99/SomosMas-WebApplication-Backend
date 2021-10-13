@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Builder
 @NoArgsConstructor
@@ -36,8 +37,17 @@ public class OrganizationRequestDto {
     @NotEmpty(message = "{error.organization.empty.welcomeText}")
     private String welcomeText;
 
+
     @NotEmpty(message = "{error.organization.empty.aboutUsText}")
     private String aboutUsText;
+
+    @NotEmpty(message = "{error.organization.empty.facebookUrl}")
+    private String facebookUrl;
+    @NotEmpty(message = "{error.organization.empty.instagramUrl}")
+    private String instagramUrl;
+    @NotEmpty(message = "{error.organization.empty.linkedinUrl}")
+    private String linkedinUrl;
+
 
     public static Organization dtoToOrg(OrganizationRequestDto dto) {
         return Organization.builder()
@@ -46,10 +56,14 @@ public class OrganizationRequestDto {
                 .image(dto.getImage())
                 .phone(dto.getPhone())
                 .email(dto.getEmail())
+                .deleted(false)
                 .welcomeText(dto.getWelcomeText())
                 .aboutUsText(dto.getAboutUsText())
+                .facebookUrl(dto.getFacebookUrl())
+                .instagramUrl(dto.getInstagramUrl())
+                .creationDate(new Date())
+                .lastUpdate(new Date())
+                .linkedinUrl(dto.getLinkedinUrl())
                 .build();
     }
-
-
 }
