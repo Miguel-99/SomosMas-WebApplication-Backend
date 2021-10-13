@@ -10,6 +10,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.findById(organizationId));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/public")
     public ResponseEntity<?> createOrganization(@Valid @RequestBody OrganizationRequestDto request){
         try {
