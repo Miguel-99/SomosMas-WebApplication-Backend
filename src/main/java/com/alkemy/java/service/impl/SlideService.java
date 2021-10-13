@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 public class SlideService implements ISlideService {
 
     @Autowired
-    SlideRepository slideRepository;
+    private SlideRepository slideRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
     MessageSource messageSource;

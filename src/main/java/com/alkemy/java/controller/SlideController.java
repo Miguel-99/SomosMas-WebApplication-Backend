@@ -1,5 +1,6 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.SlideResponseDto;
 import com.alkemy.java.service.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -16,10 +18,13 @@ import java.util.Locale;
 public class SlideController {
 
     @Autowired
-    ISlideService slideService;
+    private ISlideService slideService;
+
+    @Value("success.get")
+    private String successGet;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Value("success.deleted")
     private String deletedMessage;
@@ -27,6 +32,14 @@ public class SlideController {
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllSlides(){
+
+        List<SlideResponseDto> slides = slideService.getAllSlide();
+
+        if(slides.isEmpty()){
+            String message = messageSource.getMessage(successGet, null, Locale.getDefault());
+            return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+        }
+
         return new ResponseEntity<>(slideService.getAllSlide(), HttpStatus.OK);
     }
 
