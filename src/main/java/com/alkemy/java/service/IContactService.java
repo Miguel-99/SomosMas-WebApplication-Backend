@@ -1,9 +1,10 @@
 package com.alkemy.java.service;
 
-import com.alkemy.java.model.Contact;
+import com.alkemy.java.dto.ContactRequestDto;
+import com.alkemy.java.dto.ContactResponseDto;
 
 public interface IContactService {
 
-    void create (Contact contact);
+    ContactResponseDto createContact (ContactRequestDto contactRequestDto);
 
 }
