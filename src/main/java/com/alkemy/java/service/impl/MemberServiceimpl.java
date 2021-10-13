@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class MemberServiceimpl implements IMemberService {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Override
     public List<MemberResponseDto> getAllMembers(){
