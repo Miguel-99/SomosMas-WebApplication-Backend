@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
-public class SlideService implements ISlideService {
+public class SlideServiceImpl implements ISlideService {
 
     @Autowired
     private SlideRepository slideRepository;
