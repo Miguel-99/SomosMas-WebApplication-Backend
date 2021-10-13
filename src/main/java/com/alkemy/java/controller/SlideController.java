@@ -1,5 +1,6 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.SlideDto;
 import com.alkemy.java.dto.SlideResponseDto;
 import com.alkemy.java.service.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,5 +50,12 @@ public class SlideController {
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         slideService.delete(id);
         return new ResponseEntity<>(messageSource.getMessage(deletedMessage, null, Locale.getDefault()), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateById(@PathVariable Long id, @Valid @RequestBody SlideDto slideDto) {
+        SlideDto slide = slideService.updateSlide(id, slideDto);
+        return new ResponseEntity<>(slide, HttpStatus.OK);
     }
 }
