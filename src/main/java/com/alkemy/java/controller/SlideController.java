@@ -26,6 +26,9 @@ public class SlideController {
     @Autowired
     private MessageSource messageSource;
 
+    @Value("success.deleted")
+    private String deletedMessage;
+
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllSlides(){
@@ -38,5 +41,12 @@ public class SlideController {
         }
 
         return new ResponseEntity<>(slideService.getAllSlide(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        slideService.delete(id);
+        return new ResponseEntity<>(messageSource.getMessage(deletedMessage, null, Locale.getDefault()), HttpStatus.OK);
     }
 }
