@@ -23,10 +23,10 @@ public class TestimonialController {
 
 
     @Autowired
-    ITestimonialService testimonialService;
+    private ITestimonialService testimonialService;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Value("success.deleted")
     private String successfullyDeleted;
