@@ -56,7 +56,7 @@ public class MemberController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteMemberById(@PathVariable Long id) {
         try {
             memberService.deleteById(id);
 

@@ -2,7 +2,9 @@ package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Member;
+import com.alkemy.java.model.Testimonial;
 import com.alkemy.java.repository.MemberRepository;
 import com.alkemy.java.service.IMemberService;
 import org.modelmapper.ModelMapper;
@@ -30,6 +32,9 @@ public class MemberServiceimpl implements IMemberService {
     @Value("error.member.name.repeated")
     private String errorPath;
 
+    @Value("error.member.id.not.found")
+    private String idNotFoundMessage;
+
 
     @Override
     public List<MemberResponseDto> getAllMembers() {
@@ -49,6 +54,13 @@ public class MemberServiceimpl implements IMemberService {
         Member member = memberRepository.save(updatedMember);
 
         return MemberResponseDto.memberToDto(member);
+    }
+
+    public void deleteById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(messageSource.getMessage
+                        (idNotFoundMessage, null, Locale.getDefault())));
+        memberRepository.delete(member);
     }
 
 
