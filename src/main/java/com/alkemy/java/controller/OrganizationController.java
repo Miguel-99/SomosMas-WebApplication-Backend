@@ -24,9 +24,9 @@ public class OrganizationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/public/{organizationId}")
-    public ResponseEntity<OrganizationDto> getOrganizationById(@PathVariable Long organizationId) throws NotFoundException {
-        return ResponseEntity.ok(organizationService.findById(organizationId));
+    @GetMapping("/public/{id}")
+    public ResponseEntity<OrganizationDto> getOrganizationById(@PathVariable Long id) throws NotFoundException {
+        return ResponseEntity.ok(organizationService.findById(id));
     }
 
 }
