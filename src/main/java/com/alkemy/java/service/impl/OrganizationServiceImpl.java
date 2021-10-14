@@ -3,32 +3,22 @@ package com.alkemy.java.service.impl;
 import com.alkemy.java.dto.ContactFieldsDto;
 import com.alkemy.java.dto.SlidesDto;
 import com.alkemy.java.dto.*;
-import com.alkemy.java.exception.BadRequestException;
-import com.alkemy.java.exception.Exception;
-import com.alkemy.java.exception.RemovedException;
-import com.alkemy.java.exception.ResourceNotFoundException;
-import com.alkemy.java.model.Category;
-import com.alkemy.java.model.News;
 import com.alkemy.java.model.Organization;
 
-import com.alkemy.java.repository.SlideRepository;
 import com.alkemy.java.repository.SlideRepository;
 import com.alkemy.java.service.IFileService;
 import com.alkemy.java.service.IOrganizationService;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alkemy.java.repository.OrganizationRepository;
 import com.alkemy.java.dto.OrganizationDto;
-import com.alkemy.java.repository.OrganizationRepository;
-import com.alkemy.java.service.IOrganizationService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Date;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -47,9 +37,6 @@ public class OrganizationServiceImpl implements IOrganizationService {
 
     @Autowired
     private MessageSource messageSource;
-
-    @Autowired
-    SlideRepository slideRepository;
 
     @Value("error.organization.dont.exist")
     private String errorOrganizationDontExist;
