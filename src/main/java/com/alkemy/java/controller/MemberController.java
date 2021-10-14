@@ -28,7 +28,8 @@ public class MemberController {
     @Autowired
     private MessageSource messageSource;
 
-    @GetMapping
+    @GetMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllMembers(){
 
         List<MemberResponseDto> members = memberService.getAllMembers();
