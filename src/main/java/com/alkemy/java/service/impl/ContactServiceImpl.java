@@ -20,10 +20,10 @@ import org.modelmapper.ModelMapper;
 @Transactional
 public class ContactServiceImpl implements IContactService {
     @Autowired
-    ModelMapper mapper;
+    private ModelMapper mapper;
     
     @Autowired
-    ContactRepository contactRepository;
+    private ContactRepository contactRepository;
            
     
 
