@@ -9,6 +9,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -28,11 +29,11 @@ public class Slide {
     @NotBlank(message = "Field Text should not be null or empty")
     private String text;
 
-    @NotBlank(message = "Field NumberOrder should not be null or empty")
+    @NotNull(message = "Field NumberOrder should not be null or empty")
     @Column(name = "number_order")
     private int numberOrder;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="organization_id")
     private Organization organizationId;
 
