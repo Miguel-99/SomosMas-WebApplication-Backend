@@ -10,14 +10,20 @@ import com.alkemy.java.service.ICategoryService;
 import javax.validation.Valid;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.Locale;
 
 
 @RestController
@@ -26,7 +32,14 @@ public class CategoryController {
 
     @Autowired
     ICategoryService iCategoryService;
-    
+
+    @Autowired
+    MessageSource messageSource;
+
+    @Value("success.deleted")
+    String messageDeleted;
+
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity <?> createCategory (@Valid @RequestBody (required = true) CategoryRequestDto categoryRequest, BindingResult bindingResult){
@@ -60,4 +73,10 @@ public class CategoryController {
         return ResponseEntity.ok(iCategoryService.getCategoryById(categoryId));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity <?> deleteCategory (@PathVariable Long id){
+        iCategoryService.deleteCategory(id);
+        return new ResponseEntity<>(messageSource.getMessage(messageDeleted, null, Locale.getDefault()), HttpStatus.OK);
+    }
 }

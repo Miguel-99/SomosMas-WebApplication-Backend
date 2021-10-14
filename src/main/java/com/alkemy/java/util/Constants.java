@@ -11,7 +11,8 @@ public class Constants {
     public final static String BAD_REQUEST = "BadRequestException";
     public final static String FORBIDDEN = "ForbiddenException";
     public final static String CONFLICT = "ConflictException";
-
+    public final static String NOT_READABLE = "HttpMessageNotReadableException";
+    public final static String ARGUMENT_TYPE_MISMATCH = "ArgumentTypeMismatchException";
 
     //OTHERS
     public static final String SPACE = " ";

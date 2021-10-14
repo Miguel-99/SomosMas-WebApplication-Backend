@@ -9,20 +9,13 @@ import javassist.NotFoundException;
 
 import java.util.List;
 
-
-
 public interface ICategoryService {
 
 
     CategoryResponseDto getCategoryById(Long categoryId) throws NotFoundException;
-
     CategoryResponseDto createCategory (CategoryRequestDto categoryRequest);
-
+    void deleteCategory(Long id);
     CategoryResponseDto updateCategory(CategoryResponseDto dto, Long id);
-
-
-
-
     List<Category> findAllCategories();
 
 }
