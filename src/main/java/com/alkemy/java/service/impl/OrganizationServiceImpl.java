@@ -38,12 +38,6 @@ public class OrganizationServiceImpl implements IOrganizationService {
     @Autowired
     private MessageSource messageSource;
 
-    @Value("error.organization.dont.exist")
-    private String errorOrganizationDontExist;
-
-    @Value("error.organization.eliminated")
-    private String errorOrganizationEliminated;
-
     @Value("error.organization.id.not.found")
     private String idNotFoundMessage;
 
