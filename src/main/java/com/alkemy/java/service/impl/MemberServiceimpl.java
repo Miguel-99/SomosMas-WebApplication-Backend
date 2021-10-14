@@ -25,14 +25,14 @@ public class MemberServiceimpl implements IMemberService {
     private ModelMapper modelMapper;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Value("error.member.name.repeated")
-    String errorPath;
+    private String errorPath;
 
 
     @Override
-    public List<MemberResponseDto> getAllMembers(){
+    public List<MemberResponseDto> getAllMembers() {
         List<Member> members = memberRepository.findAll();
         return members.stream().map(member -> modelMapper.map(member, MemberResponseDto.class)).collect(Collectors.toList());
     }
@@ -40,7 +40,7 @@ public class MemberServiceimpl implements IMemberService {
     @Override
     public MemberResponseDto createMember(MemberRequestDto request) throws Exception {
 
-        if (memberRepository.findByName(request.getName())!= null)
+        if (memberRepository.findByName(request.getName()) != null)
             throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
         Member updatedMember =
