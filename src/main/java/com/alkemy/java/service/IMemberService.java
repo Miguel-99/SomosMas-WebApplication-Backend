@@ -10,4 +10,7 @@ public interface IMemberService {
     List<MemberResponseDto> getAllMembers();
 
     MemberResponseDto createMember(MemberRequestDto org) throws Exception;
+
+    void deleteById(Long id);
+
 }
