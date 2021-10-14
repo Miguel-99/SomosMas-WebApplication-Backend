@@ -43,10 +43,22 @@ public class SlideController {
         return new ResponseEntity<>(slideService.getAllSlide(), HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         slideService.delete(id);
         return new ResponseEntity<>(messageSource.getMessage(deletedMessage, null, Locale.getDefault()), HttpStatus.OK);
+
     }
+
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getSlide(@PathVariable Long id){
+        SlideResponseDto slide = slideService.getById(id);
+
+        return  ResponseEntity.status(HttpStatus.OK).body(slide);
+
+    }
+
 }
