@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor
@@ -16,16 +17,13 @@ public class MemberRequestDto {
 
 
     @NotEmpty(message = "{error.member.name}")
+    @Pattern(regexp="^[A-Za-z]*$",message = "{error.member.output}")
     private String name;
-    @NotEmpty(message = "{error.member.facebook}")
     private String facebookUrl;
-    @NotEmpty(message = "{error.member.instagram}")
     private String instagramUrl;
-    @NotEmpty(message = "{error.member.linkedin}")
     private String linkedinUrl;
     @NotEmpty(message = "{error.member.image}")
     private String image;
-    @NotEmpty(message = "{error.member.description}")
     private String description;
 
     public static Member dtoToMember(MemberRequestDto dto) {
