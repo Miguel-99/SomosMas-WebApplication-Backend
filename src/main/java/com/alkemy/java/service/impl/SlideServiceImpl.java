@@ -5,6 +5,7 @@ import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Slide;
 import com.alkemy.java.repository.SlideRepository;
 import com.alkemy.java.service.ISlideService;
+import com.amazonaws.services.kms.model.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,7 @@ public class SlideServiceImpl implements ISlideService {
     @Override
     @Transactional(readOnly = true)
     public SlideResponseDto getById(Long id) {
-        return slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(resourceNotFound, null, Locale.getDefault())));
+        Slide slide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
+        return modelMapper.map(slide,SlideResponseDto.class);
     }
 }

@@ -1,6 +1,7 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.SlideResponseDto;
+import com.alkemy.java.model.Slide;
 import com.alkemy.java.service.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,9 +56,7 @@ public class SlideController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getSlide(@PathVariable Long id){
-        SlideResponseDto slide = slideService.getById(id);
-
-        return  ResponseEntity.status(HttpStatus.OK).body(slide);
+        return  ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
 
     }
 
