@@ -1,3 +1,4 @@
+
 package com.alkemy.java.dto;
 
 import com.alkemy.java.model.Organization;
@@ -13,6 +14,7 @@ public class SlideResponseDto {
     private Long id;
     private String text;
     private Organization organizationId;
+
 
 
 

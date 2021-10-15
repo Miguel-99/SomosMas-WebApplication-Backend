@@ -9,6 +9,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -32,7 +33,7 @@ public class Slide {
     @Column(name = "number_order")
     private int numberOrder;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="organization_id")
     private Organization organizationId;
 
