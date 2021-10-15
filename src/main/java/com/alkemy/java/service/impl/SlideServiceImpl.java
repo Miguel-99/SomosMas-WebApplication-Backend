@@ -1,10 +1,12 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.SlideDto;
 import com.alkemy.java.dto.SlideResponseDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Slide;
 import com.alkemy.java.repository.SlideRepository;
 import com.alkemy.java.service.ISlideService;
+import com.amazonaws.services.kms.model.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +51,19 @@ public class SlideServiceImpl implements ISlideService {
     @Override
     @Transactional(readOnly = true)
     public SlideResponseDto getById(Long id) {
-        return slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(resourceNotFound, null, Locale.getDefault())));
+        Slide slide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
+        return modelMapper.map(slide,SlideResponseDto.class);
+    }
+
+    public SlideDto updateSlide(Long id, SlideDto slideDto) {
+        Slide updatedSlide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
+
+        updatedSlide.setImageUrl(slideDto.getImageUrl());
+        updatedSlide.setText(slideDto.getText());
+        updatedSlide.setNumberOrder(slideDto.getNumberOrder());
+        updatedSlide.setOrganizationId(slideDto.getOrganization());
+
+        slideRepository.save(updatedSlide);
+        return SlideDto.slideToDto(updatedSlide);
     }
 }

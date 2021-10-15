@@ -1,6 +1,8 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.SlideDto;
 import com.alkemy.java.dto.SlideResponseDto;
+import com.alkemy.java.model.Slide;
 import com.alkemy.java.service.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,10 +58,15 @@ public class SlideController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getSlide(@PathVariable Long id){
-        SlideResponseDto slide = slideService.getById(id);
-
-        return  ResponseEntity.status(HttpStatus.OK).body(slide);
+        return  ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
 
     }
 
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateById(@PathVariable Long id, @Valid @RequestBody SlideDto slideDto) {
+        SlideDto slide = slideService.updateSlide(id, slideDto);
+        return new ResponseEntity<>(slide, HttpStatus.OK);
+    }
 }
