@@ -11,4 +11,7 @@ public class OrganizationDto {
     private String image;
     private String phone;
     private String address;
+    private String linkedinUrl;
+    private String facebookUrl;
+    private String instagramUrl;
 }
