@@ -1,12 +1,8 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.ContactFieldsDto;
+import com.alkemy.java.dto.SlidesDto;
 import com.alkemy.java.dto.*;
-import com.alkemy.java.exception.BadRequestException;
-import com.alkemy.java.exception.Exception;
-import com.alkemy.java.exception.RemovedException;
-import com.alkemy.java.exception.ResourceNotFoundException;
-import com.alkemy.java.model.Category;
-import com.alkemy.java.model.News;
 import com.alkemy.java.model.Organization;
 
 import com.alkemy.java.repository.SlideRepository;
@@ -14,19 +10,17 @@ import com.alkemy.java.service.IFileService;
 import com.alkemy.java.service.IOrganizationService;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alkemy.java.repository.OrganizationRepository;
-import com.alkemy.java.repository.OrganizationRepository;
-import com.alkemy.java.service.IOrganizationService;
+import com.alkemy.java.dto.OrganizationDto;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,16 +30,13 @@ public class OrganizationServiceImpl implements IOrganizationService {
     private OrganizationRepository organizationRepository;
 
     @Autowired
-    private MessageSource messageSource;
+    private SlideRepository slideRepository;
 
     @Autowired
-    SlideRepository slideRepository;
+    private ModelMapper modelMapper;
 
-    @Value("error.organization.dont.exist")
-    private String errorOrganizationDontExist;
-
-    @Value("error.organization.eliminated")
-    private String errorOrganizationEliminated;
+    @Autowired
+    private MessageSource messageSource;
 
     @Value("error.organization.id.not.found")
     private String idNotFoundMessage;
@@ -60,9 +51,16 @@ public class OrganizationServiceImpl implements IOrganizationService {
     @Override
     public OrganizationDto findById(Long id) throws NotFoundException {
 
-        Organization organization = existsVerification(id);
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(organization, OrganizationDto.class);
+        OrganizationDto response = modelMapper.map(existsVerification(id), OrganizationDto.class);
+
+        List<SlidesDto> slides = slideRepository.findAllByOrganizationId(id)
+                .stream()
+                .map(SlidesDto::new)
+                .collect(Collectors.toList());
+
+        response.setSlides(slides);
+
+        return response;
     }
 
     @Override
@@ -78,7 +76,7 @@ public class OrganizationServiceImpl implements IOrganizationService {
 
     private Organization existsVerification(Long idOrg) throws NotFoundException {
         return organizationRepository.findById(idOrg)
-                .orElseThrow(() -> new NotFoundException(messageSource.getMessage(errorOrganizationDontExist, null, Locale.getDefault())));
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("error.organization.dont.exist", null, Locale.getDefault())));
     }
 
 

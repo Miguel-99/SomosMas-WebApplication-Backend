@@ -72,9 +72,9 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> {
-            throw new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()));
-        }));
+        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> 
+             new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()))));
+        
     }
 
     @Override
