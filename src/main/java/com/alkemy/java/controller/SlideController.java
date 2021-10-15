@@ -2,6 +2,7 @@ package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.SlideDto;
 import com.alkemy.java.dto.SlideResponseDto;
+import com.alkemy.java.model.Slide;
 import com.alkemy.java.service.ISlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,12 +46,22 @@ public class SlideController {
         return new ResponseEntity<>(slideService.getAllSlide(), HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         slideService.delete(id);
         return new ResponseEntity<>(messageSource.getMessage(deletedMessage, null, Locale.getDefault()), HttpStatus.OK);
+
     }
+
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getSlide(@PathVariable Long id){
+        return  ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
+
+    }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

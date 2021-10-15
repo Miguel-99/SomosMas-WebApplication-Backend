@@ -1,4 +1,6 @@
 package com.alkemy.java.model;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -8,12 +10,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
+
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @SQLDelete(sql = "UPDATE members SET deleted = true WHERE id=?")
 @Where(clause = " deleted = false ")
 @Table(name = "Members")
+@Builder
 public class Member{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
