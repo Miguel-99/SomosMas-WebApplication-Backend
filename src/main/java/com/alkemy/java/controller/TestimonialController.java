@@ -1,5 +1,6 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.TestimonialDto;
 import com.alkemy.java.service.ITestimonialService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,11 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Locale;
 
 @RestController
@@ -42,5 +42,12 @@ public class TestimonialController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateById(@PathVariable Long id, @Valid @RequestBody TestimonialDto testimonialDto) {
+        TestimonialDto testimonial = testimonialService.updateTestimonial(id, testimonialDto);
+        return new ResponseEntity<>(testimonialDto, HttpStatus.OK);
     }
 }
