@@ -26,6 +26,9 @@ public class MemberController {
     @Value("success.get")
     private String successGet;
 
+    @Value("success.deleted")
+    private String successfullyDeleted;
+
     @Autowired
     private MessageSource messageSource;
 
@@ -75,5 +78,18 @@ public class MemberController {
        }catch (Exception e){
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
        }
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteMemberById(@PathVariable Long id) {
+        try {
+            memberService.deleteById(id);
+
+            return new ResponseEntity<>(messageSource.getMessage
+                    (successfullyDeleted, null, Locale.getDefault()),
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

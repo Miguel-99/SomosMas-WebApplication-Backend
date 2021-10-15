@@ -13,5 +13,8 @@ public interface IMemberService {
 
     MemberResponseDto createMember(MemberRequestDto org) throws Exception;
 
+    void deleteById(Long id);
+
+
     MemberDto updateMember(MemberDto memberDto, Long id) throws Exception;
 }

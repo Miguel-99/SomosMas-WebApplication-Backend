@@ -5,6 +5,7 @@ import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Member;
+import com.alkemy.java.model.Testimonial;
 import com.alkemy.java.repository.MemberRepository;
 import com.alkemy.java.service.IMemberService;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,9 @@ public class MemberServiceimpl implements IMemberService {
 
     @Value("{error.member.idNotFound}")
     private String idNotFound;
+
+    @Value("error.member.id.not.found")
+    private String idNotFoundMessage;
 
 
     @Override
@@ -69,6 +73,13 @@ public class MemberServiceimpl implements IMemberService {
         memberToUpdate.setLinkedinUrl(memberDto.getLinkedinUrl());
         memberToUpdate.setUpdateDate(new Date());
         return modelMapper.map(memberRepository.save(memberToUpdate),MemberDto.class);
+    }
+
+    public void deleteById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(messageSource.getMessage
+                        (idNotFoundMessage, null, Locale.getDefault())));
+        memberRepository.delete(member);
     }
 
 
