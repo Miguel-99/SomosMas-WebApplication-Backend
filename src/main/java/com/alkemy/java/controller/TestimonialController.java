@@ -1,21 +1,20 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.TestimonialDto;
+import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ITestimonialService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.Locale;
+import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/testimonials")
@@ -30,6 +29,19 @@ public class TestimonialController {
 
     @Value("success.deleted")
     private String successfullyDeleted;
+    
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping 
+    public ResponseEntity <?> createTestomonial (@Valid @RequestBody TestimonialDto testinonialRequest,BindingResult bindingResult){
+           
+        if (bindingResult.hasErrors())
+            throw new InvalidDataException(bindingResult);
+        
+                
+        return new ResponseEntity <>(testimonialService.createTestimonial(testinonialRequest),HttpStatus.CREATED);
+        
+    }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
@@ -48,6 +60,6 @@ public class TestimonialController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateById(@PathVariable Long id, @Valid @RequestBody TestimonialDto testimonialDto) {
         TestimonialDto testimonial = testimonialService.updateTestimonial(id, testimonialDto);
-        return new ResponseEntity<>(testimonialDto, HttpStatus.OK);
+        return new ResponseEntity<>(testimonial, HttpStatus.OK);
     }
 }
