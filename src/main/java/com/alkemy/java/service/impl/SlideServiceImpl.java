@@ -1,5 +1,6 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.SlideDto;
 import com.alkemy.java.dto.SlideResponseDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Slide;
@@ -52,5 +53,17 @@ public class SlideServiceImpl implements ISlideService {
     public SlideResponseDto getById(Long id) {
         Slide slide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
         return modelMapper.map(slide,SlideResponseDto.class);
+    }
+
+    public SlideDto updateSlide(Long id, SlideDto slideDto) {
+        Slide updatedSlide = slideRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFound, null, Locale.getDefault())));
+
+        updatedSlide.setImageUrl(slideDto.getImageUrl());
+        updatedSlide.setText(slideDto.getText());
+        updatedSlide.setNumberOrder(slideDto.getNumberOrder());
+        updatedSlide.setOrganizationId(slideDto.getOrganization());
+
+        slideRepository.save(updatedSlide);
+        return SlideDto.slideToDto(updatedSlide);
     }
 }
