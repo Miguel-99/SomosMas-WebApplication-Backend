@@ -1,5 +1,6 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.MemberDto;
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -31,6 +33,9 @@ public class MemberServiceimpl implements IMemberService {
 
     @Value("error.member.name.repeated")
     private String errorPath;
+
+    @Value("{error.member.idNotFound}")
+    private String idNotFound;
 
     @Value("error.member.id.not.found")
     private String idNotFoundMessage;
@@ -54,6 +59,20 @@ public class MemberServiceimpl implements IMemberService {
         Member member = memberRepository.save(updatedMember);
 
         return MemberResponseDto.memberToDto(member);
+    }
+
+    @Override
+    public MemberDto updateMember(MemberDto memberDto, Long id) throws Exception {
+        Member memberToUpdate = memberRepository.findById(id).
+                orElseThrow(()-> new ResourceNotFoundException(messageSource.getMessage(idNotFound,null,Locale.getDefault())));
+        memberToUpdate.setDescription(memberDto.getDescription());
+        memberToUpdate.setFacebookUrl(memberDto.getFacebookUrl());
+        memberToUpdate.setImage(memberDto.getImage());
+        memberToUpdate.setInstagramUrl(memberDto.getInstagramUrl());
+        memberToUpdate.setName(memberDto.getName());
+        memberToUpdate.setLinkedinUrl(memberDto.getLinkedinUrl());
+        memberToUpdate.setUpdateDate(new Date());
+        return modelMapper.map(memberRepository.save(memberToUpdate),MemberDto.class);
     }
 
     public void deleteById(Long id) {
