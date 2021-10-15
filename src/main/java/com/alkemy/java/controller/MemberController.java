@@ -1,5 +1,6 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.MemberDto;
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
 import com.alkemy.java.service.IMemberService;
@@ -50,5 +51,29 @@ public class MemberController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody MemberDto memberDto,@PathVariable(name = "id") Long id){
+       try {
+           return ResponseEntity.status(HttpStatus.OK).body(memberService.updateMember(memberDto, id));
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+       }
     }
 }
