@@ -2,25 +2,23 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.SlideRequestDto;
-import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ISlideService;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.java.dto.SlideResponseDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Locale;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -35,6 +33,8 @@ public class SlideController {
 
     @Autowired
     private MessageSource messageSource;
+    
+
 
     @Value("success.deleted")
     private String deletedMessage;
@@ -42,12 +42,12 @@ public class SlideController {
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping  
-    public ResponseEntity <?> createSlide (@Valid @RequestBody SlideRequestDto slideRequestDto, BindingResult bindingResult){
+    public ResponseEntity <?> createSlide (@RequestParam("file") MultipartFile file ,  @RequestParam ("slide") String resquest) throws Exception{
         
-        if (bindingResult.hasErrors())
-            throw new InvalidDataException(bindingResult);
+        ObjectMapper mapper = new ObjectMapper();
+        SlideRequestDto slideRequestDto = mapper.readValue(resquest, SlideRequestDto.class);
         
-        return new ResponseEntity<> (slideService.createSlide(slideRequestDto),HttpStatus.CREATED);
+        return new ResponseEntity<> (slideService.createSlide(slideRequestDto, file),HttpStatus.CREATED);
         
     }
     

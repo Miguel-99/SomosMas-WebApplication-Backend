@@ -5,12 +5,13 @@ import com.alkemy.java.dto.SlideRequestDto;
 import com.alkemy.java.dto.SlideResponseCreateDto;
 import com.alkemy.java.dto.SlideResponseDto;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 
 
 public interface ISlideService {
     
-    SlideResponseCreateDto createSlide(SlideRequestDto slideRequest);
+    SlideResponseCreateDto createSlide(SlideRequestDto slideRequest, MultipartFile file) throws Exception;
 
     List<SlideResponseDto> getAllSlide();
 

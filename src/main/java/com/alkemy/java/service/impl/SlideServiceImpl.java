@@ -11,6 +11,7 @@ import com.alkemy.java.dto.SlideResponseDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Slide;
 import com.alkemy.java.repository.SlideRepository;
+import com.alkemy.java.service.IFileService;
 import com.alkemy.java.service.ISlideService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 
 
@@ -38,6 +45,9 @@ public class SlideServiceImpl implements ISlideService {
     
     @Autowired
     private MessageSource messageSource;
+    
+    @Autowired
+    private IFileService fileService;
    
     @Value("error.user.notFoundID")
     private String idNotFound;
@@ -47,18 +57,18 @@ public class SlideServiceImpl implements ISlideService {
 
     @Value("error.slide.notFound")
     private String resourceNotFound;
-
+    
+    @Value("error.slide.text.notNull")
+    private String textNotEmpty;
+    
+    @Value ("error.slide.organization.notNull")
+    private String organizationNotEmpty;
+    
+    
     @Override
-    public SlideResponseCreateDto createSlide(SlideRequestDto slideRequest) {
-             
-        if (slideRequest.getNumberOrder() == null || slideRepository.findByNumberOrder(slideRequest.getNumberOrder()) != null ) {
-            
-            slideRequest.setNumberOrder(slideRepository.maxOrder()+1);
-        }
-           
-        if (!organizationRepository.existsById(slideRequest.getOrganizationDto().getId())) {
-            throw new BadRequestException (messageSource.getMessage(errorOrganizationDontExist, null, Locale.getDefault()));
-        }
+    public SlideResponseCreateDto createSlide(SlideRequestDto slideRequest, MultipartFile file) throws Exception {
+
+        validSlideRequest(slideRequest);
         
         Slide slide = mapToEntity(slideRequest);
         
@@ -66,6 +76,7 @@ public class SlideServiceImpl implements ISlideService {
         slide.setLastUpdate(new Date ());
         slide.setNumberOrder(slideRequest.getNumberOrder());
         slide.setOrganizationId(mapper.map(slideRequest.getOrganizationDto(), Organization.class));
+        slide.setImageUrl(fileService.uploadFile(file));
         
         slideRepository.save(slide);
         
@@ -107,5 +118,23 @@ public class SlideServiceImpl implements ISlideService {
        
         return mapper.map(slide,SlideResponseDto.class);
         
+    }
+    
+    private void validSlideRequest (SlideRequestDto slideRequest){
+       
+        if (slideRequest.getText() == null || slideRequest.getText().isEmpty()) 
+           throw new BadRequestException (messageSource.getMessage(textNotEmpty, null, Locale.getDefault()));
+        
+        if (slideRequest.getOrganizationDto()== null ) 
+           throw new BadRequestException (messageSource.getMessage(organizationNotEmpty, null, Locale.getDefault()));
+        
+        if (!organizationRepository.existsById(slideRequest.getOrganizationDto().getId())) 
+            throw new BadRequestException (messageSource.getMessage(errorOrganizationDontExist, null, Locale.getDefault()));
+        
+        
+        if (slideRequest.getNumberOrder() == null || slideRepository.findByNumberOrder(slideRequest.getNumberOrder()) != null ) {
+            
+            slideRequest.setNumberOrder(slideRepository.maxOrder()+1);
+        }
     }
 }
