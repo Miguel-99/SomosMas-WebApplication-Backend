@@ -28,7 +28,7 @@ import java.util.Locale;
 public class SlideController {
 
     @Autowired
-    ISlideService slideService;
+    private ISlideService slideService;
     
     @Value("success.get")
     private String successGet;
@@ -52,7 +52,6 @@ public class SlideController {
     }
     
    
-
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllSlides(){
@@ -67,6 +66,7 @@ public class SlideController {
         return new ResponseEntity<>(slideService.getAllSlide(), HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
@@ -74,4 +74,15 @@ public class SlideController {
         return new ResponseEntity<>(messageSource.getMessage(deletedMessage, null, Locale.getDefault()), HttpStatus.OK);
 
     }
+
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getSlide(@PathVariable Long id){
+        SlideResponseDto slide = slideService.getById(id);
+
+        return  ResponseEntity.status(HttpStatus.OK).body(slide);
+
+
+    }
+
 }

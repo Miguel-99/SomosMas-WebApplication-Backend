@@ -14,13 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SlideRequestDto {
     
-    @NotBlank(message = "Field ImageUrl should not be null or empty")
-    private String imageUrl;
-
+    
     @NotBlank(message = "Field Text should not be null or empty")
     private String text;
 
-     
     private Integer numberOrder;
 
     @NotNull (message = "Field organizatioDto should not be null or empty")
