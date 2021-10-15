@@ -1,5 +1,6 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.MemberDto;
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
 import com.alkemy.java.service.IMemberService;
@@ -25,6 +26,9 @@ public class MemberController {
     @Value("success.get")
     private String successGet;
 
+    @Value("success.deleted")
+    private String successfullyDeleted;
+
     @Autowired
     private MessageSource messageSource;
 
@@ -49,6 +53,43 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(request));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody MemberDto memberDto,@PathVariable(name = "id") Long id){
+       try {
+           return ResponseEntity.status(HttpStatus.OK).body(memberService.updateMember(memberDto, id));
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+       }
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteMemberById(@PathVariable Long id) {
+        try {
+            memberService.deleteById(id);
+
+            return new ResponseEntity<>(messageSource.getMessage
+                    (successfullyDeleted, null, Locale.getDefault()),
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

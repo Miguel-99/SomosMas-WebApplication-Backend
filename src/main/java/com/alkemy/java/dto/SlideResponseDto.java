@@ -1,9 +1,10 @@
+
 package com.alkemy.java.dto;
 
 import com.alkemy.java.model.Organization;
 import lombok.Data;
 
-import java.util.Date;
+
 
 @Data
 public class SlideResponseDto {
@@ -13,8 +14,8 @@ public class SlideResponseDto {
     private Long id;
     private String text;
     private Organization organizationId;
-    private Date createDate;
-    private Date lastUpdate;
+
+
 
 
 }

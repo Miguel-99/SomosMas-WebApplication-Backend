@@ -1,7 +1,6 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.TestimonialDto;
-import com.alkemy.java.dto.TestimonialResponseDto;
 import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ITestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,9 +42,6 @@ public class TestimonialController {
         return new ResponseEntity <>(testimonialService.createTestimonial(testinonialRequest),HttpStatus.CREATED);
         
     }
-    
-    
-    
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
@@ -62,5 +54,12 @@ public class TestimonialController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateById(@PathVariable Long id, @Valid @RequestBody TestimonialDto testimonialDto) {
+        TestimonialDto testimonial = testimonialService.updateTestimonial(id, testimonialDto);
+        return new ResponseEntity<>(testimonial, HttpStatus.OK);
     }
 }

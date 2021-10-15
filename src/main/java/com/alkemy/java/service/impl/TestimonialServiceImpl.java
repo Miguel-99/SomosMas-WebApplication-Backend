@@ -51,6 +51,20 @@ public class TestimonialServiceImpl implements ITestimonialService {
         testimonialRepository.save(testimonial);
         
         return mapper.map(testimonial,TestimonialResponseDto.class);
-        
+    }
+    
+    @Override    
+    public TestimonialDto updateTestimonial(Long id, TestimonialDto testimonialDto) {
+        Testimonial updatedTestimonial = testimonialRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(idNotFoundMessage, null, Locale.getDefault())));
+
+        updatedTestimonial.setName(testimonialDto.getName());
+        updatedTestimonial.setImage(testimonialDto.getImage());
+        updatedTestimonial.setContent(testimonialDto.getContent());
+
+        testimonialRepository.save(updatedTestimonial);
+        return TestimonialDto.testimonialToDto(updatedTestimonial);
+
+
     }
 }

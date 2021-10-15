@@ -1,3 +1,4 @@
+
 package com.alkemy.java.service;
 
 import com.alkemy.java.dto.CategoryListRespDto;
@@ -7,7 +8,6 @@ import com.alkemy.java.model.Category;
 import javassist.NotFoundException;
 
 import java.util.List;
-
 
 public interface ICategoryService {
 
