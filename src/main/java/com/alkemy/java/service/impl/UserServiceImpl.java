@@ -42,12 +42,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     private ModelMapper mapper = new ModelMapper();
 
-
-    @Value("${error.user.dont.exist}")
+    @Value("error.user.dont.exist")
     private String resourceNotFound;
 
     @Autowired
@@ -56,25 +53,25 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Value("${error.email.registered}")
+    @Value("error.email.registered")
     private String errorPath;
 
-    @Value("${sendgrid.subject.welcome}")
+    @Value("sendgrid.subject.welcome")
     private String welcome;
 
     @Autowired
     IEmailService emailService;
 
-    @Value("${error.service.user.forbidden}")
+    @Value("error.service.user.forbidden")
     private String errorForbiddenUser;
 
     @Autowired
     MessageSource messageSource;
 
-    @Value("${error.user.notFoundID}")
+    @Value("error.user.notFoundID")
     private String idNotFound;
 
-    @Value("${error.empty.list}")
+    @Value("error.empty.list")
     private String emptyList;
 
     @Autowired
