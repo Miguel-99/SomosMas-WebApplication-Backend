@@ -26,7 +26,7 @@ public class SendGridEmailServiceImpl implements IEmailService {
     @Autowired
     private SendGrid sendGridClient;
 
-    @Value("email.sendgrid.from")
+    @Value("${email.sendgrid.from}")
     private String fromEmail;
 
     @Value("app.sendgrid.template.welcome")
@@ -44,6 +44,12 @@ public class SendGridEmailServiceImpl implements IEmailService {
     @Value("sendgrid.subject.welcome")
     private String welcome;
 
+    @Value("${sendgrid.subject.contact}")
+    private String contactSubject;
+
+    @Value("${sendgrid.body.contact}")
+    private String contactBody;
+
     @Autowired
     public SendGridEmailServiceImpl(SendGrid sendGrid) {
         this.sendGridClient = sendGrid;
@@ -55,6 +61,11 @@ public class SendGridEmailServiceImpl implements IEmailService {
         Mail mail = addPersonalizationTemplate(subject,user.getEmail(),user.getFirstName());
 
         sendEmailRequest(mail);
+    }
+
+    @Override
+    public void sendContactEmail(String emailTo) {
+        sendEmailRequest(new Mail(new Email(fromEmail), contactSubject, new Email(emailTo), new Content("text/plain", contactBody )));
     }
 
     private Mail addPersonalizationTemplate(String subject, String to, String name){
