@@ -44,6 +44,14 @@ public class DataSeeder {
             Collections.addAll(userList , userUser, userAdmin);
             saveUsers(userList, userRepository);
 
+            Activity activity1 = new Activity("transformacion", "Impulsar proyectos de transformación social", "transformacion.url", new Date(), new Date());
+            Activity activity2 = new Activity("proteccion", "Protección del medio ambiente.", "proteccion.url", new Date(), new Date());
+            Activity activity3 = new Activity("ayuda", "Ayuda a la infancia.", "ayuda.url", new Date(), new Date());
+            Activity activity4 = new Activity("desarrollo", "Comunicación para el desarrollo.", "desarrollo.url", new Date(), new Date());
+            Activity activity5 = new Activity("denuncia", "Promoción y denuncia de los abusos de los derechos humanos.", "denuncia.url", new Date(), new Date());
+            List<Activity> activityList = new ArrayList<>();
+            Collections.addAll(activityList, activity1, activity2, activity3, activity4, activity5);
+            saveActivity(activityList, activityRepository);
         };
     }
 
@@ -59,6 +67,14 @@ public class DataSeeder {
         for (User user: users){
             if(!userRepository.existsByEmail(user.getEmail())){
                 userRepository.save(user);
+            }
+        }
+    }
+
+    void saveActivity(List<Activity> activities, ActivityRepository activityRepository){
+        for (Activity activity: activities){
+            if(!activityRepository.existsByName(activity.getName())){
+                activityRepository.save(activity);
             }
         }
     }
