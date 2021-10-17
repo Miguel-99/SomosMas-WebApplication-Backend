@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.alkemy.java.service.IEmailService;
 import com.amazonaws.services.kms.model.AlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,9 @@ public class ContactServiceImpl implements IContactService {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private IEmailService emailService;
+
     @Value("error.contact.alreadyexists")
     private String errorContactAlreadyExists;
 
@@ -42,6 +46,7 @@ public class ContactServiceImpl implements IContactService {
         if(contactRepository.findByEmail(contactRequest.getEmail()).isPresent()){
             throw new AlreadyExistsException(messageSource.getMessage(errorContactAlreadyExists, null, Locale.getDefault()));
         }
+        emailService.sendContactEmail(contactRequest.getEmail());
         return contactRepository.save(Contact.fromDtoToContact(contactRequest));
     }
 
