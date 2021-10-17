@@ -1,6 +1,7 @@
 package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.ContactListDto;
+import com.alkemy.java.dto.ContactRequestDto;
 import com.alkemy.java.dto.ContactResponseDto;
 import com.alkemy.java.service.IContactService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +10,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/contact")
+@RequestMapping("/contacts")
 public class ContactController {
 
     @Autowired
@@ -37,5 +37,10 @@ public class ContactController {
         if (contacts.isEmpty())
             return new ResponseEntity<>(messageSource.getMessage(successGet, null, Locale.getDefault()), HttpStatus.OK);
         return new ResponseEntity<>(contacts, HttpStatus.OK);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<?> createCategory (@Valid @RequestBody(required = true) ContactRequestDto contactRequestDto){
+        return new ResponseEntity<>((contactService.createContact(contactRequestDto)), HttpStatus.CREATED);
     }
 }
