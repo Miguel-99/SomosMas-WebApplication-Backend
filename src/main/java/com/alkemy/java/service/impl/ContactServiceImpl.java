@@ -8,9 +8,14 @@ import com.alkemy.java.repository.ContactRepository;
 import com.alkemy.java.service.IContactService;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.amazonaws.services.kms.model.AlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -24,19 +29,20 @@ public class ContactServiceImpl implements IContactService {
     
     @Autowired
     private ContactRepository contactRepository;
-           
-    
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Value("error.contact.alreadyexists")
+    private String errorContactAlreadyExists;
+
 
     @Override
-    public ContactResponseDto createContact(ContactRequestDto contactRequest) {
-        
-        Contact contact = mapToEntity (contactRequest);
-        contact.setCreatedDate(new Date());
-        contact.setUpdateDate(new Date());
-        
-        contactRepository.save(contact);
-        
-        return mapToDto (contact); 
+    public Contact createContact(ContactRequestDto contactRequest)throws AlreadyExistsException {
+        if(contactRepository.findByEmail(contactRequest.getEmail()).isPresent()){
+            throw new AlreadyExistsException(messageSource.getMessage(errorContactAlreadyExists, null, Locale.getDefault()));
+        }
+        return contactRepository.save(Contact.fromDtoToContact(contactRequest));
     }
 
     @Override
@@ -45,7 +51,7 @@ public class ContactServiceImpl implements IContactService {
         return contacts.stream().map( contact -> mapper.map(contact, ContactListDto.class)).collect(Collectors.toList());
     }
 
-        private ContactResponseDto mapToDto(Contact contact) {
+    private ContactResponseDto mapToDto(Contact contact) {
         return mapper.map(contact, ContactResponseDto.class);
     }
 
