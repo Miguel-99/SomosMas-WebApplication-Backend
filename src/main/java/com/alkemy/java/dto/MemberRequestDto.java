@@ -17,7 +17,7 @@ public class MemberRequestDto {
 
 
     @NotEmpty(message = "{error.member.name}")
-    @Pattern(regexp="^[A-Za-z ]*$",message = "{error.member.output}")
+    @Pattern(regexp="^[A-Za-zñ ]*$",message = "{error.member.output}")
     private String name;
     private String facebookUrl;
     private String instagramUrl;
