@@ -42,10 +42,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     private ModelMapper mapper = new ModelMapper();
-
 
     @Value("error.user.dont.exist")
     private String resourceNotFound;
@@ -199,5 +196,14 @@ public class UserServiceImpl implements IUserService {
         } else {
             throw new ForbiddenException(messageSource.getMessage(errorForbiddenUser, null, Locale.getDefault()));
         }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public User registerUser(User user) {
+        return userRepository.save(user);
     }
 }
