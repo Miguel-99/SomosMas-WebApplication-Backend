@@ -44,7 +44,7 @@ public class MemberController {
 
 
     @PostMapping
-    public ResponseEntity<?> createOrganization(@Valid @RequestBody MemberRequestDto request){
+    public ResponseEntity<?> createMembers(@Valid @RequestBody MemberRequestDto request){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(request));
         } catch (Exception e) {
