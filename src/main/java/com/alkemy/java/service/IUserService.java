@@ -17,9 +17,12 @@ public interface IUserService {
      boolean validedRole(Long id, String token);
      UserDtoResponse getUserInformation(Long id, String token);
 
-     public User delete(Long idUser) throws NoSuchElementException;
+     User delete(Long idUser) throws NoSuchElementException;
 
-     public User findById(Long idUser);
+     User findById(Long idUser);
 
      List<UserDtoList> findAllUsers();
+
+     boolean existsByEmail(String email);
+     User registerUser(User user);
 }
