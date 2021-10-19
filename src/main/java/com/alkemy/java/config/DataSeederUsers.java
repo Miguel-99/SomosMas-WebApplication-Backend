@@ -46,12 +46,10 @@ public class DataSeederUsers {
         Role roleUser = new Role();
         roleUser.setName("ROLE_USER");
         roleUser.setDescription("Role for Users.");
-        roleUser.setCreateDate(new Date());
 
         Role roleAdmin = new Role();
         roleAdmin.setName("ROLE_ADMIN");
         roleAdmin.setDescription("Role for Admins.");
-        roleAdmin.setCreateDate(new Date());
 
         List<Role> roles = new ArrayList<>();
         Collections.addAll(roles, roleUser, roleAdmin);
@@ -72,7 +70,7 @@ public class DataSeederUsers {
         String lastNameExample = "Nuevo";
         String emailExample = "UsuarioMail%d@mail.com";
         String passwordExample = "123";
-        String photoExample = "";
+        String photoExample = "Foto%d.jpg";
 
         Role roleExample = roleService.findByName("ROLE_USER");
 
@@ -84,7 +82,7 @@ public class DataSeederUsers {
             userAux.setLastName(lastNameExample);
             userAux.setEmail(String.format(emailExample,i));
             userAux.setPassword(passwordExample);
-            userAux.setPhoto(photoExample);
+            userAux.setPhoto(String.format(photoExample,i));
             userAux.setRole(roleExample);
             userList.add(userAux);
         }
@@ -96,7 +94,7 @@ public class DataSeederUsers {
         String lastNameExample = "Nuevo";
         String emailExample = "AdminMail%d@mail.com";
         String passwordExample = "123";
-        String photoExample = "";
+        String photoExample = "Foto%d.jpg";
 
         Role roleExample = roleService.findByName("ROLE_ADMIN");
 
@@ -108,7 +106,7 @@ public class DataSeederUsers {
             userAux.setLastName(lastNameExample);
             userAux.setEmail(String.format(emailExample,i));
             userAux.setPassword(passwordExample);
-            userAux.setPhoto(photoExample);
+            userAux.setPhoto(String.format(photoExample,i));
             userAux.setRole(roleExample);
             adminList.add(userAux);
         }
