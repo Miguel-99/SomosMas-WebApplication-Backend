@@ -204,6 +204,10 @@ public class UserServiceImpl implements IUserService {
     }
 
     public User registerUser(User user) {
+        user.setCreationDate(new Date());
+        user.setLastUpdate(new Date());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 }
