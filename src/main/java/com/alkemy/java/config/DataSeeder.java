@@ -46,8 +46,8 @@ public class DataSeeder {
             Collections.addAll(userList , userUser, userAdmin);
             saveUsers(userList, userRepository);
 
-            Activity activity1 = new Activity("Transformacion", "Impulsar proyectos de transformación social", "transformacion.url", new Date(), new Date());
-            Activity activity2 = new Activity("Proteccion", "Protección del medio ambiente.", "proteccion.url", new Date(), new Date());
+            Activity activity1 = new Activity("Transformación", "Impulsar proyectos de transformación social", "transformacion.url", new Date(), new Date());
+            Activity activity2 = new Activity("Protección", "Protección del medio ambiente.", "proteccion.url", new Date(), new Date());
             Activity activity3 = new Activity("Ayuda", "Ayuda a la infancia.", "ayuda.url", new Date(), new Date());
             Activity activity4 = new Activity("Desarrollo", "Comunicación para el desarrollo.", "desarrollo.url", new Date(), new Date());
             Activity activity5 = new Activity("Denuncia", "Promoción y denuncia de los abusos de los derechos humanos.", "denuncia.url", new Date(), new Date());
