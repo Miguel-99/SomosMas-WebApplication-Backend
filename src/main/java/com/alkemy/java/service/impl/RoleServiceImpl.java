@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Locale;
 
 @Service
@@ -53,6 +54,8 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public Role registerRole(Role role) {
+        role.setCreateDate(new Date());
+        role.setUpdateDate(new Date());
         return roleRepository.save(role);
     }
 
