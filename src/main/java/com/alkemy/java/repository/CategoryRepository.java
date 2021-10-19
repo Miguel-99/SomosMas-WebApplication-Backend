@@ -14,5 +14,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT name FROM categories",
             nativeQuery = true)
-    Page<CategoryProjectionDto> fetchName(Pageable pageable);
+    Page<CategoryProjectionDto> getName(Pageable pageable);
 }

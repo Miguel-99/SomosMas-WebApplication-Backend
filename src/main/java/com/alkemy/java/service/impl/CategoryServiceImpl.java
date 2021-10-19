@@ -86,7 +86,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public Page<CategoryProjectionDto> getPageableCategory(Pageable pageable) {
-        return categoryRepository.fetchName(pageable);
+        return categoryRepository.getName(pageable);
     }
 
     @Override
