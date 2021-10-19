@@ -1,12 +1,12 @@
 
 package com.alkemy.java.service.impl;
 
-import com.alkemy.java.dto.CategoryListRespDto;
 import com.alkemy.java.dto.CategoryRequestDto;
 import com.alkemy.java.dto.CategoryResponseDto;
 import com.alkemy.java.exception.BadRequestException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Category;
+import com.alkemy.java.dto.CategoryProjectionDto;
 import com.alkemy.java.repository.CategoryRepository;
 import com.alkemy.java.service.ICategoryService;
 import java.util.Date;
@@ -18,6 +18,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -80,6 +82,11 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    @Override
+    public Page<CategoryProjectionDto> getPageableCategory(Pageable pageable) {
+        return categoryRepository.fetchName(pageable);
     }
 
     @Override
