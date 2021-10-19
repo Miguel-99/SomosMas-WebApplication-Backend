@@ -1,6 +1,5 @@
-package com.alkemy.java.repository;
+package com.alkemy.java.dto;
 
 public interface CategoryProjectionDto{
-
     public String getName();
 }
