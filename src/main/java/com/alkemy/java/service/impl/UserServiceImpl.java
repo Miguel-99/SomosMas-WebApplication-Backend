@@ -181,7 +181,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean validedRole(Long id, String token) {
         final String ADMIN = "ROLE_ADMIN";
-        String email = jwtUtil.extractUsername(token);
+
+        String email = jwtUtil.extractUsername(token.substring(7));
         User user = userRepository.findByEmail(email);
 
         if (!(user.getId().equals(id) || user.getRole().getName().equals(ADMIN)) ) {
