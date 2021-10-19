@@ -42,10 +42,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
     private ModelMapper mapper = new ModelMapper();
-
 
     @Value("error.user.dont.exist")
     private String resourceNotFound;
@@ -71,7 +68,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     MessageSource messageSource;
 
-    @Value("${error.user.notFoundID}")
+    @Value("error.user.notFoundID")
     private String idNotFound;
 
     @Value("error.empty.list")
