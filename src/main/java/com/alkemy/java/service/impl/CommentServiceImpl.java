@@ -28,16 +28,10 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public void update(Long id, CommentDto commentDto, String token) {
-        Comment comment;
-        Long userId;
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow( () -> new BadRequestException(messageSource.getMessage("error.comment.invalid.id",null, Locale.getDefault())));
 
-        try{
-            comment = commentRepository.getById(id);
-            userId = comment.getUser().getId();
-        } catch (Exception e){
-            throw new BadRequestException(messageSource.getMessage("error.comment.invalid.id",null, Locale.getDefault()));
-        }
-        if(!userService.validedRole(userId,token)) throw new ForbiddenException(messageSource.getMessage("error.user.forbidden",null,Locale.getDefault()));
+        if(!userService.validedRole(comment.getUser().getId(),token)) throw new ForbiddenException(messageSource.getMessage("error.user.forbidden",null,Locale.getDefault()));
 
         comment.setBody(commentDto.getBody());
         comment.setLastUpdate(new Date());
