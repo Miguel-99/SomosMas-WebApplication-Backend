@@ -46,11 +46,11 @@ public class CategoryController {
     MessageSource messageSource;
 
     @Value("success.deleted")
-    String messageDeleted;
+    private String messageDeleted;
 
 
     @Value("error.pagination")
-    String paginationError;
+    private String paginationError;
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
