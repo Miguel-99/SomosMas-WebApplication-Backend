@@ -18,8 +18,6 @@ import java.util.List;
 public class DataSeeder {
 
     private static final Logger log = LoggerFactory.getLogger(DataSeeder.class);
-    private static final String USER = "ROLE_USER";
-    private static final String ADMIN = "ROLE_ADMIN";
 
     @Bean
     CommandLineRunner initDatabase(ActivityRepository activityRepository,
@@ -41,8 +39,8 @@ public class DataSeeder {
             saveRoles(rolesList, roleRepository);
 
 
-            User userUser = new User("Giovanni", "Giorgio", "lacuentadelpueblo@gmail.com", "123456789", "foto.url", roleRepository.getByName(USER), new Date(), new Date());
-            User userAdmin = new User("Ricardo", "Fort", "maiami@gmail.com", "123456789", "foto.url", roleRepository.getByName(ADMIN), new Date(), new Date());
+            User userUser = new User("Giovanni", "Giorgio", "lacuentadelpueblo@gmail.com", "123456789", "foto.url", roleRepository.getByName(Roles.USER.toString()), new Date(), new Date());
+            User userAdmin = new User("Ricardo", "Fort", "maiami@gmail.com", "123456789", "foto.url", roleRepository.getByName(Roles.ADMIN.toString()), new Date(), new Date());
             List<User> userList = new ArrayList<>();
             Collections.addAll(userList , userUser, userAdmin);
             saveUsers(userList, userRepository);
