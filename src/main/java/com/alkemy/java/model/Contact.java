@@ -1,5 +1,7 @@
 package com.alkemy.java.model;
 
+import com.alkemy.java.dto.ContactRequestDto;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -8,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
+@Builder
 @Entity
 @Data
 @Table(name = "contacts")
@@ -46,4 +49,16 @@ public class Contact {
     private Date deletedAt;
 
     private Boolean deleted = Boolean.FALSE;
+
+
+    public static Contact fromDtoToContact(ContactRequestDto contactDto) {
+        return Contact.builder()
+                .name(contactDto.getName())
+                .email(contactDto.getEmail())
+                .message(contactDto.getMessage())
+                .phone(contactDto.getPhone())
+                .createdDate(new Date())
+                .updateDate(new Date())
+                .build();
+    }
 }

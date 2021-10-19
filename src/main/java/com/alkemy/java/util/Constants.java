@@ -13,7 +13,7 @@ public class Constants {
     public final static String CONFLICT = "ConflictException";
     public final static String NOT_READABLE = "HttpMessageNotReadableException";
     public final static String ARGUMENT_TYPE_MISMATCH = "ArgumentTypeMismatchException";
-
+    public final static String CONSTRAINT_VIOLATION = "ConstraintViolationException";
     //OTHERS
     public static final String SPACE = " ";
 

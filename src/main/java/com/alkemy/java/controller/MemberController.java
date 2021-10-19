@@ -1,5 +1,7 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.MemberDto;
+import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
 import com.alkemy.java.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +10,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,6 +25,9 @@ public class MemberController {
 
     @Value("success.get")
     private String successGet;
+
+    @Value("success.deleted")
+    private String successfullyDeleted;
 
     @Autowired
     private MessageSource messageSource;
@@ -40,5 +44,52 @@ public class MemberController {
         }
 
         return new ResponseEntity<>(members, HttpStatus.OK);
+    }
+
+
+    @PostMapping
+    public ResponseEntity<?> createMembers(@Valid @RequestBody MemberRequestDto request){
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(memberService.createMember(request));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody MemberDto memberDto,@PathVariable(name = "id") Long id){
+       try {
+           return ResponseEntity.status(HttpStatus.OK).body(memberService.updateMember(memberDto, id));
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+       }
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteMemberById(@PathVariable Long id) {
+        try {
+            memberService.deleteById(id);
+
+            return new ResponseEntity<>(messageSource.getMessage
+                    (successfullyDeleted, null, Locale.getDefault()),
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

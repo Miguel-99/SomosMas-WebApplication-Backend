@@ -18,7 +18,7 @@ import java.util.Date;
 @Table (name = "activities")
 @SQLDelete(sql = "UPDATE activities SET deleted = true WHERE id=?")
 @Where(clause = " deleted = false ")
-public class Activity{
+public class Activity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

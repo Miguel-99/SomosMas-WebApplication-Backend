@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.alkemy.java.service.impl;
 
 import com.alkemy.java.dto.CategoryListRespDto;
@@ -23,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -77,9 +72,9 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> {
-            throw new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()));
-        }));
+        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> 
+             new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()))));
+        
     }
 
     @Override

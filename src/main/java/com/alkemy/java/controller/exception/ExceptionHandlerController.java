@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -32,9 +34,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
-import static com.alkemy.java.util.Constants.NOT_FOUND;
-import static com.alkemy.java.util.Constants.USERNAME_NOT_FOUND;
 
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -125,6 +127,15 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     public ErrorMessageDto argumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         String error = ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName().substring(10);
         return new ErrorMessageDto (new Date(),ARGUMENT_TYPE_MISMATCH, error);
+    }
+
+    @ExceptionHandler (value = ConstraintViolationException.class)
+    @ResponseStatus (value = HttpStatus.BAD_REQUEST)
+    public ErrorDataMessageDto constraintViolationException(ConstraintViolationException ex) {
+        List<String> errors = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
+
+        return new ErrorDataMessageDto (new Date(),CONSTRAINT_VIOLATION, errors);
     }
 
 }

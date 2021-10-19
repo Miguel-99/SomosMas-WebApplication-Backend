@@ -7,8 +7,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -22,17 +23,17 @@ public class Slide {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Field ImageUrl should not be null or empty")
+    @NotEmpty(message = "{slide.image.empty}")
     private String imageUrl;
 
-    @NotBlank(message = "Field Text should not be null or empty")
+    @NotEmpty(message = "{slide.text.empty}")
     private String text;
 
-    @NotBlank(message = "Field NumberOrder should not be null or empty")
+    @NotEmpty(message = "{slide.numorder.empty}")
     @Column(name = "number_order")
     private int numberOrder;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="organization_id")
     private Organization organizationId;
 
