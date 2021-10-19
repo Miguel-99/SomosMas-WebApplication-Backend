@@ -72,7 +72,7 @@ public class CategoryController {
     }
 
 
-    @GetMapping("/page")
+    @GetMapping
     ResponseEntity<?> getCategoriesPageable(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
                                             @RequestParam(value = "page", defaultValue = "0") int page) {
         try {
