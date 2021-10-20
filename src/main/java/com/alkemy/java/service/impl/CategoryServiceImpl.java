@@ -68,15 +68,15 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setLastUpdate(new Date());
 
         categoryRepository.save(category);
-        
+
         return mapToDto(category);
     }
 
     @Override
     public void deleteCategory(Long id) {
-        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () -> 
-             new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()))));
-        
+        categoryRepository.delete(categoryRepository.findById(id).orElseThrow( () ->
+                new ResourceNotFoundException(messageSource.getMessage(errorDoesNotExist, null, Locale.getDefault()))));
+
     }
 
     @Override
