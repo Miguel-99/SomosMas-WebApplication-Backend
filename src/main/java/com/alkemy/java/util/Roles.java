@@ -1,23 +1,17 @@
 package com.alkemy.java.util;
 
-import com.alkemy.java.exception.NotValidRolException;
-import static com.alkemy.java.util.Constants.INVALID_ROL;
+import lombok.Getter;
 
+@Getter
 public enum Roles {
 
-    USER, ADMIN;
+    USER ("ROLE_USER"),
+    ADMIN ("ROLE_ADMIN");
 
-    public static Roles getRol(String rol) throws NotValidRolException {
+    private final String value;
 
-        switch (rol) {
-            case "client":
-                return USER;
-
-            case "admin":
-                return ADMIN;
-
-            default:
-                throw new NotValidRolException(INVALID_ROL);
-        }
+    Roles(String value){
+        this.value = value;
     }
+
 }
