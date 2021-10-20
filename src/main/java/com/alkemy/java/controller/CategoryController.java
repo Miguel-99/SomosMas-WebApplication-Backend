@@ -1,14 +1,12 @@
 
 package com.alkemy.java.controller;
 
-import com.alkemy.java.dto.CategoryListRespDto;
-import com.alkemy.java.dto.CategoryRequestDto;
-import com.alkemy.java.dto.CategoryResponseDto;
+import com.alkemy.java.dto.*;
 import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.exception.ResourceNotFoundException;
-import com.alkemy.java.dto.CategoryProjectionDto;
 import com.alkemy.java.service.ICategoryService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import javassist.NotFoundException;
@@ -28,7 +26,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import java.util.Locale;
@@ -74,23 +74,44 @@ public class CategoryController {
 
     @GetMapping
     ResponseEntity<?> getCategoriesPageable(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
-                                            @RequestParam(value = "page", defaultValue = "0") int page) {
+                                            @RequestParam(value = "page", defaultValue = "0") int page,HttpServletRequest request) {
         try {
+
+
             Page<CategoryProjectionDto> result =
                     iCategoryService.getPageableCategory(pageable);
+
             log.info(String.valueOf(result.getTotalPages()));
 
+            PageDto<CategoryProjectionDto> response = new PageDto<>();
+            response.setContent(result.getContent());
+
+            Map<String, String> links = new HashMap<>();
+
+            int pageNumber = result.getNumber();
+
+            if(!result.isFirst()){
+                links.put("prev", makePaginationLink(request, pageNumber - 1));
+            }
+            if(!result.isLast()){
+                links.put("next", makePaginationLink(request, pageNumber + 1));
+            }
+            response.setLinks(links);
 
             if (page >= result.getTotalPages() | page < 0)
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(
                         messageSource.getMessage(paginationError, null, Locale.getDefault()));
 
-            return ResponseEntity.status(HttpStatus.OK).body(result);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
+    }
+
+    private String makePaginationLink(HttpServletRequest request, int page) {
+        return String.format("%s?page=%d", request.getRequestURI(), page);
     }
 
 
