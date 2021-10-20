@@ -11,6 +11,7 @@ import com.alkemy.java.repository.RoleRepository;
 import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.IEmailService;
 import com.alkemy.java.service.IUserService;
+import com.alkemy.java.util.Roles;
 import lombok.extern.slf4j.Slf4j;
 import com.alkemy.java.util.JwtUtil;
 import org.modelmapper.ModelMapper;
@@ -180,12 +181,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean validedRole(Long id, String token) {
-        final String ADMIN = "ROLE_ADMIN";
-
         String email = jwtUtil.extractUsername(token.substring(7));
         User user = userRepository.findByEmail(email);
 
-        if (!(user.getId().equals(id) || user.getRole().getName().equals(ADMIN)) ) {
+        if (!(user.getId().equals(id) || user.getRole().getName().equals(Roles.ADMIN.getValue()))) {
             throw new ForbiddenException(messageSource.getMessage(errorForbiddenUser, null, Locale.getDefault()));
         }
         return true;
