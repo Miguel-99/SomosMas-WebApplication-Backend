@@ -76,38 +76,29 @@ public class CategoryController {
     ResponseEntity<?> getCategoriesPageable(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
                                             @RequestParam(value = "page", defaultValue = "0") int page,HttpServletRequest request) {
         try {
+            Map<String, String> links = new HashMap<>();
 
-
-            Page<CategoryProjectionDto> result =
-                    iCategoryService.getPageableCategory(pageable);
-
-            log.info(String.valueOf(result.getTotalPages()));
-
+            Page<CategoryProjectionDto> result = iCategoryService.getPageableCategory(pageable);
             PageDto<CategoryProjectionDto> response = new PageDto<>();
             response.setContent(result.getContent());
 
-            Map<String, String> links = new HashMap<>();
-
-            int pageNumber = result.getNumber();
-
             if(!result.isFirst()){
-                links.put("prev", makePaginationLink(request, pageNumber - 1));
+                links.put("prev", makePaginationLink(
+                        request, result.getNumber() - 1));
             }
             if(!result.isLast()){
-                links.put("next", makePaginationLink(request, pageNumber + 1));
+                links.put("next", makePaginationLink(
+                        request, result.getNumber() + 1));
             }
             response.setLinks(links);
 
             if (page >= result.getTotalPages() | page < 0)
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(
-                        messageSource.getMessage(paginationError, null, Locale.getDefault()));
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage(paginationError, null, Locale.getDefault()));
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 
     private String makePaginationLink(HttpServletRequest request, int page) {
