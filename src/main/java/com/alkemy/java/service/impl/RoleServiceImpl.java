@@ -18,16 +18,16 @@ import java.util.Locale;
 public class RoleServiceImpl implements IRoleService {
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     private ModelMapper mapper;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Value("error.role.nameNotFound")
-    String messageDontExist;
+    private String messageDontExist;
 
     public RoleServiceImpl(RoleRepository roleRepository, ModelMapper mapper) {
         this.roleRepository = roleRepository;
