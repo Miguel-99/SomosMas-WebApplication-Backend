@@ -1,9 +1,15 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.CommentResponseDto;
 import com.alkemy.java.dto.NewsDto;
 import com.alkemy.java.dto.NewsResponseDto;
+import com.alkemy.java.service.ICommentService;
 import com.alkemy.java.service.INewsService;
+
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -38,8 +44,12 @@ import org.springframework.data.web.PageableDefault;
 public class NewsController {
 
     @Autowired
+
     private INewsService newsService;
 
+    @Autowired
+    private ICommentService commentService;
+    
     @Autowired
     private MessageSource messageSource;
     
@@ -80,8 +90,9 @@ public class NewsController {
         return ResponseEntity.ok(newsService.findNewsById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<?> getNews(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
+
+    @GetMapping()
+    public ResponseEntity<?> getAllNews(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
             @RequestParam(value = "page", defaultValue = "0") int page, HttpServletRequest request) {
 
         Page<NewsResponseDto> listNews = newsService.getNews(pageable);
@@ -105,6 +116,15 @@ public class NewsController {
         response.setLinks(links);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentResponseDto>> getAllCommentsByIdNews(@PathVariable Long id){
+        List<CommentResponseDto> comments = commentService.getCommentsByIdNews(id)
+                .stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
+        return comments.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(comments) : ResponseEntity.ok(comments);
 
     }
 
