@@ -1,9 +1,15 @@
 package com.alkemy.java.controller;
 
+import com.alkemy.java.dto.CommentResponseDto;
 import com.alkemy.java.dto.NewsDto;
 import com.alkemy.java.dto.NewsResponseDto;
+import com.alkemy.java.service.ICommentService;
 import com.alkemy.java.service.INewsService;
+
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -30,6 +36,9 @@ public class NewsController {
 
     @Autowired
     INewsService newsService;
+
+    @Autowired
+    ICommentService commentService;
     
     @Autowired
     MessageSource messageSource;
@@ -63,4 +72,14 @@ public class NewsController {
     public ResponseEntity<NewsResponseDto> getNewsById(@PathVariable Long id) {
         return ResponseEntity.ok(newsService.findNewsById(id));
     }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentResponseDto>> getAllCommentsByIdNews(@PathVariable Long id){
+        List<CommentResponseDto> comments = commentService.getCommentsByIdNews(id)
+                .stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
+        return comments.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(comments) : ResponseEntity.ok(comments);
+    }
+
 }

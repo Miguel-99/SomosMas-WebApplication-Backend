@@ -1,10 +1,16 @@
 package com.alkemy.java.service;
 
+import com.alkemy.java.dto.PageDto;
 import com.alkemy.java.dto.TestimonialDto;
 import com.alkemy.java.dto.TestimonialResponseDto;
 
 
 import com.alkemy.java.dto.TestimonialDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface ITestimonialService {
 
@@ -13,4 +19,5 @@ public interface ITestimonialService {
 
     TestimonialDto updateTestimonial(Long id, TestimonialDto testimonialDto);
 
+    PageDto<TestimonialDto> findAll(Pageable page, HttpServletRequest request);
 }

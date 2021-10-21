@@ -68,7 +68,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     MessageSource messageSource;
 
-    @Value("${error.user.notFoundID}")
+    @Value("error.user.notFoundID")
     private String idNotFound;
 
     @Value("error.empty.list")
