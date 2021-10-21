@@ -16,4 +16,8 @@ public class Constants {
     public final static String CONSTRAINT_VIOLATION = "ConstraintViolationException";
     //OTHERS
     public static final String SPACE = " ";
+
+    //ROLES
+    public final static String ROLE_USER = "ROLE_USER";
+    public final static String ROLE_ADMIN = "ROLE_ADMIN";
 }

@@ -40,4 +40,10 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private List<User> userList;
 
+    public Role(String name, String description, Date createDate, Date updateDate) {
+        this.name = name;
+        this.description = description;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+    }
 }
