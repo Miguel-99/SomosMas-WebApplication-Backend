@@ -4,12 +4,16 @@ import com.alkemy.java.dto.CommentDto;
 import com.alkemy.java.exception.BadRequestException;
 import com.alkemy.java.exception.ForbiddenException;
 import com.alkemy.java.model.Comment;
+import com.alkemy.java.dto.CommentResponseDto;
+import com.alkemy.java.model.Comment;
 import com.alkemy.java.repository.CommentRepository;
 import com.alkemy.java.service.ICommentService;
 import com.alkemy.java.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import java.util.Date;
 import java.util.Locale;
@@ -38,4 +42,8 @@ public class CommentServiceImpl implements ICommentService {
         commentRepository.save(comment);
     }
 
+    @Override
+    public List<Comment> getCommentsByIdNews(Long id) {
+        return commentRepository.getCommentsByIdNews(id);
+    }
 }
