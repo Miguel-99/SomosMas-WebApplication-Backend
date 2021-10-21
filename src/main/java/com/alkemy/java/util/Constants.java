@@ -20,4 +20,9 @@ public class Constants {
     //ROLES
     public final static String ROLE_USER = "ROLE_USER";
     public final static String ROLE_ADMIN = "ROLE_ADMIN";
+
+
+    public final static String AUTHORIZATION_HEADER = "Authorization";
+    public static final String JWT = "JWT";
+    public static final String HEADER = "HEADER";
 }
