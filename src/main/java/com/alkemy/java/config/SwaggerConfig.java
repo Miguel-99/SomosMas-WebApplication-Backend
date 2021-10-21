@@ -30,7 +30,7 @@ public class SwaggerConfig {
                 .securityContexts(Collections.singletonList(securityContext()))
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.alkemy.java.controller"))
+                .apis(RequestHandlerSelectors.basePackage(PATH))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -38,12 +38,12 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Somos más REST API",
-                "Api ONG Somos más",
-                "API v1",
-                "Términos de servicio",
-                new Contact("ONG somos más", "www.somosmas.com", "alkemy.api.java@gmail.com"),
-                "Licencia de API", "www.licence.com", Collections.emptyList());
+                TITLE,
+                DESCRIPTION,
+                VERSION,
+                TERMS_OF_SERVICE,
+                new Contact(CONTACT_NAME, CONTACT_URL, CONTACT_EMAIL),
+                LICENCE, LICENCE_URL, Collections.emptyList());
     }
 
     private ApiKey apiKey(){
@@ -55,7 +55,9 @@ public class SwaggerConfig {
     }
 
     private List<SecurityReference> defaultAuth(){
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        final String SCOPE = "global";
+        final String DESCRIPTION = "accessEverything";
+        AuthorizationScope authorizationScope = new AuthorizationScope(SCOPE,DESCRIPTION);
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference(JWT, authorizationScopes));
