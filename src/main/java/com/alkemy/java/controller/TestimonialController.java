@@ -3,6 +3,8 @@ package com.alkemy.java.controller;
 import com.alkemy.java.dto.TestimonialDto;
 import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ITestimonialService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -19,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Api(value = "Testimonial controller")
 @RestController
 @RequestMapping("/testimonials")
 public class TestimonialController {
@@ -35,7 +38,8 @@ public class TestimonialController {
     
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping 
+    @PostMapping
+    @ApiOperation("Create a new testimonial")
     public ResponseEntity <?> createTestomonial (@Valid @RequestBody TestimonialDto testinonialRequest,BindingResult bindingResult){
            
         if (bindingResult.hasErrors())
@@ -46,6 +50,7 @@ public class TestimonialController {
         
     }
 
+    @ApiOperation("Delete a testimonial")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
         try {
@@ -59,6 +64,8 @@ public class TestimonialController {
         }
     }
 
+
+    @ApiOperation("Update a testimonial")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateById(@PathVariable Long id, @Valid @RequestBody TestimonialDto testimonialDto) {
@@ -66,6 +73,7 @@ public class TestimonialController {
         return new ResponseEntity<>(testimonial, HttpStatus.OK);
     }
 
+    @ApiOperation("Get testimonials")
     @GetMapping()
     public ResponseEntity<?> getTestimonials (@PageableDefault(size = 10) Pageable page, HttpServletRequest request){
     return new ResponseEntity<>(testimonialService.findAll(page, request),HttpStatus.OK);
