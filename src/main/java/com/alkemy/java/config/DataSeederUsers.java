@@ -6,6 +6,7 @@ import com.alkemy.java.model.User;
 import com.alkemy.java.repository.*;
 import com.alkemy.java.service.IRoleService;
 import com.alkemy.java.service.IUserService;
+import com.alkemy.java.util.Roles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,10 @@ public class DataSeederUsers {
     private static final int CANT_USERS = 10;
 
     @Autowired
-    IRoleService roleService;
+    private IRoleService roleService;
 
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @Bean
     CommandLineRunner initDatabase(RoleRepository roleRepository,
@@ -44,11 +45,11 @@ public class DataSeederUsers {
 
     void createDefaultRoles() {
         Role roleUser = new Role();
-        roleUser.setName("ROLE_USER");
+        roleUser.setName(Roles.USER.getValue());
         roleUser.setDescription("Role for Users.");
 
         Role roleAdmin = new Role();
-        roleAdmin.setName("ROLE_ADMIN");
+        roleAdmin.setName(Roles.ADMIN.getValue());
         roleAdmin.setDescription("Role for Admins.");
 
         List<Role> roles = new ArrayList<>();
@@ -72,7 +73,7 @@ public class DataSeederUsers {
         String passwordExample = "123";
         String photoExample = "Foto%d.jpg";
 
-        Role roleExample = roleService.findByName("ROLE_USER");
+        Role roleExample = roleService.findByName(Roles.USER.getValue());
 
         List<User> userList = new ArrayList<>();
 
@@ -96,7 +97,7 @@ public class DataSeederUsers {
         String passwordExample = "123";
         String photoExample = "Foto%d.jpg";
 
-        Role roleExample = roleService.findByName("ROLE_ADMIN");
+        Role roleExample = roleService.findByName(Roles.ADMIN.getValue());
 
         List<User> adminList = new ArrayList<>();
 
