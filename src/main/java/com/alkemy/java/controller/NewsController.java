@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.java.dto.NewsRequestDto;
 import com.alkemy.java.dto.PageDto;
 import com.alkemy.java.exception.InvalidDataException;
-import com.alkemy.java.util.UtilApp;
+import com.alkemy.java.util.UtilPagination;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +54,7 @@ public class NewsController {
     private MessageSource messageSource;
     
     @Autowired
-    private UtilApp utils;
+    private UtilPagination utils;
 
     @Value("success.deleted")
     private String messageDeleted;

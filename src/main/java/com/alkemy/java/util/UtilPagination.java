@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UtilApp {
+public class UtilPagination {
   
     private String makePaginationLink(HttpServletRequest request, int page) {
 
