@@ -16,16 +16,16 @@ public class UtilPagination {
 
     }
     
-    public Map<String,String > linksPagination (HttpServletRequest request, Page<?>list){
+    public Map<String,String > linksPagination (HttpServletRequest request, Page<?> listPage){
         
            Map<String, String> links = new HashMap<>();
 
-        if (!list.isFirst()) {
-            links.put("prev", makePaginationLink(request, list.getNumber() - 1));
+        if (!listPage.isFirst()) {
+            links.put("prev", makePaginationLink(request, listPage.getNumber() - 1));
         }
 
-        if (!list.isLast()) {
-            links.put("next", makePaginationLink(request, list.getNumber() + 1));
+        if (!listPage.isLast()) {
+            links.put("next", makePaginationLink(request, listPage.getNumber() + 1));
         }
         return links;
     }
