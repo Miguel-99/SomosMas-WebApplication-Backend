@@ -14,10 +14,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class CommentRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "Field first name should not be null or empty!")
     private String body;
 
-    @NotNull
+    @NotNull(message = "Field first name should not be null or empty!")
     private Long newsID;
 
     public static Comment dtoToComment(CommentRequestDto commentRequestDto){
