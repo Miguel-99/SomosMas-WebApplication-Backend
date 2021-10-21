@@ -40,10 +40,10 @@ import java.util.Locale;
 public class CategoryController {
 
     @Autowired
-    ICategoryService iCategoryService;
+    private ICategoryService iCategoryService;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Value("success.deleted")
     private String messageDeleted;
