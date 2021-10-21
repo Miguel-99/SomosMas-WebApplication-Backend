@@ -18,6 +18,12 @@ import com.alkemy.java.dto.NewsResponseDto;
 import com.alkemy.java.exception.BadRequestException;
 import com.alkemy.java.exception.ConflictException;
 import com.alkemy.java.repository.CategoryRepository;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.PageDto;
 
 
 @Service
@@ -101,5 +107,14 @@ public class NewsServiceImpl implements INewsService{
                 .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage(messageDontExist, null, Locale.getDefault())));
         return NewsResponseDto.newsToDto(news);
     }
+
+    @Override
+    public Page<NewsResponseDto> getNews(Pageable page) {
+        
+        return newsRepository.findAll(page).map(d -> modelMapper.map(d,NewsResponseDto.class));
+        
+    }
+    
+    
 
 }
