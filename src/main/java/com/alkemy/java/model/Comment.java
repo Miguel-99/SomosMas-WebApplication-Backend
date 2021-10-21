@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,7 @@ public class Comment {
     private Long id;
 
     @NotEmpty(message = "Field body should not be empty")
-    @Max(value = 255, message = "You have exceeded the number of characters available (255 max)")
+    @Size(max = 255, message = "You have exceeded the number of characters available (255 max)")
     private String body;
 
     @Temporal(TemporalType.DATE)
