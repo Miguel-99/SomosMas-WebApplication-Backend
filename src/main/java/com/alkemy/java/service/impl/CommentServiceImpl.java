@@ -4,8 +4,6 @@ import com.alkemy.java.dto.CommentDto;
 import com.alkemy.java.exception.BadRequestException;
 import com.alkemy.java.exception.ForbiddenException;
 import com.alkemy.java.model.Comment;
-import com.alkemy.java.dto.CommentResponseDto;
-import com.alkemy.java.model.Comment;
 import com.alkemy.java.repository.CommentRepository;
 import com.alkemy.java.service.ICommentService;
 import com.alkemy.java.service.IUserService;
