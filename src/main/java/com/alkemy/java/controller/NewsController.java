@@ -97,15 +97,7 @@ public class NewsController {
 
         Page<NewsResponseDto> listNews = newsService.getNews(pageable);
 
-        Map<String, String> links = new HashMap<>();
-
-        if (!listNews.isFirst()) {
-            links.put("prev", utils.makePaginationLink(request, listNews.getNumber() - 1));
-        }
-
-        if (!listNews.isLast()) {
-            links.put("next", utils.makePaginationLink(request, listNews.getNumber() + 1));
-        }
+       Map<String, String> links = utils.linksPagination(request, listNews);
 
         if (page >= listNews.getTotalPages()) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage(paginationError, null, Locale.getDefault()));
