@@ -45,16 +45,16 @@ public class TestimonialController {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
+    @ApiOperation("Create a new testimonial")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    @ApiOperation("Create a new testimonial")
-    public ResponseEntity <?> createTestomonial (@Valid @RequestBody TestimonialDto testinonialRequest,BindingResult bindingResult){
+    public ResponseEntity <?> createTestimonial (@Valid @RequestBody TestimonialDto testimonialRequest,BindingResult bindingResult){
 
         if (bindingResult.hasErrors())
             throw new InvalidDataException(bindingResult);
 
 
-        return new ResponseEntity <>(testimonialService.createTestimonial(testinonialRequest),HttpStatus.CREATED);
+        return new ResponseEntity <>(testimonialService.createTestimonial(testimonialRequest),HttpStatus.CREATED);
 
     }
 
