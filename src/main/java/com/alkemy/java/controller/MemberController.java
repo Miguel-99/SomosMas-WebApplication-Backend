@@ -56,21 +56,6 @@ public class MemberController {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMember(@Valid @RequestBody MemberDto memberDto,@PathVariable(name = "id") Long id){
        try {
