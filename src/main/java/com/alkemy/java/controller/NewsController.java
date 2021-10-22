@@ -24,34 +24,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alkemy.java.dto.NewsRequestDto;
+import com.alkemy.java.dto.PageDto;
 import com.alkemy.java.exception.InvalidDataException;
+import com.alkemy.java.util.UtilPagination;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 
 @RestController
 @RequestMapping("/news")
 public class NewsController {
 
     @Autowired
-    INewsService newsService;
+
+    private INewsService newsService;
 
     @Autowired
-    ICommentService commentService;
+    private ICommentService commentService;
     
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
     
+    @Autowired
+    private UtilPagination utils;
+
     @Value("success.deleted")
-    String messageDeleted;
+    private String messageDeleted;
+
+    @Value("error.pagination")
+    private String paginationError;
 
     @PostMapping
     public ResponseEntity<?> createNews(@Valid @RequestBody NewsRequestDto newsRequestDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors())
+        if (bindingResult.hasErrors()) {
             throw new InvalidDataException(bindingResult);
+        }
 
-        return new ResponseEntity<>(newsService.createNews(newsRequestDto),HttpStatus.CREATED);
+        return new ResponseEntity<>(newsService.createNews(newsRequestDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/:{id}")
@@ -73,6 +90,26 @@ public class NewsController {
         return ResponseEntity.ok(newsService.findNewsById(id));
     }
 
+
+    @GetMapping()
+    public ResponseEntity<?> getAllNews(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
+            @RequestParam(value = "page", defaultValue = "0") int page, HttpServletRequest request) {
+
+        Page<NewsResponseDto> listNews = newsService.getNews(pageable);
+
+       Map<String, String> links = utils.linksPagination(request, listNews);
+
+        if (page >= listNews.getTotalPages()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage(paginationError, null, Locale.getDefault()));
+        }
+
+        PageDto<NewsResponseDto> response = new PageDto<>();
+        response.setContent(listNews.getContent());
+        response.setLinks(links);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsByIdNews(@PathVariable Long id){
         List<CommentResponseDto> comments = commentService.getCommentsByIdNews(id)
@@ -80,6 +117,7 @@ public class NewsController {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
         return comments.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(comments) : ResponseEntity.ok(comments);
+
     }
 
 }

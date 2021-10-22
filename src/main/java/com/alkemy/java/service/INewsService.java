@@ -6,6 +6,11 @@ import com.alkemy.java.dto.NewsResponseDto;
 
 import com.alkemy.java.dto.NewsDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+
+
+import org.springframework.data.domain.Pageable;
+
 
 public interface INewsService {
 
@@ -16,4 +21,9 @@ public interface INewsService {
     NewsDto updateNews(Long id, NewsDto newsDto);
 
     NewsResponseDto findNewsById(Long id) throws ResourceNotFoundException;
+    
+    Page<NewsResponseDto> getNews(Pageable page);
+    
+    
 }
+
