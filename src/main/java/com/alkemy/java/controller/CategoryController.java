@@ -9,6 +9,7 @@ import com.alkemy.java.service.ICategoryService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.alkemy.java.util.UtilPagination;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +38,9 @@ import java.util.Locale;
 @RequestMapping("/categories")
 @Slf4j
 public class CategoryController {
+
+    @Autowired
+    UtilPagination utilPagination;
 
     @Autowired
     private ICategoryService iCategoryService;
@@ -76,35 +79,21 @@ public class CategoryController {
     ResponseEntity<?> getCategoriesPageable(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
                                             @RequestParam(value = "page", defaultValue = "0") int page,HttpServletRequest request) {
         try {
-            Map<String, String> links = new HashMap<>();
 
             Page<CategoryProjectionDto> result = iCategoryService.getPageableCategory(pageable);
-            PageDto<CategoryProjectionDto> response = new PageDto<>();
-            response.setContent(result.getContent());
-
-            if(!result.isFirst()){
-                links.put("prev", makePaginationLink(
-                        request, result.getNumber() - 1));
-            }
-            if(!result.isLast()){
-                links.put("next", makePaginationLink(
-                        request, result.getNumber() + 1));
-            }
-            response.setLinks(links);
-
+            Map<String, String> links = utilPagination.linksPagination(request, result);
             if (page >= result.getTotalPages() | page < 0)
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage(paginationError, null, Locale.getDefault()));
+
+            PageDto<CategoryProjectionDto> response = new PageDto<>();
+            response.setContent(result.getContent());
+            response.setLinks(links);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-    private String makePaginationLink(HttpServletRequest request, int page) {
-        return String.format("%s?page=%d", request.getRequestURI(), page);
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryResponseDto categoryResponseDto, @PathVariable(name = "id") long id) {
