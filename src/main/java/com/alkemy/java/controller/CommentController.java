@@ -5,6 +5,7 @@ import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/comments")
@@ -22,6 +24,12 @@ public class CommentController {
 
     @Value("${comment.list.empty}")
     private String commentListEmpty;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Value("success.deleted")
+    private String messageDeleted;
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateComment(@PathVariable("id") Long id,
@@ -42,6 +50,13 @@ public class CommentController {
 
         return new ResponseEntity<>(commentService.getAllComments().isEmpty()?
                 commentListEmpty:commentService.getAllComments(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteComment(@PathVariable("id") Long id,
+                                           @RequestHeader("Authorization") String token) {
+        commentService.deleteComment(id, token);
+        return new ResponseEntity<>(messageSource.getMessage(messageDeleted, null, Locale.getDefault()), HttpStatus.OK);
     }
 
 
