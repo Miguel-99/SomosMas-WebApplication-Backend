@@ -5,6 +5,8 @@ import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.service.ITestimonialService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -35,21 +37,33 @@ public class TestimonialController {
 
     @Value("success.deleted")
     private String successfullyDeleted;
-    
-    
+
+
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "ok"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @ApiOperation("Create a new testimonial")
     public ResponseEntity <?> createTestomonial (@Valid @RequestBody TestimonialDto testinonialRequest,BindingResult bindingResult){
-           
+
         if (bindingResult.hasErrors())
             throw new InvalidDataException(bindingResult);
-        
-                
+
+
         return new ResponseEntity <>(testimonialService.createTestimonial(testinonialRequest),HttpStatus.CREATED);
-        
+
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Delete a testimonial")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
@@ -65,6 +79,12 @@ public class TestimonialController {
     }
 
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Update a testimonial")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -73,6 +93,14 @@ public class TestimonialController {
         return new ResponseEntity<>(testimonial, HttpStatus.OK);
     }
 
+
+
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Get testimonials")
     @GetMapping()
     public ResponseEntity<?> getTestimonials (@PageableDefault(size = 10) Pageable page, HttpServletRequest request){
