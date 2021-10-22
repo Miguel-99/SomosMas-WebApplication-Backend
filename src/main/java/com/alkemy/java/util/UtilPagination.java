@@ -1,4 +1,5 @@
 
+
 package com.alkemy.java.util;
 
 import java.util.HashMap;
@@ -29,6 +30,5 @@ public class UtilPagination {
         }
         return links;
     }
-    
-         
+
 }
