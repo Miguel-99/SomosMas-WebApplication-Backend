@@ -7,10 +7,12 @@ import com.alkemy.java.model.Comment;
 import com.alkemy.java.repository.CommentRepository;
 import com.alkemy.java.service.ICommentService;
 import com.alkemy.java.service.IUserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Date;
@@ -28,6 +30,10 @@ public class CommentServiceImpl implements ICommentService {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    ModelMapper mapper;
+
+
     @Override
     public void update(Long id, CommentDto commentDto, String token) {
         Comment comment = commentRepository.findById(id)
@@ -43,5 +49,14 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public List<Comment> getCommentsByIdNews(Long id) {
         return commentRepository.getCommentsByIdNews(id);
+    }
+
+    @Override
+    public List<CommentDto> getAllComments() {
+        List<CommentDto> dtoComments = new ArrayList<>();
+        commentRepository.findAllByOrder().forEach(comment ->dtoComments.add(mapper.map(comment,CommentDto.class)));
+
+        return dtoComments;
+
     }
 }

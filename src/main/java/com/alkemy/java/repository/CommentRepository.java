@@ -14,4 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where news_id = ?1 ;"
             , nativeQuery = true)
     List<Comment> getCommentsByIdNews(Long id);
+
+    @Query("SELECT c from Comment c order by c.createDate asc")
+    List<Comment> findAllByOrder();
 }
