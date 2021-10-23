@@ -1,6 +1,4 @@
-
 package com.alkemy.java.controller;
-
 
 import com.alkemy.java.dto.SlideRequestDto;
 
@@ -14,15 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.java.dto.SlideResponseDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alkemy.java.util.UtilValidation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 
 @RestController
@@ -31,45 +28,42 @@ public class SlideController {
 
     @Autowired
     private ISlideService slideService;
-    
+
     @Value("success.get")
     private String successGet;
 
     @Autowired
     private MessageSource messageSource;
     
-
+    @Autowired
+    private UtilValidation validation;
 
     @Value("success.deleted")
     private String deletedMessage;
-    
-    
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping  
-    public ResponseEntity <?> createSlide (@RequestParam("file") MultipartFile file ,  @RequestParam ("slide") String resquest) throws Exception{
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createSlide(@ModelAttribute SlideRequestDto slideRequest) throws Exception {
         
-        ObjectMapper mapper = new ObjectMapper();
-        SlideRequestDto slideRequestDto = mapper.readValue(resquest, SlideRequestDto.class);
-        
-        return new ResponseEntity<> (slideService.createSlide(slideRequestDto, file),HttpStatus.CREATED);
-        
+        validation.validationApp(slideRequest);
+
+        return new ResponseEntity<>(slideService.createSlide(slideRequest), HttpStatus.CREATED);
+
     }
     
-   
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllSlides(){
+    public ResponseEntity<?> getAllSlides() {
 
         List<SlideResponseDto> slides = slideService.getAllSlide();
 
-        if(slides.isEmpty()){
+        if (slides.isEmpty()) {
             String message = messageSource.getMessage(successGet, null, Locale.getDefault());
             return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
         }
 
         return new ResponseEntity<>(slideService.getAllSlide(), HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -81,12 +75,10 @@ public class SlideController {
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getSlide(@PathVariable Long id){
-        return  ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
-
+    public ResponseEntity<?> getSlide(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(slideService.getById(id));
 
     }
-
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

@@ -8,14 +8,11 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.*;
 import java.util.List;
 import java.util.Locale;
@@ -47,13 +44,15 @@ public class FileServiceImpl implements IFileService {
     public String uploadFile(MultipartFile file) throws Exception {
         File mainFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         String fileName = "";
+        String fileUrl ="";
         try {
             FileOutputStream stream = new FileOutputStream(mainFile);
             stream.write(file.getBytes());
             fileName = System.currentTimeMillis()+"-"+mainFile.getName();
+            fileUrl =  endpointUrl + "/" + bucketName +"/"+ fileName;
             PutObjectRequest request = new PutObjectRequest(bucketName,fileName,mainFile);
             amazonS3.putObject(request);
-
+            
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException(e.getMessage());
         } catch (IOException e) {
@@ -62,8 +61,10 @@ public class FileServiceImpl implements IFileService {
             throw new Exception(e.getMessage());
         }
 
-        return fileName;
+        return fileUrl;
     }
+    
+    
 
     @Override
     public List<String> getFullUrFilesFromAWSS3() {
