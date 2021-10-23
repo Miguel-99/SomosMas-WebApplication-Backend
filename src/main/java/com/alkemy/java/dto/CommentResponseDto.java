@@ -11,26 +11,14 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponseDto {
-    private String body;
-    private Date creationDate;
-    private Date lastUpdate;
-
-    public CommentResponseDto(Comment comment) {
-        this.body = comment.getBody();
-        this.creationDate = comment.getCreateDate();
-        this.lastUpdate = comment.getLastUpdate();
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class CommentResponseDto {
 
     private String body;
-
     private String user;
-
     private Long news;
+    private Date creationDate;
+    private Date lastUpdate;
 
     public static CommentResponseDto commentToDto(Comment comment){
         return CommentResponseDto.builder()
@@ -38,5 +26,11 @@ public class CommentResponseDto {
                 .user(comment.getUser().getEmail())
                 .news(comment.getNews().getId())
                 .build();
+    }
+
+    public CommentResponseDto(Comment comment) {
+        this.body = comment.getBody();
+        this.creationDate = comment.getCreateDate();
+        this.lastUpdate = comment.getLastUpdate();
     }
 }
