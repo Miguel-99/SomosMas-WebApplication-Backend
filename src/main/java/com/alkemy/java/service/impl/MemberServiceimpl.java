@@ -12,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -82,5 +84,8 @@ public class MemberServiceimpl implements IMemberService {
         memberRepository.delete(member);
     }
 
-
+    @Override
+    public Page<MemberDto> getAllMembersPageable(Pageable page) {
+        return memberRepository.findAll(page).map(memberPage -> modelMapper.map(memberPage, MemberDto.class));
+    }
 }

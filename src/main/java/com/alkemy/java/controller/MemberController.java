@@ -3,18 +3,26 @@ package com.alkemy.java.controller;
 import com.alkemy.java.dto.MemberDto;
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
+import com.alkemy.java.dto.PageDto;
 import com.alkemy.java.service.IMemberService;
+import com.alkemy.java.util.UtilPagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/members")
@@ -23,29 +31,38 @@ public class MemberController {
     @Autowired
     private IMemberService memberService;
 
+    @Autowired
+    private UtilPagination utilPagination;
+
     @Value("success.get")
     private String successGet;
 
     @Value("success.deleted")
     private String successfullyDeleted;
 
+    @Value("error.pagination")
+    private String paginationError;
+
     @Autowired
     private MessageSource messageSource;
 
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllMembers(){
+    public ResponseEntity<?> getAllMembers(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
+                                           @RequestParam(value = "page", defaultValue = "0") int page, HttpServletRequest request){
 
-        List<MemberResponseDto> members = memberService.getAllMembers();
+        Page<MemberDto> members = memberService.getAllMembersPageable(pageable);
+        Map<String, String> links = utilPagination.linksPagination(request, members);
 
-        if(members.isEmpty()){
-            String message = messageSource.getMessage(successGet, null, Locale.getDefault());
-            return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-        }
+        if (page >= members.getTotalPages())
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage(paginationError, null, Locale.getDefault()));
 
-        return new ResponseEntity<>(members, HttpStatus.OK);
+        PageDto<MemberDto> response = new PageDto<>();
+        response.setContent(members.getContent());
+        response.setLinks(links);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
     @PostMapping
     public ResponseEntity<?> createMembers(@Valid @RequestBody MemberRequestDto request){
