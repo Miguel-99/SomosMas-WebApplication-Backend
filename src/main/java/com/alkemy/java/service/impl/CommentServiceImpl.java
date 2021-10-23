@@ -7,7 +7,6 @@ import com.alkemy.java.model.Comment;
 import com.alkemy.java.dto.CommentRequestDto;
 import com.alkemy.java.dto.CommentResponseDto;
 import com.alkemy.java.exception.ResourceNotFoundException;
-import com.alkemy.java.model.Comment;
 import com.alkemy.java.model.News;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.CommentRepository;
@@ -20,7 +19,6 @@ import com.alkemy.java.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,19 +27,13 @@ import java.util.List;
 import java.util.Date;
 import java.util.Locale;
 
-import java.util.Locale;
-
 @Service
 public class CommentServiceImpl implements ICommentService {
-
-    @Autowired
-    private CommentRepository commentRepository;
 
     @Autowired
     private IUserService userService;
 
     @Autowired
-    private MessageSource messageSource;
     private CommentRepository commentRepository;
 
     @Autowired
@@ -55,6 +47,9 @@ public class CommentServiceImpl implements ICommentService {
 
     @Value("error.member.idNotFound")
     private String messageNotFound;
+
+    @Autowired
+    ModelMapper mapper;
 
     @Autowired
     private MessageSource messageSource;
@@ -74,10 +69,6 @@ public class CommentServiceImpl implements ICommentService {
         Comment finalComment = commentRepository.save(comment);
         return CommentResponseDto.commentToDto(finalComment);
     }
-
-    @Autowired
-    ModelMapper mapper;
-
 
     @Override
     public void update(Long id, CommentDto commentDto, String token) {
