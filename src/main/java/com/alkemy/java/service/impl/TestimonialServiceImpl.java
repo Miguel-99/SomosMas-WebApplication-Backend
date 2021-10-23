@@ -1,5 +1,6 @@
 package com.alkemy.java.service.impl;
 
+import com.alkemy.java.dto.PageDto;
 import com.alkemy.java.dto.TestimonialDto;
 import com.alkemy.java.dto.TestimonialResponseDto;
 import com.alkemy.java.model.Testimonial;
@@ -9,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import com.alkemy.java.exception.ResourceNotFoundException;
-import java.util.Date;
+
+import java.util.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
 import org.modelmapper.ModelMapper;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class TestimonialServiceImpl implements ITestimonialService {
@@ -29,7 +35,9 @@ public class TestimonialServiceImpl implements ITestimonialService {
 
     @Value("error.testimonial.id.not.found")
     private String idNotFoundMessage;
-    
+
+    @Value("${error.testimonial.page.empty}")
+    private String emptyPage;
 
 
     @Override
@@ -66,5 +74,27 @@ public class TestimonialServiceImpl implements ITestimonialService {
         return TestimonialDto.testimonialToDto(updatedTestimonial);
 
 
+    }
+
+    @Override
+    public PageDto<TestimonialDto> findAll(Pageable page, HttpServletRequest request) {
+        PageDto<TestimonialDto> pageDto = new PageDto<>();
+        Map<String,String> links = new HashMap<>();
+        List<TestimonialDto> listDtos = new ArrayList<>();
+        Page<Testimonial> elements =  testimonialRepository.findAll(page);
+
+        elements.getContent().forEach(element -> listDtos.add(mapper.map(element,TestimonialDto.class)));
+        links.put("next",elements.hasNext()?makePaginationLink(request,page.getPageNumber()+1):"");
+        links.put("previous",elements.hasPrevious()?makePaginationLink(request,page.getPageNumber()-1):"");
+
+        pageDto.setContent(listDtos);
+        pageDto.setLinks(links);
+
+        return pageDto;
+    }
+
+
+    private String makePaginationLink(HttpServletRequest request, int page) {
+        return String.format("%s?page=%d", request.getRequestURI(), page);
     }
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -24,15 +23,15 @@ public class Comment {
     @Column(nullable = false)
     private Long id;
 
-    @NotEmpty(message = "Field body should not be empty")
-    @Size(max = 255, message = "You have exceeded the number of characters available (255 max)")
+    @NotEmpty(message = "{error.comment.body.empty}")
+    @Size(max = 255, message = "{error.comment.body.limit}")
     private String body;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", updatable = false, nullable = false)
     private Date createDate;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_update", nullable = false)
     private Date lastUpdate;
 
