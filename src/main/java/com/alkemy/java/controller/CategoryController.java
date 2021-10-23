@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.alkemy.java.util.UtilPagination;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
 
 import java.util.Locale;
 
-
+@Api(value = "Categories controller")
 @RestController
 @RequestMapping("/categories")
 @Slf4j
@@ -56,6 +58,7 @@ public class CategoryController {
     private String paginationError;
 
 
+    @ApiOperation("Create a new category")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<?> createCategory(@Valid @RequestBody(required = true) CategoryRequestDto categoryRequest, BindingResult bindingResult) {
@@ -65,6 +68,7 @@ public class CategoryController {
         return new ResponseEntity<>(iCategoryService.createCategory(categoryRequest), HttpStatus.CREATED);
     }
 
+    @ApiOperation("Get All categories")
     @GetMapping("/")
     public ResponseEntity<List<CategoryListRespDto>> getAllCategories() {
         List<CategoryListRespDto> categories = iCategoryService.findAllCategories()
@@ -74,7 +78,7 @@ public class CategoryController {
         return categories.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(categories) : ResponseEntity.ok(categories);
     }
 
-
+    @ApiOperation("Get all pageable categories")
     @GetMapping
     ResponseEntity<?> getCategoriesPageable(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
                                             @RequestParam(value = "page", defaultValue = "0") int page,HttpServletRequest request) {
@@ -95,6 +99,7 @@ public class CategoryController {
         }
     }
 
+    @ApiOperation("Update category by ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryResponseDto categoryResponseDto, @PathVariable(name = "id") long id) {
         try {
@@ -104,12 +109,14 @@ public class CategoryController {
         }
     }
 
+    @ApiOperation("Get category by ID")
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long categoryId) throws NotFoundException {
 
         return ResponseEntity.ok(iCategoryService.getCategoryById(categoryId));
     }
 
+    @ApiOperation("Delete category by ID")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
