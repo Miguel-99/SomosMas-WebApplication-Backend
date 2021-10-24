@@ -80,6 +80,7 @@ public class CategoryController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 204, message = "No Content"),
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 400, message = "Unauthorized Access"),
             @ApiResponse(code = 403, message = "Forbidden Access"),
