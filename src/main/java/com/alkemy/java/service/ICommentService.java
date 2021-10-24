@@ -1,12 +1,22 @@
 package com.alkemy.java.service;
 
-import com.alkemy.java.dto.CommentResponseDto;
+import com.alkemy.java.dto.CommentDto;
 import com.alkemy.java.model.Comment;
 
 import java.util.List;
-import java.util.Optional;
+
+import com.alkemy.java.dto.CommentRequestDto;
+import com.alkemy.java.dto.CommentResponseDto;
 
 public interface ICommentService {
 
+    void update(Long id, CommentDto commentDto, String token);
+
     List<Comment> getCommentsByIdNews(Long id);
+
+    List<CommentDto> getAllComments();
+
+    void deleteComment(Long id, String token);
+
+    CommentResponseDto createComment(CommentRequestDto commentRequestDto, String token);
 }
