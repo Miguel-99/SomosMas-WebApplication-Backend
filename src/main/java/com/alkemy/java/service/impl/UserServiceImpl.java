@@ -197,4 +197,17 @@ public class UserServiceImpl implements IUserService {
             throw new ForbiddenException(messageSource.getMessage(errorForbiddenUser, null, Locale.getDefault()));
         }
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public User registerUser(User user) {
+        user.setCreationDate(new Date());
+        user.setLastUpdate(new Date());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return userRepository.save(user);
+    }
 }
