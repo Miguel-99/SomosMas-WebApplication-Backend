@@ -1,10 +1,7 @@
 package com.alkemy.java.service.impl;
 
-
 import com.alkemy.java.dto.SlideRequestDto;
 import com.alkemy.java.dto.SlideResponseCreateDto;
-import com.alkemy.java.exception.BadRequestException;
-import com.alkemy.java.model.Organization;
 import com.alkemy.java.repository.OrganizationRepository;
 import java.util.Date;
 import com.alkemy.java.dto.SlideDto;
@@ -23,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import org.springframework.web.multipart.MultipartFile;
-
 
 
 @Service
@@ -44,34 +39,22 @@ public class SlideServiceImpl implements ISlideService {
 
     @Autowired
     private IFileService fileService;
-
+    
     @Value("error.user.notFoundID")
     private String idNotFound;
 
-    @Value("error.organization.dont.exist")
-    private String errorOrganizationDontExist;
 
-    @Value("error.slide.notFound")
-    private String resourceNotFound;
-
-    @Value("error.slide.text.notNull")
-    private String textNotEmpty;
-
-    @Value("error.slide.organization.notNull")
-    private String organizationNotEmpty;
 
     @Override
-    public SlideResponseCreateDto createSlide(SlideRequestDto slideRequest, MultipartFile file) throws Exception {
-
-        validSlideRequest(slideRequest);
-
+    public SlideResponseCreateDto createSlide(SlideRequestDto slideRequest) throws Exception {
+        
         Slide slide = mapToEntity(slideRequest);
 
         slide.setCreateDate(new Date());
         slide.setLastUpdate(new Date());
-        slide.setNumberOrder(slideRequest.getNumberOrder());
-        slide.setOrganizationId(mapper.map(slideRequest.getOrganizationDto(), Organization.class));
-        slide.setImageUrl(fileService.uploadFile(file));
+        slide.setNumberOrder(validOrderNumber(slideRequest));
+        slide.setOrganizationId(organizationRepository.getById(slideRequest.getOrganizationId()));
+        slide.setImageUrl(fileService.uploadFile(slideRequest.getFile()));
 
         slideRepository.save(slide);
 
@@ -115,24 +98,16 @@ public class SlideServiceImpl implements ISlideService {
 
     }
 
-    private void validSlideRequest(SlideRequestDto slideRequest) {
-
-        if (slideRequest.getText() == null || slideRequest.getText().isEmpty()) {
-            throw new BadRequestException(messageSource.getMessage(textNotEmpty, null, Locale.getDefault()));
-        }
-
-        if (slideRequest.getOrganizationDto() == null) {
-            throw new BadRequestException(messageSource.getMessage(organizationNotEmpty, null, Locale.getDefault()));
-        }
-
-        if (!organizationRepository.existsById(slideRequest.getOrganizationDto().getId())) {
-            throw new BadRequestException(messageSource.getMessage(errorOrganizationDontExist, null, Locale.getDefault()));
-        }
-
+    private Integer validOrderNumber(SlideRequestDto slideRequest) {
+        
+        Integer numberOrder = slideRequest.getNumberOrder();
+        
         if (slideRequest.getNumberOrder() == null || slideRepository.findByNumberOrder(slideRequest.getNumberOrder()) != null) {
 
-            slideRequest.setNumberOrder(slideRepository.maxOrder() + 1);
+            numberOrder = slideRepository.maxOrder() + 1;
         }
+        
+        return numberOrder;
     }
 
     private SlideResponseCreateDto mapToDto(Slide slide) {
