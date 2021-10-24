@@ -12,6 +12,8 @@ import javax.validation.Valid;
 import com.alkemy.java.util.UtilPagination;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ import java.util.Locale;
 public class CategoryController {
 
     @Autowired
-    UtilPagination utilPagination;
+    private UtilPagination utilPagination;
 
     @Autowired
     private ICategoryService iCategoryService;
@@ -53,11 +55,18 @@ public class CategoryController {
     @Value("success.deleted")
     private String messageDeleted;
 
-
     @Value("error.pagination")
     private String paginationError;
 
-
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Create a new category")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
@@ -68,6 +77,15 @@ public class CategoryController {
         return new ResponseEntity<>(iCategoryService.createCategory(categoryRequest), HttpStatus.CREATED);
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Get All categories")
     @GetMapping("/")
     public ResponseEntity<List<CategoryListRespDto>> getAllCategories() {
@@ -78,6 +96,15 @@ public class CategoryController {
         return categories.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(categories) : ResponseEntity.ok(categories);
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Get all pageable categories")
     @GetMapping
     ResponseEntity<?> getCategoriesPageable(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
@@ -99,6 +126,15 @@ public class CategoryController {
         }
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Update category by ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryResponseDto categoryResponseDto, @PathVariable(name = "id") long id) {
@@ -109,6 +145,15 @@ public class CategoryController {
         }
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Get category by ID")
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long categoryId) throws NotFoundException {
@@ -116,6 +161,15 @@ public class CategoryController {
         return ResponseEntity.ok(iCategoryService.getCategoryById(categoryId));
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Delete category by ID")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
