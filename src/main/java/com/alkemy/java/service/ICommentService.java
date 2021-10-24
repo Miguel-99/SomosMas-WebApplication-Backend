@@ -15,5 +15,8 @@ public interface ICommentService {
     List<Comment> getCommentsByIdNews(Long id);
 
     List<CommentDto> getAllComments();
+
+    void deleteComment(Long id, String token);
+
     CommentResponseDto createComment(CommentRequestDto commentRequestDto, String token);
 }

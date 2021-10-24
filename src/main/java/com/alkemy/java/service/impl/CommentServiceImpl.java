@@ -95,4 +95,15 @@ public class CommentServiceImpl implements ICommentService {
         return dtoComments;
 
     }
+
+    @Override
+    public void deleteComment(Long id, String token) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow( () -> new BadRequestException(messageSource.getMessage("error.comment.invalid.id",null, Locale.getDefault())));
+
+        if(!userService.validedRole(comment.getUser().getId(),token))
+            throw new ForbiddenException(messageSource.getMessage("error.user.forbidden",null,Locale.getDefault()));
+
+        commentRepository.delete(comment);
+    }
 }
