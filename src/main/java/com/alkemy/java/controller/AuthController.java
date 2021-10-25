@@ -2,14 +2,14 @@ package com.alkemy.java.controller;
 
 import com.alkemy.java.dto.*;
 import com.alkemy.java.service.IUserService;
-import com.alkemy.java.service.impl.UserDetailsServiceImpl;
-import com.alkemy.java.service.impl.UserServiceImpl;
 import com.alkemy.java.util.JwtUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +20,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+
 
 import javax.validation.Valid;
 import java.util.Locale;
 
-
+@Api(value= "Authentication Controller")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -47,7 +47,18 @@ public class AuthController {
 
     @Value("error.empty.register")
     private String errorUsernamePasswordIncorrect;
-
+    
+    
+    
+    @ApiOperation("User Authentication")
+    @ApiResponses({ 
+               @ApiResponse(code = 202, message = "Accepted"),
+               @ApiResponse(code = 400, message = "Bad Request"),
+               @ApiResponse(code = 401, message = "Unauthorized"),
+               @ApiResponse(code = 404, message = "Not Found"),
+               @ApiResponse(code = 500, message = "Internal server error")
+    })
+    
     @PostMapping("/authentication")
     public ResponseEntity<?> createAuthentication(@RequestBody AuthenticationRequestDto authenticationRequest) throws Exception {
         try {
@@ -64,6 +75,13 @@ public class AuthController {
         }
     }
 
+    
+    @ApiOperation("User Registration")
+    @ApiResponses({ 
+               @ApiResponse(code = 200, message = "OK"), 
+               @ApiResponse(code = 400, message = "Bad Request"),
+               @ApiResponse(code = 500, message = "Internal server error")
+    })
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody UserDtoRequest userDtoRequest) {
 
@@ -85,7 +103,16 @@ public class AuthController {
         return ResponseEntity.ok(new JWTAuthResponse(token,response));
 
     }
-
+    
+    @ApiOperation("Get User Details")
+    @ApiResponses({ 
+               @ApiResponse(code = 200, message = "OK"),
+               @ApiResponse(code = 401, message= "Unauthorized"),
+               @ApiResponse(code = 403, message = "Forbidden Access"),
+               @ApiResponse(code = 404, message = "Not Found"),
+               @ApiResponse(code = 500, message = "Internal server error")
+    })
+    
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUserInformation (@PathVariable Long id, @RequestHeader(name = "Authorization", required = true) String token){
         return new ResponseEntity<>(userService.getUserInformation(id, token), HttpStatus.OK);
