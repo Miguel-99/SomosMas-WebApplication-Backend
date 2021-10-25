@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -39,12 +43,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 
+@Api(value = "News Controller")
 @RestController
 @RequestMapping("/news")
 public class NewsController {
 
     @Autowired
-
     private INewsService newsService;
 
     @Autowired
@@ -62,6 +66,14 @@ public class NewsController {
     @Value("error.pagination")
     private String paginationError;
 
+    @ApiOperation("Create a new News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @PostMapping
     public ResponseEntity<?> createNews(@Valid @RequestBody NewsRequestDto newsRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -71,12 +83,28 @@ public class NewsController {
         return new ResponseEntity<>(newsService.createNews(newsRequestDto), HttpStatus.CREATED);
     }
 
+    @ApiOperation("Delete a News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @DeleteMapping("/:{id}")
     public ResponseEntity<?> deleteNews(@PathVariable("id") Long id) {
         newsService.deleteNews(id);
         return new ResponseEntity<>(messageSource.getMessage(messageDeleted, null, Locale.getDefault()), HttpStatus.OK);
     }
 
+    @ApiOperation("Update a News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateNews(@PathVariable("id") Long id, @Valid @RequestBody NewsDto newsDto) {
@@ -84,13 +112,28 @@ public class NewsController {
         return new ResponseEntity<>(newsDtoResponse, HttpStatus.OK);
     }
 
+    @ApiOperation("Get News by Id")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NewsResponseDto> getNewsById(@PathVariable Long id) {
         return ResponseEntity.ok(newsService.findNewsById(id));
     }
 
-
+    @ApiOperation("Get all News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping()
     public ResponseEntity<?> getAllNews(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
             @RequestParam(value = "page", defaultValue = "0") int page, HttpServletRequest request) {
@@ -110,6 +153,15 @@ public class NewsController {
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
+    @ApiOperation("Get all Comments by News Id")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsByIdNews(@PathVariable Long id){
         List<CommentResponseDto> comments = commentService.getCommentsByIdNews(id)
