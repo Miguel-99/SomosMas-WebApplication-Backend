@@ -1,6 +1,5 @@
 package com.alkemy.java.config;
 
-import com.alkemy.java.model.Activity;
 import com.alkemy.java.model.Role;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.*;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Configuration
@@ -33,7 +31,7 @@ public class DataSeederUsers {
     private IUserService userService;
 
     @Bean
-    CommandLineRunner initDatabase(RoleRepository roleRepository,
+    CommandLineRunner initDatabaseUsers(RoleRepository roleRepository,
                                    UserRepository userRepository) {
 
         return args -> {
