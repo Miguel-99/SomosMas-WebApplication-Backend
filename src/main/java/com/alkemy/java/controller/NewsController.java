@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -65,6 +67,13 @@ public class NewsController {
     private String paginationError;
 
     @ApiOperation("Create a new News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @PostMapping
     public ResponseEntity<?> createNews(@Valid @RequestBody NewsRequestDto newsRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -75,6 +84,13 @@ public class NewsController {
     }
 
     @ApiOperation("Delete a News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @DeleteMapping("/:{id}")
     public ResponseEntity<?> deleteNews(@PathVariable("id") Long id) {
         newsService.deleteNews(id);
@@ -82,6 +98,13 @@ public class NewsController {
     }
 
     @ApiOperation("Update a News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateNews(@PathVariable("id") Long id, @Valid @RequestBody NewsDto newsDto) {
@@ -90,6 +113,13 @@ public class NewsController {
     }
 
     @ApiOperation("Get News by Id")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<NewsResponseDto> getNewsById(@PathVariable Long id) {
@@ -97,6 +127,13 @@ public class NewsController {
     }
 
     @ApiOperation("Get all News")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping()
     public ResponseEntity<?> getAllNews(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable,
             @RequestParam(value = "page", defaultValue = "0") int page, HttpServletRequest request) {
@@ -118,6 +155,13 @@ public class NewsController {
     }
 
     @ApiOperation("Get all Comments by News Id")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 400, message = "Bad Request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsByIdNews(@PathVariable Long id){
         List<CommentResponseDto> comments = commentService.getCommentsByIdNews(id)
