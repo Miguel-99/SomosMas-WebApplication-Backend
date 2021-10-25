@@ -40,7 +40,15 @@ public class TestimonialController {
     @Value("success.deleted")
     private String successfullyDeleted;
 
-
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Create a new testimonial")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
@@ -54,7 +62,15 @@ public class TestimonialController {
 
     }
 
-
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Delete a testimonial")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
@@ -70,6 +86,15 @@ public class TestimonialController {
     }
 
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Update a testimonial")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -79,6 +104,15 @@ public class TestimonialController {
     }
 
 
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 400, message = "Unauthorized Access"),
+            @ApiResponse(code = 403, message = "Forbidden Access"),
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ApiOperation("Get testimonials")
     @GetMapping()
     public ResponseEntity<?> getTestimonials(@PageableDefault(size = 10) Pageable page, HttpServletRequest request) {
