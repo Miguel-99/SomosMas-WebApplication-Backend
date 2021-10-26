@@ -1,5 +1,6 @@
 package com.alkemy.java.config;
 
+import com.alkemy.java.repository.UserRepository;
 import com.alkemy.java.service.impl.UserDetailsServiceImpl;
 import com.alkemy.java.util.JwtUtil;
 import org.mockito.Mockito;
@@ -18,4 +19,6 @@ public class Config {
         return Mockito.mock(JwtUtil.class);
     }
 
+    @Bean
+    public UserRepository userRepository() { return Mockito.mock(UserRepository.class);}
 }
