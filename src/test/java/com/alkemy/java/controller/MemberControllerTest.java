@@ -2,10 +2,7 @@ package com.alkemy.java.controller;
 
 
 import com.alkemy.java.config.Config;
-import com.alkemy.java.dto.MemberDto;
-import com.alkemy.java.dto.MemberRequestDto;
-import com.alkemy.java.dto.MemberResponseDto;
-import com.alkemy.java.dto.UserDto;
+import com.alkemy.java.dto.*;
 import com.alkemy.java.model.Member;
 import com.alkemy.java.model.User;
 import com.alkemy.java.repository.MemberRepository;
@@ -40,6 +37,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -79,25 +77,35 @@ class MemberControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    MemberResponseDto memberTest;
+    MemberRequestDto requestDto;
+    private MemberResponseDto responseDto;
 
     @BeforeEach
     void setUp() {
 
-        memberTest = new MemberResponseDto();
-        memberTest.setName("member1");
-        memberTest.setFacebookUrl("facebook.com");
-        memberTest.setInstagramUrl("instagram.com");
-        memberTest.setLinkedinUrl("linkedin.com");
-        memberTest.setImage("images");
-        memberTest.setDescription("description");
+        responseDto = new MemberResponseDto(
+                "member",
+                "facebook.com",
+                "instagram.com",
+                "linkedin.com",
+                "images",
+                "description"
+        );
+        requestDto = new MemberRequestDto(
+                "member",
+                "facebook.com",
+                "instagram.com",
+                "linkedin.com",
+                "images",
+                "description"
+        );
 
     }
 
     @Test
     void getAllMembers() throws Exception {
         List<MemberResponseDto> memberList = new ArrayList<>();
-        memberList.add(memberTest);
+        memberList.add(responseDto);
         Page<MemberDto> memberTesting = new PageImpl(memberList);
 
         when(service.getAllMembersPageable(any(Pageable.class))).thenReturn(memberTesting);
@@ -116,25 +124,15 @@ class MemberControllerTest {
 
     @Test
     void createMembers() throws Exception {
-        String url = "/members";
-        Member mem = new Member();
-        mem.setDescription("d");
-        mem.setId(2L);
 
-//        when(service.createMember(modelMapper.map(memberTest,MemberRequestDto.class)))
-//                .thenReturn(new MemberResponseDto());
+        doReturn(responseDto).when(service).createMember(requestDto);
 
-//        when(service.createMember(memberTest)).thenReturn(new User());
-
-        MemberRequestDto emp = new MemberRequestDto();//whichever data your entity class have
-
-        emp.setDescription("d");
-
-//        mockMvc.perform(MockMvcRequestBuilders.post("/employees")
-//                        .content(asJsonString(emp))
-//                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json;charset=UTF-8"));
+        mockMvc.perform(post("/members")
+                        .content(objectMapper.writeValueAsString(requestDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andDo(print());
 
     }
 
