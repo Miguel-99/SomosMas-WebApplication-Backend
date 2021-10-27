@@ -62,7 +62,6 @@ class MemberControllerTest {
     private IMemberService service;
 
 
-
     @MockBean
     private MemberRepository memberRepository;
 
