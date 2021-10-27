@@ -2,6 +2,7 @@ package com.alkemy.java.controller;
 
 
 import com.alkemy.java.config.Config;
+import com.alkemy.java.config.MessagesConfig;
 import com.alkemy.java.dto.*;
 import com.alkemy.java.model.Member;
 import com.alkemy.java.model.User;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
@@ -37,8 +39,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(MemberController.class)
-@Import(Config.class)
+@Import({Config.class, MessagesConfig.class})
 @WithMockUser(authorities = "ROLE_ADMIN")
 class MemberControllerTest {
 
@@ -77,8 +78,9 @@ class MemberControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    MemberRequestDto requestDto;
+    private MemberRequestDto requestDto;
     private MemberResponseDto responseDto;
+
 
     @BeforeEach
     void setUp() {
@@ -138,11 +140,21 @@ class MemberControllerTest {
     }
 
     @Test
-    void updateMember() {
+    void updateMember() throws Exception {
+
+
     }
 
     @Test
-    void deleteMemberById() {
+    void deleteMemberById() throws Exception {
+        mockMvc.perform(delete("/members/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is("Successfully deleted")))
+                .andDo(print());
+    }
+
+    @Test
+    void deleteMemberByIdNotFound() throws Exception {
     }
 
     private String mapToJSON(Object object) throws JsonProcessingException {
