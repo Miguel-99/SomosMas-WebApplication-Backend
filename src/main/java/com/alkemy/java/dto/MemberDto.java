@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 public class MemberDto {
 
     @NotEmpty(message = "{error.member.name}")
-    @Pattern(regexp="^[A-Za-z]*$",message = "{error.member.output}")
+    @Pattern(regexp="^[A-Za-z ]*$",message = "{error.member.output}") //tiene q tener espacio
     private String name;
 
     @NotEmpty
