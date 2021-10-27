@@ -3,19 +3,17 @@ package com.alkemy.java.controller;
 
 import com.alkemy.java.config.Config;
 import com.alkemy.java.config.MessagesConfig;
-import com.alkemy.java.dto.*;
+import com.alkemy.java.dto.MemberDto;
+import com.alkemy.java.dto.MemberRequestDto;
+import com.alkemy.java.dto.MemberResponseDto;
 import com.alkemy.java.model.Member;
-import com.alkemy.java.model.User;
 import com.alkemy.java.repository.MemberRepository;
 import com.alkemy.java.service.IMemberService;
 import com.alkemy.java.util.UtilPagination;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,27 +22,26 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(MemberController.class)
 @Import({Config.class, MessagesConfig.class})
@@ -81,7 +78,6 @@ class MemberControllerTest {
     private MemberRequestDto requestDto;
     private MemberResponseDto responseDto;
 
-
     @BeforeEach
     void setUp() {
 
@@ -101,6 +97,8 @@ class MemberControllerTest {
                 "images",
                 "description"
         );
+
+
 
     }
 
@@ -140,8 +138,40 @@ class MemberControllerTest {
     }
 
     @Test
+    void createMembersBadRequest() throws Exception {
+        requestDto.setName("12abc");
+        doReturn(responseDto).when(service).createMember(requestDto);
+        mockMvc.perform(post("/members")
+                        .content(objectMapper.writeValueAsString(requestDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andDo(print());
+
+    }
+
+    @Test
     void updateMember() throws Exception {
 
+        MemberDto member = new MemberDto("name", "fb"
+                , "ig", "link", "image", "desc");
+
+        MemberDto member2 = new MemberDto();
+        member2.setName("updated name");
+
+        when(service.updateMember(member, 1L)).
+                thenReturn(member2);
+
+        mockMvc.perform(put("/members/{id}", 1L)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("updated name")))
+                .andDo(print());
+    }
+
+    @Test
+    void updateMemberError() throws Exception {
 
     }
 
