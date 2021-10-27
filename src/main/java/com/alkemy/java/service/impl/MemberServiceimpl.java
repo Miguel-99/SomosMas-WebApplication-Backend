@@ -36,7 +36,7 @@ public class MemberServiceimpl implements IMemberService {
     @Value("error.member.name.repeated")
     private String errorPath;
 
-    @Value("{error.member.idNotFound}")
+    @Value("error.member.idNotFound") // borrar parentesis
     private String idNotFound;
 
     @Value("error.member.id.not.found")
