@@ -6,13 +6,16 @@ import com.alkemy.java.config.MessagesConfig;
 import com.alkemy.java.dto.MemberDto;
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
+import com.alkemy.java.model.Member;
 import com.alkemy.java.repository.MemberRepository;
 import com.alkemy.java.service.IMemberService;
 import com.alkemy.java.util.UtilPagination;
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,11 +33,15 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,6 +60,8 @@ class MemberControllerTest {
 
     @MockBean
     private IMemberService service;
+
+
 
     @MockBean
     private MemberRepository memberRepository;
@@ -74,6 +83,10 @@ class MemberControllerTest {
 
     private MemberRequestDto requestDto;
     private MemberResponseDto responseDto;
+    private MemberDto member;
+    private MemberDto memberEdit;
+    private Member memberOriginal;
+
 
     @BeforeEach
     void setUp() {
@@ -95,7 +108,14 @@ class MemberControllerTest {
                 "description"
         );
 
+        member = new MemberDto("name", "fb"
+                , "ig", "link", "image", "desc");
 
+        memberEdit = new MemberDto();
+        memberEdit.setName("updated name");
+
+        memberOriginal = new Member(1, "name", "fb"
+                , "ig", "link", "image", "desc", null, null, false);
 
     }
 
@@ -150,14 +170,8 @@ class MemberControllerTest {
     @Test
     void updateMember() throws Exception {
 
-        MemberDto member = new MemberDto("name", "fb"
-                , "ig", "link", "image", "desc");
-
-        MemberDto member2 = new MemberDto();
-        member2.setName("updated name");
-
         when(service.updateMember(member, 1L)).
-                thenReturn(member2);
+                thenReturn(memberEdit);
 
         mockMvc.perform(put("/members/{id}", 1L)
                         .contentType(APPLICATION_JSON)
@@ -168,12 +182,25 @@ class MemberControllerTest {
     }
 
     @Test
-    void updateMemberError() throws Exception {
+    void updateMemberBadRequest() throws Exception {
+        String url = "/members/{id}";
 
+        memberOriginal.setId(777L);
+
+        String JSONRequest = mapToJSON(null);
+
+        given(service.updateMember(null, null)).willThrow(IllegalStateException.class);
+
+        mockMvc.perform(put(url, memberOriginal.getId())
+                        .content(JSONRequest)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     void deleteMemberById() throws Exception {
+        doNothing().when(service).deleteById(2L);
         mockMvc.perform(delete("/members/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("Successfully deleted")))
@@ -182,6 +209,7 @@ class MemberControllerTest {
 
     @Test
     void deleteMemberByIdNotFound() throws Exception {
+
     }
 
     private String mapToJSON(Object object) throws JsonProcessingException {
