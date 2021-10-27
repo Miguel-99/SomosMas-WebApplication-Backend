@@ -116,7 +116,7 @@ class MemberControllerTest {
                         .param("page", "0")
                         .content("0"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].name", is("member1")))
+                .andExpect(jsonPath("$.content[0].name", is("member")))
                 .andExpect(jsonPath("$.content[0].image", is("images")))
                 .andDo(print());
     }
@@ -132,10 +132,10 @@ class MemberControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("member")))
                 .andDo(print());
 
     }
-
 
     @Test
     void updateMember() {
