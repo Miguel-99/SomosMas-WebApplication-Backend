@@ -23,11 +23,14 @@ public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
 
+        final String expired = (String) request.getAttribute("expired");
         Map<String, Object> data = new HashMap<>();
+
+        data.put(MESSAGE, (expired != null) ? UNAUTHORIZED_EXCEPTION_MESSAGE : authException.getMessage());
+
         data.put(TIMESTAMP, new Date());
         data.put(STATUS_CODE, UNAUTHORIZED_EXCEPTION.value());
         data.put(ERROR, UNAUTHORIZED_EXCEPTION.name());
-        data.put(MESSAGE, authException.getMessage());
 
         response.setStatus(UNAUTHORIZED_EXCEPTION.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

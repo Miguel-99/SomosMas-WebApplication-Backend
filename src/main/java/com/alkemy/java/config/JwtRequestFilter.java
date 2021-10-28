@@ -2,6 +2,7 @@ package com.alkemy.java.config;
 
 import com.alkemy.java.service.impl.UserDetailsServiceImpl;
 import com.alkemy.java.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if(authorizationHeader.startsWith("Bearer ")){
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            try{
+                username = jwtUtil.extractUsername(jwt);
+            } catch (ExpiredJwtException ex){
+                request.setAttribute("expired", ex.getMessage());
+            }
+
         }
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){

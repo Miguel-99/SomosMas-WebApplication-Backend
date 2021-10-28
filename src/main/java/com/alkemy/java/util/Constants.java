@@ -20,6 +20,7 @@ public class Constants {
     public final static HttpStatus UNAUTHORIZED_EXCEPTION = HttpStatus.UNAUTHORIZED;
     public final static HttpStatus FORBIDDEN_EXCEPTION = HttpStatus.FORBIDDEN;
     public final static String FORBIDDEN_EXCEPTION_MESSAGE = ". You do not have the required permissions.";
+    public final static String UNAUTHORIZED_EXCEPTION_MESSAGE = "Token expired";
 
     public final static String TIMESTAMP = "Timestamp";
     public final static String ERROR = "Error";
