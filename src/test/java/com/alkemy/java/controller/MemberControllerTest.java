@@ -10,12 +10,10 @@ import com.alkemy.java.model.Member;
 import com.alkemy.java.repository.MemberRepository;
 import com.alkemy.java.service.IMemberService;
 import com.alkemy.java.util.UtilPagination;
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,12 +31,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -49,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MemberController.class)
 @Import({Config.class, MessagesConfig.class})
-@WithMockUser(authorities = "ROLE_ADMIN")
 class MemberControllerTest {
 
     @MockBean
@@ -119,6 +112,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     void getAllMembers() throws Exception {
         List<MemberResponseDto> memberList = new ArrayList<>();
         memberList.add(responseDto);
@@ -137,7 +131,24 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @WithMockUser(authorities = {"ROLE_USER"})
+    void getAllMembersIsForbidden() throws Exception {
+        List<MemberResponseDto> memberList = new ArrayList<>();
+        memberList.add(responseDto);
+        Page<MemberDto> memberTesting = new PageImpl(memberList);
 
+        when(service.getAllMembersPageable(any(Pageable.class))).thenReturn(memberTesting);
+
+        mockMvc.perform(get("/members")
+                        .accept(MimeTypeUtils.APPLICATION_JSON_VALUE))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+
+
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void createMembers() throws Exception {
 
@@ -153,6 +164,7 @@ class MemberControllerTest {
 
     }
 
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void createMembersBadRequest() throws Exception {
         requestDto.setName("12abc");
@@ -166,6 +178,7 @@ class MemberControllerTest {
 
     }
 
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void updateMember() throws Exception {
 
@@ -175,11 +188,14 @@ class MemberControllerTest {
         mockMvc.perform(put("/members/{id}", 1L)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member)))
+
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("updated name")))
                 .andDo(print());
     }
 
+
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void updateMemberBadRequest() throws Exception {
         String url = "/members/{id}";
@@ -197,6 +213,7 @@ class MemberControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void deleteMemberById() throws Exception {
         doNothing().when(service).deleteById(2L);
@@ -206,6 +223,7 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void deleteMemberByIdNotFound() throws Exception {
 
