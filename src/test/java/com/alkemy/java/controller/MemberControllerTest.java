@@ -1,6 +1,4 @@
 package com.alkemy.java.controller;
-
-
 import com.alkemy.java.config.Config;
 import com.alkemy.java.config.MessagesConfig;
 import com.alkemy.java.dto.MemberDto;
@@ -193,17 +191,15 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(authorities = {"ROLE_USER"})
+    @WithMockUser(authorities = {"ROLE_USER "})
     @Test
     void updateMemberIsForBidden() throws Exception {
-
         when(service.updateMember(member, 1L)).
                 thenReturn(memberEdit);
 
         mockMvc.perform(put("/members/{id}", 1L)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member)))
-
                 .andExpect(status().isForbidden())
                 .andDo(print());
     }
