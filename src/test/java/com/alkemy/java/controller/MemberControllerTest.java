@@ -147,7 +147,6 @@ class MemberControllerTest {
     }
 
 
-
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void createMembers() throws Exception {
@@ -191,6 +190,21 @@ class MemberControllerTest {
 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("updated name")))
+                .andDo(print());
+    }
+
+    @WithMockUser(authorities = {"ROLE_USER"})
+    @Test
+    void updateMemberIsForBidden() throws Exception {
+
+        when(service.updateMember(member, 1L)).
+                thenReturn(memberEdit);
+
+        mockMvc.perform(put("/members/{id}", 1L)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member)))
+
+                .andExpect(status().isForbidden())
                 .andDo(print());
     }
 
