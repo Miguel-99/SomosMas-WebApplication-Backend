@@ -1,15 +1,19 @@
 package com.alkemy.java.controller;
+
 import com.alkemy.java.config.Config;
 import com.alkemy.java.config.MessagesConfig;
 import com.alkemy.java.dto.MemberDto;
 import com.alkemy.java.dto.MemberRequestDto;
 import com.alkemy.java.dto.MemberResponseDto;
+import com.alkemy.java.exception.ConflictException;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.Member;
 import com.alkemy.java.repository.MemberRepository;
 import com.alkemy.java.service.IMemberService;
 import com.alkemy.java.util.UtilPagination;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -227,7 +231,8 @@ class MemberControllerTest {
     @Test
     void deleteMemberById() throws Exception {
         doNothing().when(service).deleteById(2L);
-        mockMvc.perform(delete("/members/{id}", 1L))
+
+        mockMvc.perform(delete("/members/{id}", 2L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("Successfully deleted")))
                 .andDo(print());
@@ -236,6 +241,11 @@ class MemberControllerTest {
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Test
     void deleteMemberByIdNotFound() throws Exception {
+        doThrow(new ResourceNotFoundException("Not found!")).when(service).deleteById(1L);
+
+        mockMvc.perform(delete("/members/{id}", 1L))
+                .andExpect(status().isNotFound())
+                .andDo(print());
 
     }
 
