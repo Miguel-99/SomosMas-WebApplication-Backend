@@ -190,7 +190,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDtoResponse getUserInformation(Long id, String token){
         if(validedRole(id,token)){
-            String email = jwtUtil.extractUsername(token);
+            String email = jwtUtil.extractUsername(token.substring(7));
             User user = userRepository.findByEmail(email);
             return UserDtoResponse.userToDto(user);
         } else {
