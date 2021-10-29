@@ -103,7 +103,7 @@ public class UserServiceImpl implements IUserService {
         user.setPhoto("url1");
         user.setRole(roleRepository.findById(userDto.getRoleId()).get());
         User newUser = userRepository.save(user);
-        emailService.sendEmailWithTemplate(userDto,welcome);
+        emailService.sendEmailWithTemplate(userDto,"WELCOME");
         return UserDtoResponse.userToDto(newUser);
     }
 
