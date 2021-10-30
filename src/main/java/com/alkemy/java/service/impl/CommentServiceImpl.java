@@ -26,6 +26,7 @@ import java.util.List;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements ICommentService {
@@ -83,8 +84,11 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByIdNews(Long id) {
-        return commentRepository.getCommentsByIdNews(id);
+    public List<CommentResponseDto> getCommentsByNewsId(Long id) {
+        return commentRepository.getCommentsByIdNews(id)
+                .stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
