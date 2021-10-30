@@ -80,7 +80,6 @@ class OrganizationControllerTest {
     }
 
     //UPDATE METHOD
-    //crear un test que muetra que se actualiza correctamente
     @Test
     void ShouldUpdateOrganizationWhenCallSetContactFields() throws Exception{
         OrganizationResponseDto responseDto = new OrganizationResponseDto("organization", "address", "image", "42157126", "afsodfkjv123@mail.com", null, "wecome text", "about us", "facebook.url/si", "instagram.url/ok", "linkedin.url/hola");
