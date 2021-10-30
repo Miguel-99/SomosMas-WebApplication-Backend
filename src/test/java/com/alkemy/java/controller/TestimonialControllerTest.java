@@ -163,11 +163,9 @@ class TestimonialControllerTest {
     @WithAnonymousUser
     void unauthorizedUser_whenGetAll_return401() throws Exception{
         when(testimonialService.findAll(any(Pageable.class),any(HttpServletRequest.class))).thenThrow(new AccessDeniedException("algo"));
-//        doThrow(new AccessDeniedException("")).when(testimonialService).findAll(any(Pageable.class),any(HttpServletRequest.class));
 
         mockMvc.perform(get("/testimonials"))
                 .andExpect(status().isUnauthorized())
-                //.andExpect(jsonPath("$.message",is("Unauthorized")))
                 .andDo(print());
     }
 
@@ -180,7 +178,6 @@ class TestimonialControllerTest {
                         .content(objectMapper.writeValueAsString(testimonialDto))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
-                //.andExpect(jsonPath("$.message",is("Unauthorized")))
                 .andDo(print());
     }
 
@@ -193,7 +190,6 @@ class TestimonialControllerTest {
                         .content(objectMapper.writeValueAsString(testimonialDto))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
-                //.andExpect(jsonPath("$.message",is("Unauthorized")))
                 .andDo(print());
     }
 
@@ -204,7 +200,6 @@ class TestimonialControllerTest {
 
         mockMvc.perform(delete("/testimonials/{id}", 1L))
                 .andExpect(status().isUnauthorized())
-                //.andExpect(jsonPath("$.message",is("Unauthorized")))
                 .andDo(print());
     }
 
