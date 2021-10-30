@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContactFieldsDto {
 
-    private Long id;
-
     private String linkedinUrl;
 
     private String facebookUrl;
