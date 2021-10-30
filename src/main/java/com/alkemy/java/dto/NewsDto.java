@@ -4,15 +4,11 @@ import com.alkemy.java.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
 public class NewsDto {
-
-    private Long id;
 
     @Size(min = 2, max = 100, message = "field characters length must be between 2 and 100")
     private String name;
