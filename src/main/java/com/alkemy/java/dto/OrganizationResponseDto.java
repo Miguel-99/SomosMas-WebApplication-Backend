@@ -20,7 +20,6 @@ import java.util.List;
 @Builder
 public class OrganizationResponseDto {
 
-    private Long id;
     private String name;
     private String address;
     private String image;
@@ -38,6 +37,7 @@ public class OrganizationResponseDto {
         return OrganizationResponseDto.builder()
                 .name(organization.getName())
                 .address(organization.getAddress())
+                .image(organization.getImage())
                 .phone(organization.getPhone())
                 .email(organization.getEmail())
                 .lastUpdate(organization.getLastUpdate())
