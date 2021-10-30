@@ -103,7 +103,7 @@ public class UserServiceImpl implements IUserService {
         user.setPhoto("url1");
         user.setRole(roleRepository.findById(userDto.getRoleId()).get());
         User newUser = userRepository.save(user);
-        emailService.sendEmailWithTemplate(userDto,welcome);
+        emailService.sendEmailWithTemplate(userDto,"WELCOME");
         return UserDtoResponse.userToDto(newUser);
     }
 
@@ -190,7 +190,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDtoResponse getUserInformation(Long id, String token){
         if(validedRole(id,token)){
-            String email = jwtUtil.extractUsername(token);
+            String email = jwtUtil.extractUsername(token.substring(7));
             User user = userRepository.findByEmail(email);
             return UserDtoResponse.userToDto(user);
         } else {

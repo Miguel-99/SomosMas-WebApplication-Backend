@@ -20,7 +20,6 @@ import java.util.List;
 @Builder
 public class OrganizationResponseDto {
 
-    private Long id;
     private String name;
     private String address;
     private String image;

@@ -11,6 +11,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -19,7 +20,7 @@ import static com.alkemy.java.util.Constants.SPACE;
 
 import java.io.IOException;
 
-@Service
+@Slf4j@Service
 @PropertySource("classpath:messages/messages.properties")
 public class SendGridEmailServiceImpl implements IEmailService {
 
@@ -29,26 +30,20 @@ public class SendGridEmailServiceImpl implements IEmailService {
     @Value("${email.sendgrid.from}")
     private String fromEmail;
 
-    @Value("app.sendgrid.template.welcome")
+    @Value("${app.sendgrid.template}")
     private String templateWelcomeId;
 
-    @Value("sendgrid.welcome.message")
+    @Value("${sendgrid.welcome.message}")
     private String sendgridWelcomeMessage;
 
-    @Value("sendgrid.from.name")
+    @Value("${sendgrid.from.name}")
     private String fromName;
 
-    @Value("error.email.not.sent")
+    @Value("${error.email.not.sent}")
     private String emailNotSent;
 
-    @Value("sendgrid.subject.welcome")
+    @Value("${sendgrid.subject.welcome}")
     private String welcome;
-
-    @Value("${sendgrid.subject.contact}")
-    private String contactSubject;
-
-    @Value("${sendgrid.body.contact}")
-    private String contactBody;
 
     @Autowired
     public SendGridEmailServiceImpl(SendGrid sendGrid) {
@@ -65,7 +60,7 @@ public class SendGridEmailServiceImpl implements IEmailService {
 
     @Override
     public void sendContactEmail(String emailTo) {
-        sendEmailRequest(new Mail(new Email(fromEmail), contactSubject, new Email(emailTo), new Content("text/plain", contactBody )));
+        Mail mail = new Mail(new Email(fromEmail,fromName), "Contacto", new Email(emailTo), new Content("text/html", SPACE));
     }
 
     private Mail addPersonalizationTemplate(String subject, String to, String name){
@@ -77,11 +72,10 @@ public class SendGridEmailServiceImpl implements IEmailService {
         Personalization personalization = new Personalization();
         personalization.addTo(new Email(to));
 
-        if(subject.equals(welcome)){
-            personalization.addDynamicTemplateData("subject", subject);
-            personalization.addDynamicTemplateData("name", name);
+        if(subject.equals("WELCOME")){
             personalization.addDynamicTemplateData("messageSubject", sendgridWelcomeMessage);
         }
+        personalization.addDynamicTemplateData("name", name);
         mail.addPersonalization(personalization);
 
         return mail;
@@ -102,4 +96,3 @@ public class SendGridEmailServiceImpl implements IEmailService {
     }
 
 }
-
