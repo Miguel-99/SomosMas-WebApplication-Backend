@@ -93,8 +93,8 @@ class AuthControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.token").value(token))
-                    .andDo(print());
+                .andExpect(jsonPath("$.token").value(token));
+
 
     }
 
@@ -108,8 +108,8 @@ class AuthControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Incorrect username or password"))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value("Incorrect username or password"));
+
 
     }
 
@@ -128,8 +128,8 @@ class AuthControllerTest {
                         .contentType(APPLICATION_JSON)
                 .characterEncoding("utf-8"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andDo(print());
+                .andExpect(content().contentType(APPLICATION_JSON));
+
     }
 
     @Test
@@ -140,8 +140,8 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.messages", hasSize(5)))
-                .andDo(print());
+                .andExpect(jsonPath("$.messages", hasSize(5)));
+
     }
 
     @Test
@@ -154,8 +154,8 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Mail is already taken."))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value("Mail is already taken."));
+
     }
 
 
@@ -169,8 +169,8 @@ class AuthControllerTest {
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.firstName").value("name"))
-                .andDo(print());
+                .andExpect(jsonPath("$.firstName").value("name"));
+
 
     }
 
@@ -184,8 +184,8 @@ class AuthControllerTest {
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("You do not have the required permissions"))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value("You do not have the required permissions"));
+
     }
 
     @Test
@@ -196,8 +196,8 @@ class AuthControllerTest {
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Id not found"))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value("Id not found"));
+
     }
 
 }
