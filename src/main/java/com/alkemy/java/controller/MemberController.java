@@ -98,6 +98,7 @@ public class MemberController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     @ApiOperation(value = "Update an existing Member.")
     @ApiResponses({
