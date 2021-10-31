@@ -1,9 +1,7 @@
 package com.alkemy.java.service.impl;
 
-import com.alkemy.java.dto.UserDto;
-import com.alkemy.java.dto.UserDtoList;
-import com.alkemy.java.dto.UserDtoRequest;
-import com.alkemy.java.dto.UserDtoResponse;
+import com.alkemy.java.dto.*;
+import com.alkemy.java.exception.BadRequestException;
 import com.alkemy.java.exception.ForbiddenException;
 import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.model.User;
@@ -18,6 +16,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,7 +57,13 @@ public class UserServiceImpl implements IUserService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Value("error.email.registered")
     private String errorPath;
@@ -75,6 +86,9 @@ public class UserServiceImpl implements IUserService {
     @Value("error.empty.list")
     private String emptyList;
 
+    @Value("error.username.password.incorrect")
+    private String errorUsernamePasswordIncorrect;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -89,7 +103,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDtoResponse registerUser(UserDtoRequest userDto) {
+    public JWTAuthResponse registerUser(UserDtoRequest userDto) {
+
         if (userRepository.findByEmail(userDto.getEmail()) != null)
             throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
 
@@ -104,7 +119,8 @@ public class UserServiceImpl implements IUserService {
         user.setRole(roleRepository.findById(userDto.getRoleId()).get());
         User newUser = userRepository.save(user);
         emailService.sendEmailWithTemplate(userDto,welcome);
-        return UserDtoResponse.userToDto(newUser);
+
+   return new JWTAuthResponse(loginUserRegister(userDto),mapper.map(user,UserDtoResponse.class));
     }
 
 
@@ -189,8 +205,9 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDtoResponse getUserInformation(Long id, String token){
+
         if(validedRole(id,token)){
-            String email = jwtUtil.extractUsername(token);
+            String email = jwtUtil.extractUsername(token.substring(7));
             User user = userRepository.findByEmail(email);
             return UserDtoResponse.userToDto(user);
         } else {
@@ -209,5 +226,30 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userRepository.save(user);
+    }
+    @Override
+    public AuthenticationResponseDto createAuthentication(AuthenticationRequestDto authenticationRequest) throws Exception {
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+        } catch (BadCredentialsException e) {
+            throw new BadRequestException(messageSource.getMessage(errorUsernamePasswordIncorrect, null, Locale.getDefault()));
+        }
+
+       String jwt = jwtUtil.generateToken(userDetailsService.loadUserByUsername(authenticationRequest.getEmail()));
+
+        return  new AuthenticationResponseDto(jwt);
+    }
+
+    private String loginUserRegister (UserDtoRequest userDtoRequest){
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDtoRequest.getEmail(), userDtoRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final UserDetails userDetails =
+                userDetailsService.loadUserByUsername(userDtoRequest.getEmail());
+
+        return jwtUtil.generateToken(userDetails);
     }
 }
