@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -44,10 +45,6 @@ public class OrganizationServiceImpl implements IOrganizationService {
     @Value("error.email.registered")
     private String errorPath;
 
-    @Autowired
-    private IFileService fileService;
-
-
     @Override
     public OrganizationDto findById(Long id) throws NotFoundException {
 
@@ -64,24 +61,29 @@ public class OrganizationServiceImpl implements IOrganizationService {
     }
 
     @Override
-    public void setContactFields(ContactFieldsDto contactFieldsDto) throws NotFoundException {
+    public OrganizationResponseDto setContactFields(ContactFieldsDto contactFieldsDto, Long idOrg) throws NotFoundException {
+        Organization organization = organizationRepository.findById(idOrg)
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage(idNotFoundMessage, null, Locale.getDefault())));
 
-        existsVerification(contactFieldsDto.getId());
+        if(contactFieldsDto.getLinkedinUrl() != null)
+            organization.setLinkedinUrl(contactFieldsDto.getLinkedinUrl());
+        if(contactFieldsDto.getFacebookUrl() != null)
+            organization.setFacebookUrl(contactFieldsDto.getFacebookUrl());
+        if(contactFieldsDto.getInstagramUrl() != null)
+            organization.setInstagramUrl(contactFieldsDto.getInstagramUrl());
 
-        organizationRepository.setContactInfoById(contactFieldsDto.getLinkedinUrl(),
-                contactFieldsDto.getFacebookUrl(),
-                contactFieldsDto.getInstagramUrl(),
-                contactFieldsDto.getId());
+        organization.setLastUpdate(new Date());
+        Organization orga = organizationRepository.save(organization);
+        return OrganizationResponseDto.orgToDto(orga);
     }
 
     private Organization existsVerification(Long idOrg) throws NotFoundException {
         return organizationRepository.findById(idOrg)
-                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("error.organization.dont.exist", null, Locale.getDefault())));
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage(idNotFoundMessage, null, Locale.getDefault())));
     }
 
-
     @Override
-    public OrganizationResponseDto createOrganization(OrganizationRequestDto request) throws Exception {
+    public OrganizationResponseDto createOrganization(OrganizationRequestDto request) {
 
         if (organizationRepository.findByEmail(request.getEmail())!= null)
             throw new RuntimeException(messageSource.getMessage(errorPath, null, Locale.getDefault()));
