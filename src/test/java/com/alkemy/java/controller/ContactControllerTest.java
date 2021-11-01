@@ -102,9 +102,10 @@ class ContactControllerTest {
         when(contactService.createContact(contactRequestDto)).thenReturn(new ContactResponseDto());
 
         mockMvc.perform(post("/contacts/")
+                    .content(objectMapper.writeValueAsString(contactRequestDto))
                     .contentType(APPLICATION_JSON))
-                    .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andDo(print());
 
     }
