@@ -89,7 +89,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = BadRequestException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessageDto BadRequestException(BadRequestException ex) {
         return new ErrorMessageDto(new Date(),BAD_REQUEST, ex.getMessage());
     }
@@ -136,6 +136,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
 
         return new ErrorDataMessageDto (new Date(),CONSTRAINT_VIOLATION, errors);
+    }
+
+    @ExceptionHandler (value =  RuntimeException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessageDto runtimeException (RuntimeException ex){
+        return new ErrorMessageDto(new Date(),BAD_REQUEST,ex.getMessage());
     }
 
 }
