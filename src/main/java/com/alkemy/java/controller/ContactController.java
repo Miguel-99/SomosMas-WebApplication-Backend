@@ -31,16 +31,17 @@ public class ContactController {
 
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllContacts(){
+    public ResponseEntity<?> getAllContacts() {
         List<ContactListDto> contacts = contactService.getAllContacts();
 
         if (contacts.isEmpty())
-            return new ResponseEntity<>(messageSource.getMessage(successGet, null, Locale.getDefault()), HttpStatus.OK);
+            return new ResponseEntity<>(messageSource.getMessage(successGet, null, Locale.getDefault()), HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createCategory (@Valid @RequestBody(required = true) ContactRequestDto contactRequestDto){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> createContact(@Valid @RequestBody(required = true) ContactRequestDto contactRequestDto) {
         return new ResponseEntity<>((contactService.createContact(contactRequestDto)), HttpStatus.CREATED);
     }
 }

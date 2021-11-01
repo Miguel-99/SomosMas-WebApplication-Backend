@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface IContactService {
 
-    Contact createContact (ContactRequestDto contactRequestDto);
+    ContactResponseDto createContact (ContactRequestDto contactRequestDto);
     List<ContactListDto> getAllContacts();
 }

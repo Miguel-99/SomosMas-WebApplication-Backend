@@ -42,12 +42,19 @@ public class ContactServiceImpl implements IContactService {
 
 
     @Override
-    public Contact createContact(ContactRequestDto contactRequest)throws AlreadyExistsException {
-        if(contactRepository.findByEmail(contactRequest.getEmail()).isPresent()){
+    public ContactResponseDto createContact(ContactRequestDto contactRequest) throws AlreadyExistsException {
+        if (contactRepository.findByEmail(contactRequest.getEmail()).isPresent()) {
             throw new AlreadyExistsException(messageSource.getMessage(errorContactAlreadyExists, null, Locale.getDefault()));
         }
         emailService.sendContactEmail(contactRequest.getEmail());
-        return contactRepository.save(Contact.fromDtoToContact(contactRequest));
+
+        Contact contact = mapToEntity(contactRequest);
+        contact.setCreatedDate(new Date());
+        contact.setUpdateDate(new Date());
+
+        contactRepository.save(Contact.fromDtoToContact(contactRequest));
+
+        return mapToDto(contact);
     }
 
     @Override
