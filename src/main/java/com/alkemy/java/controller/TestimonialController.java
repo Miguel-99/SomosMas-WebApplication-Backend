@@ -68,6 +68,7 @@ public class TestimonialController {
     })
     @ApiOperation("Delete a testimonial")
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteTestimonialById(@PathVariable Long id) {
         try {
             testimonialService.deleteById(id);
@@ -104,6 +105,7 @@ public class TestimonialController {
     })
     @ApiOperation("Get testimonials")
     @GetMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getTestimonials(@PageableDefault(size = 10) Pageable page, HttpServletRequest request) {
         return new ResponseEntity<>(testimonialService.findAll(page, request), HttpStatus.OK);
     }
