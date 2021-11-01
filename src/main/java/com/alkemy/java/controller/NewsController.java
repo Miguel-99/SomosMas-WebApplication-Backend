@@ -3,13 +3,12 @@ package com.alkemy.java.controller;
 import com.alkemy.java.dto.CommentResponseDto;
 import com.alkemy.java.dto.NewsDto;
 import com.alkemy.java.dto.NewsResponseDto;
+import com.alkemy.java.exception.ResourceNotFoundException;
 import com.alkemy.java.service.ICommentService;
 import com.alkemy.java.service.INewsService;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -31,7 +30,6 @@ import com.alkemy.java.dto.NewsRequestDto;
 import com.alkemy.java.dto.PageDto;
 import com.alkemy.java.exception.InvalidDataException;
 import com.alkemy.java.util.UtilPagination;
-import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.validation.BindingResult;
@@ -74,24 +72,25 @@ public class NewsController {
             @ApiResponse(code = 403, message = "Forbidden Access"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<?> createNews(@Valid @RequestBody NewsRequestDto newsRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidDataException(bindingResult);
         }
-
         return new ResponseEntity<>(newsService.createNews(newsRequestDto), HttpStatus.CREATED);
     }
 
     @ApiOperation("Delete a News")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 200, message = "Success."),
             @ApiResponse(code = 400, message = "Bad Request."),
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "Forbidden Access"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
-    @DeleteMapping("/:{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNews(@PathVariable("id") Long id) {
         newsService.deleteNews(id);
         return new ResponseEntity<>(messageSource.getMessage(messageDeleted, null, Locale.getDefault()), HttpStatus.OK);
@@ -99,7 +98,7 @@ public class NewsController {
 
     @ApiOperation("Update a News")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 200, message = "Success."),
             @ApiResponse(code = 400, message = "Bad Request."),
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "Forbidden Access"),
@@ -108,13 +107,12 @@ public class NewsController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateNews(@PathVariable("id") Long id, @Valid @RequestBody NewsDto newsDto) {
-        NewsDto newsDtoResponse = newsService.updateNews(id, newsDto);
-        return new ResponseEntity<>(newsDtoResponse, HttpStatus.OK);
+        return new ResponseEntity<>(newsService.updateNews(id, newsDto), HttpStatus.OK);
     }
 
     @ApiOperation("Get News by Id")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Success."),
+            @ApiResponse(code = 200, message = "Success."),
             @ApiResponse(code = 400, message = "Bad Request."),
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "Forbidden Access"),
@@ -140,18 +138,16 @@ public class NewsController {
 
         Page<NewsResponseDto> listNews = newsService.getNews(pageable);
 
-       Map<String, String> links = utils.linksPagination(request, listNews);
+        Map<String, String> links = utils.linksPagination(request, listNews);
 
-        if (page >= listNews.getTotalPages()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageSource.getMessage(paginationError, null, Locale.getDefault()));
-        }
+        if (page >= listNews.getTotalPages())
+            throw new ResourceNotFoundException(messageSource.getMessage(paginationError, null, Locale.getDefault()));
 
         PageDto<NewsResponseDto> response = new PageDto<>();
         response.setContent(listNews.getContent());
         response.setLinks(links);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @ApiOperation("Get all Comments by News Id")
@@ -164,12 +160,8 @@ public class NewsController {
     })
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsByIdNews(@PathVariable Long id){
-        List<CommentResponseDto> comments = commentService.getCommentsByIdNews(id)
-                .stream()
-                .map(CommentResponseDto::new)
-                .collect(Collectors.toList());
+        List<CommentResponseDto> comments = commentService.getCommentsByNewsId(id);
         return comments.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).body(comments) : ResponseEntity.ok(comments);
-
     }
 
 }

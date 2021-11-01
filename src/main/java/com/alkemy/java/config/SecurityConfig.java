@@ -1,10 +1,11 @@
 package com.alkemy.java.config;
 
+import com.alkemy.java.controller.exception.CustomAccessDeniedHandler;
+import com.alkemy.java.controller.exception.SimpleAuthenticationEntryPoint;
 import com.alkemy.java.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -23,7 +26,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl userService;
-
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
@@ -52,18 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .exceptionHandling()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.DELETE,"/news").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET,"/categories/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.GET,"/slides").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET).permitAll()
-                .antMatchers(HttpMethod.POST).permitAll()
-                .antMatchers("/users/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/organization/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/v2/api-docs/**").permitAll()
@@ -71,24 +65,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/categories/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler())
+                .and()
                 .httpBasic();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-        /*
-         httpSecurity.csrf().disable().authorizeRequests()
-         .antMatchers(HttpMethod.GET, "/news").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-         .antMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ROLE_ADMIN")
-         .antMatchers(HttpMethod.POST, "/news").hasAnyAuthority("ROLE_ADMIN")
-         .anyRequest().authenticated()
-         .and().sessionManagement()
-         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-         .and().exceptionHandling();
-         */
     }
 
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new SimpleAuthenticationEntryPoint();
+    }
 
 }

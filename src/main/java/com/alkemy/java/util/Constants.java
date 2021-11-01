@@ -1,5 +1,7 @@
 package com.alkemy.java.util;
 
+import org.springframework.http.HttpStatus;
+
 public class Constants {
 
     //EXCEPTIONS
@@ -14,6 +16,16 @@ public class Constants {
     public final static String NOT_READABLE = "HttpMessageNotReadableException";
     public final static String ARGUMENT_TYPE_MISMATCH = "ArgumentTypeMismatchException";
     public final static String CONSTRAINT_VIOLATION = "ConstraintViolationException";
+
+    public final static HttpStatus UNAUTHORIZED_EXCEPTION = HttpStatus.UNAUTHORIZED;
+    public final static HttpStatus FORBIDDEN_EXCEPTION = HttpStatus.FORBIDDEN;
+    public final static String FORBIDDEN_EXCEPTION_MESSAGE = ". You do not have the required permissions.";
+    public final static String UNAUTHORIZED_EXCEPTION_MESSAGE = "Token expired";
+
+    public final static String TIMESTAMP = "Timestamp";
+    public final static String ERROR = "Error";
+    public final static String STATUS_CODE = "Status code";
+    public final static String MESSAGE = "Message";
 
     //OTHERS
     public static final String SPACE = " ";

@@ -12,7 +12,7 @@ public interface ICommentService {
 
     void update(Long id, CommentDto commentDto, String token);
 
-    List<Comment> getCommentsByIdNews(Long id);
+    List<CommentResponseDto> getCommentsByNewsId(Long id);
 
     List<CommentDto> getAllComments();
 
