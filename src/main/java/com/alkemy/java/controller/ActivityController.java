@@ -32,9 +32,9 @@ public class ActivityController {
         if(bindingResult.hasErrors())
             throw new InvalidDataException(bindingResult);
 
-        activityService.createActivity(activityDto);
 
-        return new ResponseEntity<>(activityDto, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(activityService.createActivity(activityDto), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

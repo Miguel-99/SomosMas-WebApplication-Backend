@@ -28,12 +28,13 @@ public class ActivityServiceImpl implements IActivityService {
     private String messageNotFound;
     
     @Override
-    public void createActivity(ActivityDto activityDto) {
+    public ActivityDto createActivity(ActivityDto activityDto) {
 
         if(activityRepository.existsByName(activityDto.getName()))
             throw new ConflictException(messageSource.getMessage("error.activity.already.exist", null, Locale.getDefault()));
 
         activityRepository.save(ActivityDto.dtoToActivity(activityDto));
+        return activityDto;
     }
 
     @Override
