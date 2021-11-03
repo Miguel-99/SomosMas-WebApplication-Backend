@@ -1,39 +1,15 @@
 # Proyecto ONG Somos Más
 
-_Es un proyecto para una ONG.........._
+desarrollamos una API REST/backend para una ONG llamada xxx que tiene como fin xxx  
+Solicitaron nuestra ayuda para el desarrollo de un sitio web para la organización. Su objetivo, es poder tener un sitio web que sea su carta de presentación donde puedan compartir novedades con la comunidad, contar sobre el trabajo que llevan a cabo, mostrar información sobre el equipo que esta atrás de cada acción de la organización. La página la deben poder administrar ellos y nuestra labor fue realizar el backend de dicha aplicación, para lo cual utilizamos las siguientes tecnologías:
 
-## Comenzando 🚀
-
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
-
-Mira **Deployment** para conocer como desplegar el proyecto.
-
-
-### Usuarios Ejemplos 📋
-
-_Usuarios demo para testear la app_
-
-```
-UsuarioMail1@mail.com  	pw : 123
-UsuarioMail2@mail.com  	pw : 123
-UsuarioMail3@mail.com  	pw : 123
-UsuarioMail4@mail.com  	pw : 123
-UsuarioMail5@mail.com  	pw : 123
-UsuarioMail6@mail.com  	pw : 123
-UsuarioMail7@mail.com  	pw : 123
-UsuarioMail8@mail.com  	pw : 123
-UsuarioMail9@mail.com  	pw : 123
-UsuarioMail10@mail.com  pw : 123
-
-AdminMail1@mail.com 	pw : 123
-AdminMail2@mail.com	pw : 123
-AdminMail3@mail.com	pw : 123
-AdminMail4@mail.com	pw : 123
-AdminMail5@mail.com	pw : 123
-AdminMail6@mail.com	pw : 123
-AdminMail7@mail.com	pw : 123
-AdminMail8@mail.com	pw : 123
-AdminMail9@mail.com	pw : 123
-AdminMail10@mail.com	pw : 123
-
-```
+- Java
+- Spring Boot
+- MySQL
+- Spring Security
+- Hibernate
+- JPA
+- AWS
+- SendGrid
+- Mockito
+- JUnit 5
